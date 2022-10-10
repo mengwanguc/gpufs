@@ -63,7 +63,17 @@ cd torchvision-meng/
 python setup.py install
 ```
 
-8. Download dataset
+8. Install vmtouch
+
+```
+cd ~
+git clone https://github.com/hoytech/vmtouch.git
+cd vmtouch
+make
+sudo make install
+```
+
+9. Download dataset
 
 ```
 cd ~
@@ -80,15 +90,15 @@ ONLY perform dummy tests using this file to evaluate GPU utilization.
 
 If you want to train accuracy on Imagenette dataset, please see: https://github.com/fastai/imagenette
 
-9. Group the data
+10. Group the data
 
 ```
 python group-needle.py /home/cc/data/imagenette2/train/ 2
 ```
 Here 2 is the group size. So we are grouping 2 files into a large `.mytar` file.
 
-10. Train on the grouped data
+11. Train on the grouped data
 
 ```
-python main-mytar.py -a alexnet --epoch 1
+python main-mytar.py -a alexnet --epoch 1 
 ```
