@@ -93,6 +93,7 @@ If you want to train accuracy on Imagenette dataset, please see: https://github.
 10. Group the data
 
 ```
+cd ~/gpufs/grouping
 python group-needle.py /home/cc/data/imagenette2/train/ 2
 ```
 Here 2 is the group size. So we are grouping 2 files into a large `.mytar` file.
@@ -100,5 +101,6 @@ Here 2 is the group size. So we are grouping 2 files into a large `.mytar` file.
 11. Train on the grouped data
 
 ```
+cd ~/gpufs/exp
 python main-mytar.py -a alexnet --epoch 1 
 ```
