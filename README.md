@@ -102,5 +102,11 @@ Here 2 is the group size. So we are grouping 2 files into a large `.mytar` file.
 
 ```
 cd ~/gpufs/exp
-python main-mytar.py -a alexnet --epoch 1 
+python main-mytar.py -a alexnet --epoch 1 --img_per_tar 2
 ```
+This will train based on group size 2.
+
+```
+python main-original.py --epoch 1 -a alexnet ~/data/imagenette2
+```
+This will train using the original pytorch and script.

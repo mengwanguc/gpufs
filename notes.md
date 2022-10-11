@@ -4,7 +4,9 @@ how to compare two commits:
 https://github.com/mengwanguc/torchvision-meng/compare/859a535f53be41554d8da45c4b6172089096eb7f..21a5611c9eb7bdd41b915d335fa5e044451db5df
 https://github.com/mengwanguc/pytorch-meng/compare/2564cc7a1d5a8bd4ae1d1a045654c576e568e470..199358ef854f8ad4612d89bff429fe6fd9105d5d
 
+## TODO:
 
+Today fixed class_index issue for my_tar. Need to apply the same fix to other scenarios e.g. is_async etc.
 
 # Oct 10 Monday
 
