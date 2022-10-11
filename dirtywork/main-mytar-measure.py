@@ -24,6 +24,7 @@ model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
 
+
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 # parser.add_argument('data', metavar='DIR',
 #                     help='path to dataset')
@@ -165,6 +166,8 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         print("=> creating model '{}'".format(args.arch))
         model = models.__dict__[args.arch]()
+
+    print(model)
 
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
@@ -348,12 +351,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         display_start_time = time.time()
         if i % args.print_freq == 0:
-            # progress.display(i + 1)
-            print("top1: {}  acc5: {}".format(top1, acc5))
+            progress.display(i + 1)
+            # print("top1: {}  acc5: {}".format(top1, acc5))
             # print("   ")
         display_time += time.time() - display_start_time
-        print("step {}  total time: {}  data time: {}  display time: {}  move_time: {} output_time: {} loss_time: {} optimize_time: {}, acc_time: {}".format(
-                i, time.time()-end, data_time, display_time, move_data_to_gpu_time, compute_output_time, compute_loss_time, optimize_time, accuracy_compute_time))
+        # print("step {}  total time: {}  data time: {}  display time: {}  move_time: {} output_time: {} loss_time: {} optimize_time: {}, acc_time: {}".format(
+        #         i, time.time()-end, data_time, display_time, move_data_to_gpu_time, compute_output_time, compute_loss_time, optimize_time, accuracy_compute_time))
         ss = time.time()
 
     total_data_time += data_time
