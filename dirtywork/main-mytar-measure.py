@@ -322,11 +322,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         print(target.is_cuda)
         start_move_data_to_gpu = time.time()
         if args.gpu is not None:
-            # images = images.cuda(args.gpu, non_blocking=True)
-            images = images.cuda(args.gpu)
+            images = images.cuda(args.gpu, non_blocking=True)
+            # images = images.cuda(args.gpu)
         if torch.cuda.is_available():
-            # target = target.cuda(args.gpu, non_blocking=True)
-            target = target.cuda(args.gpu)
+            target = target.cuda(args.gpu, non_blocking=True)
+            # target = target.cuda(args.gpu)
         print(target.is_cuda)
 
         move_data_to_gpu_time += time.time() - start_move_data_to_gpu

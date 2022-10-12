@@ -20,7 +20,22 @@ However, I don't think it's asynchronous to the gpu computation nor data loader.
 https://discuss.pytorch.org/t/should-we-set-non-blocking-to-true/38234
 
 However, I think it's possible according to nvidia:
+
 https://developer.nvidia.com/blog/how-overlap-data-transfers-cuda-cc/
+
+https://stackoverflow.com/questions/65932328/pytorch-while-loading-batched-data-using-dataloader-how-to-transfer-the-data-t
+
+https://spell.ml/blog/pytorch-training-tricks-YAnJqBEAACkARhgD
+
+https://pytorch.org/docs/stable/notes/cuda.html#cuda-memory-pinning
+
+https://www.telesens.co/2019/02/16/efficient-data-transfer-from-paged-memory-to-gpu-using-multi-threading/
+
+Seems they have already tried to pipeline data transfer and training.
+However, some layers, e.g. conv2d, will require the whole batch to be ready in order to do the computation.
+In this case, the pipelining doesn't work.
+
+However, while we are doing computation for 1st batch, we can try to transfer the data of 2nd batch to gpu.
 
 ## TODO
 
