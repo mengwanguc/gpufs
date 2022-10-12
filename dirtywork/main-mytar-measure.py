@@ -319,11 +319,16 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     accuracy_compute_time = 0
     for i, (images, target) in enumerate(train_loader):
         data_time += time.time() - ss
+        print(target.is_cuda)
         start_move_data_to_gpu = time.time()
         if args.gpu is not None:
-            images = images.cuda(args.gpu, non_blocking=True)
+            # images = images.cuda(args.gpu, non_blocking=True)
+            images = images.cuda(args.gpu)
         if torch.cuda.is_available():
-            target = target.cuda(args.gpu, non_blocking=True)
+            # target = target.cuda(args.gpu, non_blocking=True)
+            target = target.cuda(args.gpu)
+        print(target.is_cuda)
+
         move_data_to_gpu_time += time.time() - start_move_data_to_gpu
 
         # compute output
@@ -351,12 +356,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         display_start_time = time.time()
         if i % args.print_freq == 0:
-            progress.display(i + 1)
+            # progress.display(i + 1)
             # print("top1: {}  acc5: {}".format(top1, acc5))
-            # print("   ")
+            print("   ")
         display_time += time.time() - display_start_time
-        # print("step {}  total time: {}  data time: {}  display time: {}  move_time: {} output_time: {} loss_time: {} optimize_time: {}, acc_time: {}".format(
-        #         i, time.time()-end, data_time, display_time, move_data_to_gpu_time, compute_output_time, compute_loss_time, optimize_time, accuracy_compute_time))
+        print("step {}  total time: {}  data time: {}  display time: {}  move_time: {} output_time: {} loss_time: {} optimize_time: {}, acc_time: {}".format(
+                i, time.time()-end, data_time, display_time, move_data_to_gpu_time, compute_output_time, compute_loss_time, optimize_time, accuracy_compute_time))
         ss = time.time()
 
     total_data_time += data_time
