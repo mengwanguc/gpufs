@@ -85,18 +85,8 @@ def make_dataset(
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif',
                   '.tiff', '.webp', '.pickle', '.zip', 'tar', 'mytar')
-
-
-if len(sys.argv) < 4:
-    print('python group-needlep.py <train_folder> <groupsize> <mytar_save_folder>')
-    print('example: python group-needle.py ~/data/test-accuracy/imagenette2/train 4 ~/data/test-accuracy/mytar/train')
-    exit()
-
 train_folder = sys.argv[1]
 group_size = int(sys.argv[2])
-mytar_save_folder = sys.argv[3] + '/{}/'.format(group_size)
-
-os.makedirs(mytar_save_folder, exist_ok=True)
 
 classes, class_to_idx = find_classes(train_folder)
 print("classes: \n {} \n class_to_idx: \n {}".format(classes, class_to_idx))
@@ -111,7 +101,10 @@ permutation = torch.randperm(len(instances), generator=generator).tolist()
 it = iter(permutation)
 group_num = int(len(permutation) / group_size)
 
-
+mytar_save_folder = '/home/cc/data/mytar/{}/train/'.format(group_size)
+os.makedirs(mytar_save_folder, exist_ok=True)
+tar_save_folder = '/home/cc/data/tar/{}/train/'.format(group_size)
+os.makedirs(tar_save_folder, exist_ok=True)
 
 metadata = ''
 for i in range(group_num):
@@ -119,15 +112,18 @@ for i in range(group_num):
     imgdata = b''
     offset = 0
     metadata += '{},{}\n'.format(mytar_name,group_size)
-    for j in range(group_size):
-        idx = permutation[i*group_size + j]
-        img_path, target_class = instances[idx]
-        img_size = os.path.getsize(img_path)
-        metadata += '{},{},{},{},{}\n'.format(j, target_class, offset, img_size,img_path)
-        offset += img_size
-        with open(img_path, 'rb') as reader:
-            img = reader.read()
-            imgdata += img
+    tarFileName = tar_save_folder + '/' + str(i) + '.tar'
+    with tarfile.open(tarFileName, 'w') as tarObj:
+        for j in range(group_size):
+            idx = permutation[i*group_size + j]
+            img_path, target_class = instances[idx]
+            img_size = os.path.getsize(img_path)
+            metadata += '{},{},{},{},{}\n'.format(j, target_class, offset, img_size,img_path)
+            offset += img_size
+            with open(img_path, 'rb') as reader:
+                img = reader.read()
+                imgdata += img
+            tarObj.add(img_path, basename(img_path))
     with open(mytar_save_folder + mytar_name, 'wb') as writer:
         writer.write(imgdata)
 

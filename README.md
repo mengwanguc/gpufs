@@ -63,7 +63,12 @@ cd torchvision-meng/
 python setup.py install
 ```
 
-8. Install vmtouch
+
+## See effect of grouping on gpu utilization:
+
+** If you only care about accuracy, please go to ["Training Accuracy"](#training-accuracy). **
+
+1. Install vmtouch
 
 ```
 cd ~
@@ -73,7 +78,7 @@ make
 sudo make install
 ```
 
-9. Download dataset
+2. Download dataset
 
 ```
 cd ~
@@ -90,15 +95,15 @@ ONLY perform dummy tests using this file to evaluate GPU utilization.
 
 If you want to train accuracy on Imagenette dataset, please see: https://github.com/fastai/imagenette
 
-10. Group the data
+3. Group the data
 
 ```
 cd ~/gpufs/grouping
-python group-needle.py /home/cc/data/imagenette2/train/ 2
+python group-needle.py /home/cc/data/imagenette2/train/ 2 /home/cc/data/mytar
 ```
 Here 2 is the group size. So we are grouping 2 files into a large `.mytar` file.
 
-11. Train on the grouped data
+4. Train on the grouped data
 
 ```
 cd ~/gpufs/exp
@@ -110,3 +115,29 @@ This will train based on group size 2.
 python main-original.py --epoch 1 -a alexnet ~/data/imagenette2
 ```
 This will train using the original pytorch and script.
+
+## Training accuracy
+
+As an example, let's start with Imagenette:
+
+1. First, download the [imagenettee](https://github.com/fastai/imagenette) dataset:
+
+```
+cd ~
+mkdir data
+cd data
+mkdir test-accuracy
+cd test-accuracy
+wget https://s3.amazonaws.com/fast-ai-imageclas/imagenette2.tgz
+tar -zxvf imagenette2.tgz
+```
+
+2. Group it:
+
+```
+cd ~/gpufs/grouping
+python group-needle.py ~/data/test-accuracy/imagenette2/train 4 ~/data/test-accuracy/mytar/train
+```
+
+This will group the training data into groups of size 4, and stored in `~/data/test-accuracy/mytar/train/4/`.
+
