@@ -113,26 +113,31 @@ group_num = int(len(permutation) / group_size)
 
 
 
-metadata = ''
-for i in range(group_num):
-    mytar_name = 'filegroup-{}.mytar'.format(i)
-    imgdata = b''
-    offset = 0
-    metadata += '{},{}\n'.format(mytar_name,group_size)
-    for j in range(group_size):
-        idx = permutation[i*group_size + j]
-        img_path, target_class = instances[idx]
-        img_size = os.path.getsize(img_path)
-        metadata += '{},{},{},{},{}\n'.format(j, target_class, offset, img_size,img_path)
-        offset += img_size
-        with open(img_path, 'rb') as reader:
-            img = reader.read()
-            imgdata += img
-    with open(mytar_save_folder + mytar_name, 'wb') as writer:
-        writer.write(imgdata)
+with open(mytar_save_folder + "metadata.txt", 'w') as metadata_writer:
+    metadata_writer.write('{}\n'.format(len(classes)))
+    for class_name in classes:
+        metadata_writer.write('{}\n'.format(class_name))
 
-with open(mytar_save_folder + "metadata.txt", 'w') as writer:
-    writer.write(metadata)
+    metadata = ''
+    for i in range(group_num):
+        mytar_name = 'filegroup-{}.mytar'.format(i)
+        imgdata = b''
+        offset = 0
+        metadata += '{},{}\n'.format(mytar_name,group_size)
+        for j in range(group_size):
+            idx = permutation[i*group_size + j]
+            img_path, target_class = instances[idx]
+            img_size = os.path.getsize(img_path)
+            metadata += '{},{},{},{},{}\n'.format(j, target_class, offset, img_size,img_path)
+            offset += img_size
+            with open(img_path, 'rb') as reader:
+                img = reader.read()
+                imgdata += img
+        with open(mytar_save_folder + mytar_name, 'wb') as writer:
+            writer.write(imgdata)
+
+
+    metadata_writer.write(metadata)
 
 
 print("group_size: {} group num: {}".format(
