@@ -1,3 +1,9 @@
+# Nov 1
+
+Tensorflow already implements async cpu-to-gpu transfer:
+https://github.com/tensorflow/tensorflow/issues/5722
+
+
 # Oct 11 Tuesday
 alexnet self forward time: 6.85730504989624
 
