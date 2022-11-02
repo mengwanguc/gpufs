@@ -13,6 +13,13 @@ Why do we do preprocessing during every batch? Why don't we just do it once?
 
 In-storage computation???
 
+data compression?
+When IO is bottleneck, we can use compressed data, to save memory and speed up data read. 
+The tradeoff is that we need to do extra data uncompressing, which adds cpu overhead.
+We can even move overhead to gpu (e.g. using dali https://developer.nvidia.com/blog/rapid-data-pre-processing-with-nvidia-dali/)
+
+
+
 
 # Oct 11 Tuesday
 alexnet self forward time: 6.85730504989624
