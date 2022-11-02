@@ -3,6 +3,9 @@
 Tensorflow already implements async cpu-to-gpu transfer:
 https://github.com/tensorflow/tensorflow/issues/5722
 
+This person answered something that prefetch cpu-to-gpu, but does pytorch really supports that?
+https://stackoverflow.com/questions/63460538/proper-usage-of-pytorchs-non-blocking-true-for-data-prefetching
+
 
 # Oct 11 Tuesday
 alexnet self forward time: 6.85730504989624
