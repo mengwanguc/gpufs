@@ -1,3 +1,10 @@
+# Nov 2
+
+Set cpu constraints for a namespace:
+https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/
+
+
+
 # Nov 1
 
 Tensorflow already implements async cpu-to-gpu transfer:
