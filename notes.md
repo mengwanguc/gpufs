@@ -11,6 +11,8 @@ https://github.com/Lightning-AI/lightning/issues/1404
 
 Why do we do preprocessing during every batch? Why don't we just do it once?
 
+In-storage computation???
+
 
 # Oct 11 Tuesday
 alexnet self forward time: 6.85730504989624
