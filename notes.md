@@ -1,9 +1,57 @@
+# Nov 3
+
+random read on ssd:
+https://superuser.com/questions/1108034/why-are-4k-reads-in-hdd-ssd-benchmarks-slower-than-writes
+
+https://superuser.com/questions/1325962/sequential-vs-random-i-o-on-ssds
+
+os takes time to prepare io request, which may be cpu intensive???
+
+---
+
+gzip doesn't help to compress image, because JEPG images are already compressed.
+
+openimages use jpg
+
+tradeoff between io and cpu
+
+free music use mp3 (compressed)
+
+---
+
+faster than pillow: https://github.com/jbaiter/jpegtran-cffi
+
+---
+
+We can allow users to specify an acceptable quality ratio
+
+so we allow a tradeoff between training speed and accuracy
+
+
+by using profiling, we can show user the training time given ratio.
+
+--
+
+Other sequentail methods:
+
+TFRecord???
+
+dali-seq???
+
+
+
 # Nov 2
 
 Set cpu constraints for a namespace:
 https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/
 
+adaptdl:
 
+https://adaptdl.readthedocs.io/en/latest/commandline/tensorboard.html
+
+Vijay's paper on gpu scheduling:
+
+https://www.usenix.org/system/files/osdi22-mohan.pdf
 
 # Nov 1
 
