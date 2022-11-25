@@ -1,3 +1,11 @@
+# Nov 25
+
+Can we sort the IO requests to reduce seek time?
+
+https://wiki.ubuntu.com/Kernel/Reference/IOSchedulers
+
+
+
 # Nov 3
 
 random read on ssd:
