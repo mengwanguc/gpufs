@@ -19,7 +19,7 @@ Question for https://www.usenix.org/system/files/hotcloud19-paper-kakaraparthy.p
 ### my thoughts
 
 - Can we sort the IO requests to reduce seek time?
-- In IO scheduling, the io scheduler needs to switch between different processes, which might not be a good ordering. Can we disable the switch?
+- In IO scheduling, the io scheduler needs to switch between different processes, which might not be a good ordering. Can we disable the switch? Or maybe we can set the time slice to very large.
 
 https://wiki.ubuntu.com/Kernel/Reference/IOSchedulers
 
