@@ -12,11 +12,14 @@ Question for https://www.usenix.org/system/files/hotcloud19-paper-kakaraparthy.p
 
 - We can also have a reservior of e.g. 400 groups in memory. We can further randomize the reservior.
 - In pytorch, for every epoch, the loading of the first batch is usually slow, because multiple processing and it's not overlapped by gpu time. So maybe we should have a data loader which can fill the reservior for the next epoch.
-- 
+
 
 # Nov 25
 
-Can we sort the IO requests to reduce seek time?
+### my thoughts
+
+- Can we sort the IO requests to reduce seek time?
+- In IO scheduling, the io scheduler needs to switch between different processes, which might not be a good ordering. Can we disable the switch?
 
 https://wiki.ubuntu.com/Kernel/Reference/IOSchedulers
 
