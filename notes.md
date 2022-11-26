@@ -12,7 +12,20 @@ Question for https://www.usenix.org/system/files/hotcloud19-paper-kakaraparthy.p
 
 - We can also have a reservior of e.g. 400 groups in memory. We can further randomize the reservior.
 - In pytorch, for every epoch, the loading of the first batch is usually slow, because multiple processing and it's not overlapped by gpu time. So maybe we should have a data loader which can fill the reservior for the next epoch.
+- use a dedicated cpu to read data
+- Since deep learning training has deterministic training time and order, the remote cloud storage server can prepare the data in advance based on better scheduling.
 
+### From Graphene:{Fine-Grained}{IO} Management for Graph Computing
+- For instance, Linux exploits a linked list called pluglist to batch and submit the IO requests [8], in particular, the most recent Linux kernel 4.4.0 supports 16 requests in a batch
+- IO merging...
+- IO sorting
+- Graphene pins IO and computing threads to the CPU socket that is close to the SSD they are working on. This NUMA-aware arrangement reduces the communication overhead between IO thread and SSD, as well as IO and computing threads. Our test shows that this can improve the performance by 5% for various graphs
+
+### documentation
+linux io scheduler
+https://www.kernel.org/doc/html/v6.0/block/index.html
+
+[PATCH 11/16] blk-mq: improve plug list sorting: https://lkml.iu.edu/hypermail/linux/kernel/1810.3/04456.html
 
 # Nov 25
 
