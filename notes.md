@@ -1,8 +1,26 @@
+# Nov 26
+
+estimate disk drive latency: https://www.fsl.cs.sunysb.edu/docs/ospert-iosched/map-ioscheduler.pdf
+
+Question for https://www.usenix.org/system/files/hotcloud19-paper-kakaraparthy.pdf
+
+- To generate one reservior, do you need to read through the entire dataset?
+- How often do you re-fill the reservior? Do you re-fill it per batch, or per reservior (i.e. 400 batches in the example experiment setup.)
+- Is the source code open?
+
+### my thoughts
+
+- We can also have a reservior of e.g. 400 groups in memory. We can further randomize the reservior.
+- In pytorch, for every epoch, the loading of the first batch is usually slow, because multiple processing and it's not overlapped by gpu time. So maybe we should have a data loader which can fill the reservior for the next epoch.
+- 
+
 # Nov 25
 
 Can we sort the IO requests to reduce seek time?
 
 https://wiki.ubuntu.com/Kernel/Reference/IOSchedulers
+
+https://www.oreilly.com/library/view/linux-device-drivers/0596000081/ch12s04.html
 
 
 
