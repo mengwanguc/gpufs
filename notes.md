@@ -1,3 +1,12 @@
+# Nov 27
+
+### tagged command queueing:
+- http://www.stbsuite.com/support/virtual-training-center/introduction-to-command-queuing
+
+
+where is disk scheduling implemented: https://stackoverflow.com/questions/49220089/where-is-disk-scheduling-implemented
+>In the mid-1980's it started to become common for disk drives to provide a logical I/O interface. The device driver no longer saw disks/platters/sectors. Instead, it just saw an array of logical blocks. The drive took care of physical locations and redirecting of bad blocks (tasks that the operating system used to handle). This allowed single device driver to manage multiple types of devices, sharing the same interface and differing only in the number of logical blocks.
+
 # Nov 26
 
 estimate disk drive latency: https://www.fsl.cs.sunysb.edu/docs/ospert-iosched/map-ioscheduler.pdf
