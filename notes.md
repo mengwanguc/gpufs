@@ -7,6 +7,14 @@ tf.data: A Machine Learning Data Processing Framework
 - cache preprocessed data?
 - some datasets use "shuffle" transformation, so should be excluded.
 - I remember gandiva searches all ml jobs on github?
+- Figure 10 showed that data preprocessing reduces the volume of data for 75% of jobs. For 14% of jobs, the volume of data fed into the model for training is less than 10% of bytes read from storage. As input data for ML jobs commonly resides in remote storage, such as a distributed file system or cloud object store, this means that more data than necessary is sent over the network during ML training. Designing ML data processing systems that apply projections closer to storage is a promising way
+- **they already pipeline data preprocessing and IO in tensorflow!**
+
+Evaluating Block-level Optimization through the IO Path
+- The queue depth at the disk drive level is a parame- ter set at the device driver and often set to 4 (the default value for many SCSI device drivers). The queue depth at the disk is commonly kept low to avoid request starva- tion, because disk drive scheduling introduces variability in request response time, which can be controlled easily by the operating system at the device driver with algo- rithms such as Deadline but not at the disk drive level.
+
+where is disk schedulign implemented:
+https://stackoverflow.com/questions/49220089/where-is-disk-scheduling-implemented
 
 # Nov 27
 
