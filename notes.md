@@ -6,6 +6,7 @@ tf.data: A Machine Learning Data Processing Framework
 - 70% jobs' data size decreases after preprocessing. Why don't we store them directly?
 - cache preprocessed data?
 - some datasets use "shuffle" transformation, so should be excluded.
+- I remember gandiva searches all ml jobs on github?
 
 # Nov 27
 
