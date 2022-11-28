@@ -1,3 +1,10 @@
+# Nov 28
+
+### data size
+
+tf.data: A Machine Learning Data Processing Framework
+- 70% jobs' data size decreases after preprocessing. Why don't we store them directly?
+
 # Nov 27
 
 ### tagged command queueing:
