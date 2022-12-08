@@ -1,0 +1,1 @@
+taskset -c 0-7 ./read imagenet_train_file_paths 1024

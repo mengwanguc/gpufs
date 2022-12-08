@@ -1,0 +1,42 @@
+unsort 10000 IO. Threads: 1
+209015184
+unsort 10000 IO. Threads: 2
+227662215
+unsort 10000 IO. Threads: 4
+195150550
+unsort 10000 IO. Threads: 8
+172154316
+unsort 10000 IO. Threads: 16
+156691171
+unsort 10000 IO. Threads: 32
+145309860
+unsort 10000 IO. Threads: 64
+152478863
+partial sort 10000 IO. Threads: 1
+170732357
+partial sort 10000 IO. Threads: 2
+173546717
+partial sort 10000 IO. Threads: 4
+162704030
+partial sort 10000 IO. Threads: 8
+156404205
+partial sort 10000 IO. Threads: 16
+147398765
+partial sort 10000 IO. Threads: 32
+138395834
+partial sort 10000 IO. Threads: 64
+145141281
+all sort 10000 IO. Threads: 1
+97227907
+all sort 10000 IO. Threads: 2
+82013014
+all sort 10000 IO. Threads: 4
+78110199
+all sort 10000 IO. Threads: 8
+77042787
+all sort 10000 IO. Threads: 16
+73985563
+all sort 10000 IO. Threads: 32
+70630055
+all sort 10000 IO. Threads: 64
+69830940
