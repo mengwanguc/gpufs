@@ -33,6 +33,9 @@ int main(int argc, char *argv[]) {
         char mode = 'r';
         FILE *fp;
         long block_index[1000];
+
+        int buffer_size = BLOCK_SIZE * 1000;
+
         if(argc <= 2) {
                 printf("Please specify device name and mode\n./direct_io [/dev/sda] [s/r]\n");
                 exit(1);
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
         }
 
         srand(time(NULL));
-        posix_memalign(&buff, BLOCK_SIZE, BLOCK_SIZE);
+        posix_memalign(&buff, BLOCK_SIZE, buffer_size);
         int step = BLOCK_COUNT / 1000;
         long total = 0;
         for(i = 0; i < 1000; ++i) {
@@ -73,7 +76,7 @@ int main(int argc, char *argv[]) {
                         continue;
                 }
                 gettimeofday(&start_tv, NULL);
-                read_result = read(fd, buff, BLOCK_SIZE*1000);
+                read_result = read(fd, buff, buffer_size);
                 gettimeofday(&end_tv, NULL);
                 start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
                 end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
