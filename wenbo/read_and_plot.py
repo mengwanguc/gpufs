@@ -9,7 +9,7 @@ model = ""
 batch_top1_top5_train = {}
 batch_top1_top5_val = {}
 
-with open('base_model_data/vgg11_batch_256_epo_50') as json_file:
+with open('grouped_model_data/resnet18_batch_256_gsize_256_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == 'train_top1':
@@ -45,13 +45,13 @@ for k,v in batch_top1_top5_val.items():
     batch_val_top1.append(v[0])
     batch_val_top5.append(v[1])
 
-"""
+#"""
 epoch_range = range(1,epochs+1)
-plt.plot(epoch_range, train_top1, label = 'training_top1')
-plt.plot(epoch_range, train_top5, label = 'training_top5')
-plt.plot(epoch_range, val_top1, label = 'validation_top1')
-plt.plot(epoch_range, val_top5, label = 'validation_top5')
-plt.title('Training Accuracy')
+plt.plot(epoch_range, train_top1, label = 'train_top1')
+plt.plot(epoch_range, train_top5, label = 'train_top5')
+plt.plot(epoch_range, val_top1, label = 'val_top1')
+plt.plot(epoch_range, val_top5, label = 'val_top5')
+plt.title('Training and Validation Accuracy')
 plt.xlabel('Epochs')
 plt.ylabel('Accuracy')
 plt.ylim([0,100])
@@ -59,8 +59,8 @@ plt.legend()
 plt.show(block=True) 
 ep = str(epochs)
 bat = str(batch_size)
-results_dir = 'base_model_graph/'
-sample_file_name = model+ "_batch_" + bat +"_epo_"+ ep +".png" 
+results_dir = 'grouped_model_graph/'
+sample_file_name = model+"_ec_" + "_batch_" + bat +"_epo_"+ ep +".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """
@@ -79,4 +79,4 @@ bat = str(batch_size)
 results_dir = 'base_model_graph/'
 sample_file_name = "batch_graph_"+ model + "_batch_" + bat +"_epo_"+ ep +".png" 
 plt.savefig(results_dir + sample_file_name)
-#"""
+"""
