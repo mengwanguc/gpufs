@@ -26,6 +26,9 @@ bash Anaconda3-2021.11-Linux-x86_64.sh
 After installation, log out and log in bash again.
 
 4. Install packages required for builing pytorch
+
+**Note: the commands below assumes you have cuda 10.2 installed on your machine. If you have other cuda versions, please use the magma-cuda\* that matches your CUDA version from** https://anaconda.org/pytorch/repo
+
 ```
 conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses
 
@@ -41,6 +44,8 @@ scl enable devtoolset-7 bash
 ```
 
 6. Download our custom pytorch and build it
+
+**NOTE: our custom pytorch assumes that you are using cuda 10.2. If you are using cuda 11, please install the original pytorch from** https://github.com/pytorch/pytorch#installation
 
 ```
 cd ~
