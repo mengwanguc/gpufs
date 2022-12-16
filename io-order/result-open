@@ -1,0 +1,175 @@
+unsort 10000 IO. Threads: 1
+sort time: 1
+70133094
+open time:70051946
+read time:35632
+unsort 10000 IO. Threads: 2
+sort time: 0
+60546133
+open time:121004462
+read time:33033
+unsort 10000 IO. Threads: 4
+sort time: 1
+53249254
+open time:212875857
+read time:32786
+unsort 10000 IO. Threads: 8
+sort time: 0
+45734346
+open time:365647903
+read time:32778
+unsort 10000 IO. Threads: 16
+sort time: 0
+40893783
+open time:653428622
+read time:32961
+unsort 10000 IO. Threads: 32
+sort time: 0
+36213702
+open time:1155455369
+read time:33421
+unsort 10000 IO. Threads: 64
+sort time: 0
+34387950
+open time:2186722928
+read time:32765
+partial sort 10000 IO. Threads: 1
+sort time: 1682
+67599534
+open time:67519399
+read time:35514
+partial sort 10000 IO. Threads: 2
+sort time: 1801
+62750016
+open time:125412049
+read time:32557
+partial sort 10000 IO. Threads: 4
+sort time: 1810
+53681420
+open time:214525972
+read time:32954
+partial sort 10000 IO. Threads: 8
+sort time: 1597
+46618114
+open time:372679321
+read time:33002
+partial sort 10000 IO. Threads: 16
+sort time: 1812
+40571478
+open time:648436469
+read time:33156
+partial sort 10000 IO. Threads: 32
+sort time: 1581
+36340899
+open time:1159982098
+read time:33330
+partial sort 10000 IO. Threads: 64
+sort time: 1794
+35344614
+open time:2251789742
+read time:33108
+all sort 10000 IO. Threads: 1
+sort time: 3392
+40062941
+open time:39991082
+read time:31227
+all sort 10000 IO. Threads: 2
+sort time: 3121
+35415920
+open time:70753484
+read time:32449
+all sort 10000 IO. Threads: 4
+sort time: 3289
+33548645
+open time:133937616
+read time:34361
+all sort 10000 IO. Threads: 8
+sort time: 3651
+33374916
+open time:264987775
+read time:35764
+all sort 10000 IO. Threads: 16
+sort time: 3923
+32000545
+open time:504603984
+read time:36213
+all sort 10000 IO. Threads: 32
+sort time: 3403
+30264206
+open time:949779827
+read time:36360
+all sort 10000 IO. Threads: 64
+sort time: 3652
+28282119
+open time:1770331829
+read time:36216
+all sort inode 10000 IO. Threads: 1
+sort time: 3920
+29392076
+open time:29323778
+read time:29044
+all sort inode 10000 IO. Threads: 2
+sort time: 4104
+25135336
+open time:50191825
+read time:32023
+all sort inode 10000 IO. Threads: 4
+sort time: 3587
+24142848
+open time:96434262
+read time:34645
+all sort inode 10000 IO. Threads: 8
+sort time: 3447
+25111358
+open time:198728394
+read time:36159
+all sort inode 10000 IO. Threads: 16
+sort time: 2658
+21298737
+open time:335066939
+read time:37024
+all sort inode 10000 IO. Threads: 32
+sort time: 4179
+19499620
+open time:612695875
+read time:36716
+all sort inode 10000 IO. Threads: 64
+sort time: 3270
+17459126
+open time:1100110219
+read time:35653
+all sort lba 10000 IO. Threads: 1
+sort time: 2950
+29452558
+open time:29385125
+read time:29116
+all sort lba 10000 IO. Threads: 2
+sort time: 4184
+25089604
+open time:50098277
+read time:31756
+all sort lba 10000 IO. Threads: 4
+sort time: 3840
+23953426
+open time:95480806
+read time:34175
+all sort lba 10000 IO. Threads: 8
+sort time: 4113
+23063809
+open time:183647164
+read time:35799
+all sort lba 10000 IO. Threads: 16
+sort time: 3503
+20692924
+open time:325626769
+read time:36664
+all sort lba 10000 IO. Threads: 32
+sort time: 3314
+19126887
+open time:601845800
+read time:36411
+all sort lba 10000 IO. Threads: 64
+sort time: 3403
+17581669
+open time:1107328510
+read time:35926

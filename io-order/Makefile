@@ -1,14 +1,13 @@
 CC=gcc
 CFLAGS=-I.
-OBJ = read.o
+OBJ = read get_inode get_lsa
 
 LIBS=-lpthread
 
-%.o: %.c
-	$(CC) -c -o $@ $< $(CFLAGS) 
+all: $(OBJ)
 
-read: $(OBJ)
+$(OBJ): %: %.c
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 clean:
-	rm -f *.o read
+	rm -f *.o $(OBJ)

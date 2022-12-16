@@ -13,14 +13,15 @@
 
 
 #define NUM_FILES 1281167
-#define NUM_READS 1000
+#define NUM_READS 10000
 
 long open_time = 0;
 long read_time = 0;
 
 typedef struct sample {
     int index;
-    int inode;
+    unsigned int inode;
+    __u64 start_physical;
 } Sample;
 
 pthread_mutex_t count_mutex;
@@ -31,34 +32,22 @@ Sample samples[NUM_READS];
 
 
 int cmp_by_index_func (const void * a, const void * b) {
-   return ( ((Sample*)a)->index - ((Sample*)b)->index );
+    return ( ((Sample*)a)->index - ((Sample*)b)->index );
 }
 
 int cmp_by_inode_func (const void * a, const void * b) {
-   return ( ((Sample*)a)->inode - ((Sample*)b)->inode );
+    return ( ((Sample*)a)->inode - ((Sample*)b)->inode );
 }
 
-void *sort_by_inode() {
-    int i;
-    for (i = 0; i < NUM_READS; i++) {
-        int fd = open(filepaths[samples[i].index], O_RDONLY | O_DIRECT);
-        if(fd == -1) {
-            perror("Error: File open failure.");
-        }
-        else {
-            // struct stat file_stat;  
-            // int ret;  
-            // ret = fstat (fd, &file_stat);  
-            // if (ret < 0) {  
-            //     perror("Error: fstat failure.");
-            // }
-            // samples[i].inode = file_stat.st_ino;
-            printf("%u\n", samples[i].inode );
-        }
-        close(fd);
+int cmp_by_start_physical_func (const void * a, const void * b) {
+    if (((Sample*)a)->start_physical > ((Sample*)b)->start_physical) {
+        return 1;
     }
-    qsort(samples, NUM_READS, sizeof(Sample), cmp_by_inode_func);
-    return;
+    else if (((Sample*)a)->start_physical == ((Sample*)b)->start_physical) {
+        return 0;
+    } else {
+        return -1;
+    }
 }
 
 void *thread_read(void *param)
@@ -115,18 +104,21 @@ void *thread_read(void *param)
 
 
 int main(int argc, char *argv[]) {
-    int i;
+    int i, j;
     FILE *fpaths;
+    char fsamples_name[100];
     FILE *fsamples;
 
     struct timeval start_tv, end_tv;
     long start, end, time_spent;
+    long preopen_time;
 
     int mode = 0;
+    int preopen = 0;
 
-    if(argc <= 3) {
+    if(argc <= 4) {
         printf("Please specify paths file\n./read [/imagenette_file_paths] [num_threads] [mode: 0 for unsort, 1 for partial sort, 2 for all sort,"
-                        "3 for sort by inode number]\n");
+                        "3 for sort by inode number] [0 for not pre-open. 1 for pre-open.]\n");
         exit(1);
     }
 
@@ -141,9 +133,11 @@ int main(int argc, char *argv[]) {
     // printf("%s\n", filepaths[NUM_FILES-1]);
 
     // sampling
-    fsamples = fopen("samples_1000.txt", "r");
+    snprintf(fsamples_name, 100, "samples_inodes_lba_%d.txt", NUM_READS);
+    fsamples = fopen(fsamples_name, "r");
     i = 0;
-    while(fscanf(fsamples, "%d", &samples[i].index) == 1){
+    while(fscanf(fsamples, "%d %u %llu", 
+                &samples[i].index, &samples[i].inode, &samples[i].start_physical) == 3){
             i++;
     }
     fclose(fsamples);
@@ -162,7 +156,9 @@ int main(int argc, char *argv[]) {
     } else if (mode == 2) {
         qsort(samples, NUM_READS, sizeof(Sample), cmp_by_index_func);
     } else if (mode == 3) {
-        sort_by_inode();
+        qsort(samples, NUM_READS, sizeof(Sample), cmp_by_inode_func);
+    } else if (mode == 4) {
+        qsort(samples, NUM_READS, sizeof(Sample), cmp_by_start_physical_func);
     }
 
     gettimeofday(&end_tv, NULL);
@@ -172,33 +168,64 @@ int main(int argc, char *argv[]) {
     printf("sort time: %ld\n", time_spent);
 
 
-    int num_threads = atoi(argv[2]);
-    pthread_t *tid_array = malloc(num_threads * sizeof(pthread_t));
+    // for (i = 0; i < NUM_READS; i++) {
+    //     printf("%d\t%u\t%llu\n", 
+    //             samples[i].index, samples[i].inode, samples[i].start_physical);
+    // }
 
-    // create all threads
-    gettimeofday(&start_tv, NULL);
+    preopen = atoi(argv[4]);
+    if (preopen == 1) {
+        gettimeofday(&start_tv, NULL);
+        for (i = 0; i < NUM_READS; i++) {
+            
+            int f = open(filepaths[samples[i].index], O_RDONLY);
+            close(f);
+        }
 
-    for(i = 0; i < num_threads; i++)
-    {
-       pthread_create(&tid_array[i], NULL, thread_read, NULL);
+        gettimeofday(&end_tv, NULL);
+        start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
+        end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
+        preopen_time = (end - start);
+        printf("preopen time: %ld\n", preopen_time);
     }
 
-    for(i = 0; i < num_threads; i++)
-    {
-        pthread_join(tid_array[i], NULL);
+
+
+
+    for (j = 0; j < 1; j++) {
+
+        int num_threads = atoi(argv[2]);
+        pthread_t *tid_array = malloc(num_threads * sizeof(pthread_t));
+
+        // create all threads
+        gettimeofday(&start_tv, NULL);
+
+        count = 0;
+        open_time = 0;
+        read_time = 0;
+
+        for(i = 0; i < num_threads; i++)
+        {
+        pthread_create(&tid_array[i], NULL, thread_read, NULL);
+        }
+
+        for(i = 0; i < num_threads; i++)
+        {
+            pthread_join(tid_array[i], NULL);
+        }
+
+        gettimeofday(&end_tv, NULL);
+        start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
+        end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
+        time_spent = (end - start);
+
+        printf("%ld\n", time_spent);
+
+        printf("open time:%ld\n", open_time);
+        printf("read time:%ld\n", read_time);
+
+        free(tid_array);
     }
-
-    gettimeofday(&end_tv, NULL);
-    start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
-    end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
-    time_spent = (end - start);
-
-    printf("%ld\n", time_spent);
-
-    printf("open time:%ld\n", open_time);
-    printf("read time:%ld\n", read_time);
-
-    free(tid_array);
 
     return 0;
 }    
