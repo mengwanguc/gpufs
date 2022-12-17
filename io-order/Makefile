@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-I.
-OBJ = read get_inode get_lsa
+OBJ = read get_inode get_lsa get_lsa_all
 
 LIBS=-lpthread
 
