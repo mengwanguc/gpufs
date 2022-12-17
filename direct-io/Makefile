@@ -1,12 +1,14 @@
 CC=gcc
 CFLAGS=-I.
-OBJ = direct_io.o
+OBJ = direct_io lba_distance_measure
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-direct_io: $(OBJ)
+all: $(OBJ)
+
+$(OBJ): %: %.c
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f *.o direct_io
+	rm -f *.o $(OBJ)
