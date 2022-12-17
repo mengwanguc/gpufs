@@ -1,6 +1,5 @@
 import sys
 import os
-import torch
 from typing import Any, Callable, cast, Dict, List, Optional, Tuple
 from os.path import basename
 import tarfile
