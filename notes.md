@@ -1,3 +1,26 @@
+# Dec 17
+
+## pin inodes to cache
+
+`locate ~/data/imagenet/train/`
+
+## control memory usage
+
+https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process
+
+## control inode cache
+
+https://serverfault.com/questions/338097/tuning-linux-cache-settings-for-inode-caching
+
+
+# drop caches
+
+https://unix.stackexchange.com/questions/17936/setting-proc-sys-vm-drop-caches-to-clear-cache
+
+basically, if we want to drop all, we do: `sync; echo 3 > /proc/sys/vm/drop_caches`
+
+if we want to keep directories and inodes cache, we do: `sync; echo 1 > /proc/sys/vm/drop_caches`
+
 # Nov 28
 
 ### data size
