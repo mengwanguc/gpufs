@@ -19,7 +19,7 @@
 
 
 #define NUM_FILES 1281167
-#define NUM_READS 10000
+#define NUM_READS 100000
 
 
 typedef struct sample {

@@ -13,7 +13,8 @@
 
 
 #define NUM_FILES 1281167
-#define NUM_READS 10000
+#define NUM_READS 100000
+#define BATCH_SIZE 10000
 
 long open_time = 0;
 long read_time = 0;
@@ -29,6 +30,8 @@ int count;
 
 char filepaths[NUM_FILES][100];
 Sample samples[NUM_READS];
+
+int next_batch = 0;
 
 
 int cmp_by_index_func (const void * a, const void * b) {
@@ -58,11 +61,11 @@ void *thread_read(void *param)
     long start, end, time_spent;
 
 
-    while (cur < NUM_READS) {
+    while (cur < next_batch) {
         pthread_mutex_lock(&count_mutex);
         cur = count++;
         pthread_mutex_unlock(&count_mutex);
-        if (cur >= NUM_READS) {
+        if (cur >= next_batch) {
             break;
         }
 
@@ -83,7 +86,7 @@ void *thread_read(void *param)
 
             long fsize = lseek(f, 0, SEEK_END);
             lseek(f, 0, SEEK_SET);  /* same as rewind(f); */
-            int ret = read(f, string, fsize);
+            // int ret = read(f, string, fsize);
 
             gettimeofday(&end_tv, NULL);
             start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
@@ -104,7 +107,7 @@ void *thread_read(void *param)
 
 
 int main(int argc, char *argv[]) {
-    int i, j;
+    int i, j, k;
     FILE *fpaths;
     char fsamples_name[100];
     FILE *fsamples;
@@ -192,39 +195,43 @@ int main(int argc, char *argv[]) {
 
 
 
-    for (j = 0; j < 1; j++) {
+    for (j = 0; j < 2; j++) {
+        for (k = 0; k < NUM_READS; k += BATCH_SIZE) {
+            count = k;
+            next_batch = k + BATCH_SIZE;
 
-        int num_threads = atoi(argv[2]);
-        pthread_t *tid_array = malloc(num_threads * sizeof(pthread_t));
+            int num_threads = atoi(argv[2]);
+            pthread_t *tid_array = malloc(num_threads * sizeof(pthread_t));
 
-        // create all threads
-        gettimeofday(&start_tv, NULL);
+            // create all threads
+            gettimeofday(&start_tv, NULL);
 
-        count = 0;
-        open_time = 0;
-        read_time = 0;
+            count = 0;
+            open_time = 0;
+            read_time = 0;
 
-        for(i = 0; i < num_threads; i++)
-        {
-        pthread_create(&tid_array[i], NULL, thread_read, NULL);
+            for(i = 0; i < num_threads; i++)
+            {
+            pthread_create(&tid_array[i], NULL, thread_read, NULL);
+            }
+
+            for(i = 0; i < num_threads; i++)
+            {
+                pthread_join(tid_array[i], NULL);
+            }
+
+            gettimeofday(&end_tv, NULL);
+            start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
+            end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
+            time_spent = (end - start);
+
+            printf("%ld\n", time_spent);
+
+            printf("open time:%ld\n", open_time);
+            printf("read time:%ld\n", read_time);
+
+            free(tid_array);
         }
-
-        for(i = 0; i < num_threads; i++)
-        {
-            pthread_join(tid_array[i], NULL);
-        }
-
-        gettimeofday(&end_tv, NULL);
-        start = start_tv.tv_sec * 1000000 + start_tv.tv_usec;
-        end = end_tv.tv_sec * 1000000 + end_tv.tv_usec;
-        time_spent = (end - start);
-
-        printf("%ld\n", time_spent);
-
-        printf("open time:%ld\n", open_time);
-        printf("read time:%ld\n", read_time);
-
-        free(tid_array);
     }
 
     return 0;
