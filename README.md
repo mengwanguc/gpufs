@@ -27,7 +27,9 @@ After installation, log out and log in bash again.
 
 4. Install packages required for builing pytorch
 
-**Note: the commands below assumes you have cuda 10.2 installed on your machine. If you have other cuda versions, please use the magma-cuda\* that matches your CUDA version from** https://anaconda.org/pytorch/repo
+**Note: the commands below assumes you have cuda 10.2 installed on your machine. If you have other cuda versions, please use the magma-cuda\* that matches your CUDA version from** https://anaconda.org/pytorch/repo.
+
+For example, if your cuda version is 11.2 (check it by running nvidia-smi), then the command should be `conda install -y -c pytorch magma-cuda112`
 
 ```
 conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses
