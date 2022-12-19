@@ -150,7 +150,11 @@ This will group the training data into groups of size 4, and stored in `~/data/t
 
 example:
 
-`python main-group-accuracy.py ~/data/test-accuracy/mytar/train/4/ ~/data/test-accuracy/imagenette2/val/ --img_per_tar 4`
+
+```
+cd ~/gpufs/exp
+python main-group-accuracy.py ~/data/test-accuracy/mytar/train/4/ ~/data/test-accuracy/imagenette2/val/ --img_per_tar 4
+```
 
 Usage:
 
