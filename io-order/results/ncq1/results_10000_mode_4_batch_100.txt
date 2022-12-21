@@ -1,0 +1,302 @@
+sort time: 1429
+j:0 k:0 time:2035962
+open time:45707313
+read time:12185036
+j:0 k:100 time:1959582
+open time:43445460
+read time:12151120
+j:0 k:200 time:1979556
+open time:38796238
+read time:12793973
+j:0 k:300 time:1900941
+open time:44042845
+read time:9348673
+j:0 k:400 time:2171846
+open time:43136826
+read time:17365938
+j:0 k:500 time:1534813
+open time:31556419
+read time:9866301
+j:0 k:600 time:1565907
+open time:30956761
+read time:12650428
+j:0 k:700 time:1796758
+open time:36913072
+read time:15763129
+j:0 k:800 time:1455296
+open time:25570322
+read time:14506615
+j:0 k:900 time:1312064
+open time:24651024
+read time:11297977
+j:0 k:1000 time:1510480
+open time:24719068
+read time:9879622
+j:0 k:1100 time:1089560
+open time:21413123
+read time:8439156
+j:0 k:1200 time:1112522
+open time:20788566
+read time:9510459
+j:0 k:1300 time:1120771
+open time:17542318
+read time:13130865
+j:0 k:1400 time:1181440
+open time:21937144
+read time:11184197
+j:0 k:1500 time:1275664
+open time:20164864
+read time:16164850
+j:0 k:1600 time:977640
+open time:16908841
+read time:9536449
+j:0 k:1700 time:1067735
+open time:20219222
+read time:8365081
+j:0 k:1800 time:966570
+open time:14951586
+read time:10246040
+j:0 k:1900 time:962494
+open time:14187323
+read time:11029760
+j:0 k:2000 time:1109609
+open time:14751292
+read time:14668447
+j:0 k:2100 time:1090620
+open time:18749474
+read time:9501638
+j:0 k:2200 time:853824
+open time:12848705
+read time:8993088
+j:0 k:2300 time:835701
+open time:13153134
+read time:9727688
+j:0 k:2400 time:898879
+open time:13848914
+read time:9288322
+j:0 k:2500 time:1315238
+open time:19595195
+read time:16554609
+j:0 k:2600 time:897381
+open time:12523037
+read time:11227151
+j:0 k:2700 time:864412
+open time:11216992
+read time:12251778
+j:0 k:2800 time:858129
+open time:11171165
+read time:11415245
+j:0 k:2900 time:817702
+open time:11238021
+read time:10480819
+j:0 k:3000 time:903878
+open time:10806543
+read time:11841673
+j:0 k:3100 time:869389
+open time:12957162
+read time:10459662
+j:0 k:3200 time:850531
+open time:9875457
+read time:12160626
+j:0 k:3300 time:766964
+open time:9719237
+read time:10823089
+j:0 k:3400 time:769627
+open time:11826775
+read time:7970180
+j:0 k:3500 time:811536
+open time:9408286
+read time:10081876
+j:0 k:3600 time:911190
+open time:10083518
+read time:12828637
+j:0 k:3700 time:841820
+open time:10525059
+read time:11742544
+j:0 k:3800 time:795680
+open time:8632597
+read time:11010315
+j:0 k:3900 time:733643
+open time:9179621
+read time:9997361
+j:0 k:4000 time:757285
+open time:10570282
+read time:9356695
+j:0 k:4100 time:843702
+open time:10359389
+read time:11077420
+j:0 k:4200 time:1114674
+open time:10327459
+read time:12106764
+j:0 k:4300 time:780773
+open time:7845911
+read time:12725821
+j:0 k:4400 time:812137
+open time:10135186
+read time:10942810
+j:0 k:4500 time:672635
+open time:8202314
+read time:9037746
+j:0 k:4600 time:790558
+open time:7766683
+read time:13135323
+j:0 k:4700 time:770132
+open time:7583283
+read time:11864314
+j:0 k:4800 time:730743
+open time:8926874
+read time:10287711
+j:0 k:4900 time:957707
+open time:12674343
+read time:12798696
+j:0 k:5000 time:671024
+open time:8441816
+read time:9186045
+j:0 k:5100 time:735688
+open time:9573797
+read time:9156264
+j:0 k:5200 time:652674
+open time:7266102
+read time:10263221
+j:0 k:5300 time:815942
+open time:9990908
+read time:10986877
+j:0 k:5400 time:666691
+open time:6923752
+read time:10329279
+j:0 k:5500 time:831097
+open time:5713534
+read time:13373354
+j:0 k:5600 time:719085
+open time:7713485
+read time:10431425
+j:0 k:5700 time:754511
+open time:9233770
+read time:9597520
+j:0 k:5800 time:746671
+open time:6136102
+read time:12938596
+j:0 k:5900 time:711956
+open time:7241534
+read time:11570361
+j:0 k:6000 time:671492
+open time:7101110
+read time:10603967
+j:0 k:6100 time:703866
+open time:6800632
+read time:11098887
+j:0 k:6200 time:1062977
+open time:14920251
+read time:15819270
+j:0 k:6300 time:739757
+open time:10873714
+read time:8339416
+j:0 k:6400 time:725074
+open time:8054469
+read time:10313721
+j:0 k:6500 time:689611
+open time:5648028
+read time:11966380
+j:0 k:6600 time:649862
+open time:7523680
+read time:9424516
+j:0 k:6700 time:669207
+open time:7239462
+read time:9990827
+j:0 k:6800 time:699171
+open time:7355236
+read time:10841718
+j:0 k:6900 time:775288
+open time:7696778
+read time:13629805
+j:0 k:7000 time:711484
+open time:8204830
+read time:9294762
+j:0 k:7100 time:678017
+open time:7245938
+read time:10624149
+j:0 k:7200 time:703102
+open time:6314984
+read time:11968382
+j:0 k:7300 time:728434
+open time:6612874
+read time:10528894
+j:0 k:7400 time:695242
+open time:7588275
+read time:10472035
+j:0 k:7500 time:731515
+open time:6326356
+read time:12357185
+j:0 k:7600 time:988043
+open time:9893938
+read time:17297109
+j:0 k:7700 time:625264
+open time:5339585
+read time:11188713
+j:0 k:7800 time:666706
+open time:6642362
+read time:11093898
+j:0 k:7900 time:641856
+open time:6614687
+read time:9194205
+j:0 k:8000 time:611512
+open time:5971481
+read time:10141627
+j:0 k:8100 time:641826
+open time:5124644
+read time:11398421
+j:0 k:8200 time:654687
+open time:7101397
+read time:9453400
+j:0 k:8300 time:759900
+open time:8580229
+read time:11684188
+j:0 k:8400 time:610067
+open time:7900880
+read time:7652937
+j:0 k:8500 time:585405
+open time:7280406
+read time:8298744
+j:0 k:8600 time:661851
+open time:4932663
+read time:11938114
+j:0 k:8700 time:610913
+open time:6647233
+read time:8648651
+j:0 k:8800 time:574011
+open time:4596640
+read time:10226375
+j:0 k:8900 time:649198
+open time:6604070
+read time:9905272
+j:0 k:9000 time:656521
+open time:4498252
+read time:12277892
+j:0 k:9100 time:899682
+open time:7448245
+read time:17352565
+j:0 k:9200 time:562115
+open time:4087972
+read time:10847271
+j:0 k:9300 time:621693
+open time:5063469
+read time:11199528
+j:0 k:9400 time:546290
+open time:4027419
+read time:10546301
+j:0 k:9500 time:613838
+open time:6389159
+read time:9073535
+j:0 k:9600 time:592442
+open time:5064082
+read time:9402350
+j:0 k:9700 time:666453
+open time:6224598
+read time:11027719
+j:0 k:9800 time:565698
+open time:3997668
+read time:10812248
+j:0 k:9900 time:780137
+open time:6302177
+read time:15255195
+total time: 89729246

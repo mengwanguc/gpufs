@@ -1,0 +1,601 @@
+sort time: 2954
+j:0 k:0 time:500251
+open time:8851310
+read time:4607369
+j:0 k:100 time:663539
+open time:10904688
+read time:6303230
+j:0 k:200 time:553524
+open time:10435819
+read time:4658227
+j:0 k:300 time:578641
+open time:12033900
+read time:4184756
+j:0 k:400 time:815788
+open time:14469878
+read time:7822874
+j:0 k:500 time:525420
+open time:9124418
+read time:4730297
+j:0 k:600 time:430462
+open time:7129196
+read time:4382245
+j:0 k:700 time:759509
+open time:15406751
+read time:4906707
+j:0 k:800 time:592371
+open time:10704956
+read time:4809798
+j:0 k:900 time:681989
+open time:13303008
+read time:4944267
+j:0 k:1000 time:541932
+open time:9226802
+read time:4775966
+j:0 k:1100 time:560688
+open time:9926034
+read time:5099938
+j:0 k:1200 time:735527
+open time:10048417
+read time:6088607
+j:0 k:1300 time:583277
+open time:10422507
+read time:4851928
+j:0 k:1400 time:726458
+open time:14280708
+read time:5240560
+j:0 k:1500 time:638410
+open time:10559611
+read time:6223827
+j:0 k:1600 time:544582
+open time:7715301
+read time:5382265
+j:0 k:1700 time:549621
+open time:10489968
+read time:4519190
+j:0 k:1800 time:582578
+open time:9759459
+read time:5136146
+j:0 k:1900 time:538950
+open time:9951477
+read time:4447345
+j:0 k:2000 time:639748
+open time:10915013
+read time:6051905
+j:0 k:2100 time:859122
+open time:17020160
+read time:7920819
+j:0 k:2200 time:535395
+open time:7876180
+read time:5668116
+j:0 k:2300 time:647579
+open time:13240699
+read time:3748671
+j:0 k:2400 time:644022
+open time:11101799
+read time:5728340
+j:0 k:2500 time:549820
+open time:10391759
+read time:4459919
+j:0 k:2600 time:642422
+open time:12422402
+read time:4562366
+j:0 k:2700 time:532711
+open time:8040538
+read time:5815757
+j:0 k:2800 time:594658
+open time:11757311
+read time:4549917
+j:0 k:2900 time:862146
+open time:19016735
+read time:5473934
+j:0 k:3000 time:437134
+open time:4820541
+read time:6681091
+j:0 k:3100 time:510833
+open time:8402005
+read time:5759038
+j:0 k:3200 time:645669
+open time:11057109
+read time:6579710
+j:0 k:3300 time:546674
+open time:8203781
+read time:6034348
+j:0 k:3400 time:688390
+open time:10659180
+read time:5711529
+j:0 k:3500 time:501769
+open time:7377785
+read time:5405692
+j:0 k:3600 time:578235
+open time:10316444
+read time:4266194
+j:0 k:3700 time:959446
+open time:18822897
+read time:8262286
+j:0 k:3800 time:523815
+open time:9045942
+read time:5375470
+j:0 k:3900 time:550997
+open time:10428293
+read time:3985666
+j:0 k:4000 time:654959
+open time:12228692
+read time:4990357
+j:0 k:4100 time:519080
+open time:8680680
+read time:4603575
+j:0 k:4200 time:525280
+open time:9312800
+read time:4003131
+j:0 k:4300 time:548115
+open time:10354215
+read time:4470479
+j:0 k:4400 time:548725
+open time:9366972
+read time:5414257
+j:0 k:4500 time:621146
+open time:9413046
+read time:5386285
+j:0 k:4600 time:500006
+open time:9423056
+read time:3873003
+j:0 k:4700 time:493157
+open time:7138314
+read time:5669303
+j:0 k:4800 time:606386
+open time:13286953
+read time:3581398
+j:0 k:4900 time:524315
+open time:9355920
+read time:4682258
+j:0 k:5000 time:622958
+open time:12600936
+read time:4051112
+j:0 k:5100 time:698588
+open time:10290621
+read time:6276245
+j:0 k:5200 time:603648
+open time:9592550
+read time:5612170
+j:0 k:5300 time:583194
+open time:8919599
+read time:5690992
+j:0 k:5400 time:979006
+open time:20807578
+read time:6966885
+j:0 k:5500 time:579618
+open time:11010878
+read time:3868990
+j:0 k:5600 time:601093
+open time:11037029
+read time:4506642
+j:0 k:5700 time:628769
+open time:13106908
+read time:3478268
+j:0 k:5800 time:537631
+open time:9427693
+read time:5275041
+j:0 k:5900 time:530024
+open time:7993095
+read time:6013933
+j:0 k:6000 time:541140
+open time:8167464
+read time:5855183
+j:0 k:6100 time:577920
+open time:9637453
+read time:5364526
+j:0 k:6200 time:567974
+open time:10436628
+read time:4458163
+j:0 k:6300 time:555447
+open time:10459179
+read time:4742607
+j:0 k:6400 time:498716
+open time:7512363
+read time:5427020
+j:0 k:6500 time:508024
+open time:9848053
+read time:4154117
+j:0 k:6600 time:574455
+open time:10114755
+read time:4959641
+j:0 k:6700 time:651977
+open time:10618268
+read time:5757743
+j:0 k:6800 time:661138
+open time:12561325
+read time:4755740
+j:0 k:6900 time:696745
+open time:12486556
+read time:4910198
+j:0 k:7000 time:866167
+open time:8354870
+read time:7237184
+j:0 k:7100 time:704430
+open time:14314818
+read time:4387138
+j:0 k:7200 time:608637
+open time:11284805
+read time:6122655
+j:0 k:7300 time:554087
+open time:9155818
+read time:5140622
+j:0 k:7400 time:434306
+open time:5712592
+read time:5250828
+j:0 k:7500 time:541335
+open time:10331380
+read time:4610549
+j:0 k:7600 time:616130
+open time:10544736
+read time:5269648
+j:0 k:7700 time:585535
+open time:10870146
+read time:4805090
+j:0 k:7800 time:890645
+open time:12276010
+read time:4425080
+j:0 k:7900 time:601407
+open time:11892954
+read time:4491506
+j:0 k:8000 time:722538
+open time:14113987
+read time:5599954
+j:0 k:8100 time:552489
+open time:9051148
+read time:4989300
+j:0 k:8200 time:537462
+open time:8961539
+read time:5456058
+j:0 k:8300 time:508337
+open time:7775371
+read time:5361422
+j:0 k:8400 time:685522
+open time:13058028
+read time:4571464
+j:0 k:8500 time:518394
+open time:9519564
+read time:4914661
+j:0 k:8600 time:756970
+open time:12927615
+read time:4833561
+j:0 k:8700 time:516043
+open time:7848030
+read time:5925749
+j:0 k:8800 time:609664
+open time:12930607
+read time:3986872
+j:0 k:8900 time:656872
+open time:12835479
+read time:3606407
+j:0 k:9000 time:561659
+open time:9585089
+read time:5448134
+j:0 k:9100 time:586840
+open time:9445911
+read time:6156681
+j:0 k:9200 time:591343
+open time:10593042
+read time:5057998
+j:0 k:9300 time:596682
+open time:9881841
+read time:4986237
+j:0 k:9400 time:551891
+open time:9812855
+read time:5211366
+j:0 k:9500 time:619440
+open time:11367250
+read time:6182752
+j:0 k:9600 time:556770
+open time:8217926
+read time:5648689
+j:0 k:9700 time:570924
+open time:9788092
+read time:5261975
+j:0 k:9800 time:702316
+open time:15005849
+read time:4416480
+j:0 k:9900 time:601936
+open time:11554308
+read time:4708464
+j:1 k:0 time:3718
+open time:764
+read time:14651
+j:1 k:100 time:2760
+open time:733
+read time:18976
+j:1 k:200 time:3294
+open time:700
+read time:25755
+j:1 k:300 time:2399
+open time:659
+read time:12372
+j:1 k:400 time:3099
+open time:927
+read time:17898
+j:1 k:500 time:5369
+open time:840
+read time:14096
+j:1 k:600 time:2359
+open time:752
+read time:10125
+j:1 k:700 time:5146
+open time:730
+read time:20621
+j:1 k:800 time:2338
+open time:682
+read time:12183
+j:1 k:900 time:2366
+open time:692
+read time:14970
+j:1 k:1000 time:4502
+open time:711
+read time:14488
+j:1 k:1100 time:2118
+open time:757
+read time:10808
+j:1 k:1200 time:3179
+open time:709
+read time:16495
+j:1 k:1300 time:2201
+open time:751
+read time:21230
+j:1 k:1400 time:2155
+open time:694
+read time:9067
+j:1 k:1500 time:2983
+open time:681
+read time:13094
+j:1 k:1600 time:2292
+open time:601
+read time:12774
+j:1 k:1700 time:2347
+open time:769
+read time:14474
+j:1 k:1800 time:2638
+open time:759
+read time:16762
+j:1 k:1900 time:2185
+open time:578
+read time:11649
+j:1 k:2000 time:2901
+open time:691
+read time:19359
+j:1 k:2100 time:1930
+open time:608
+read time:9965
+j:1 k:2200 time:2591
+open time:713
+read time:15669
+j:1 k:2300 time:2042
+open time:581
+read time:9257
+j:1 k:2400 time:2387
+open time:636
+read time:13408
+j:1 k:2500 time:2105
+open time:684
+read time:12164
+j:1 k:2600 time:1970
+open time:623
+read time:10852
+j:1 k:2700 time:3210
+open time:705
+read time:17184
+j:1 k:2800 time:2087
+open time:652
+read time:11303
+j:1 k:2900 time:3800
+open time:598
+read time:13024
+j:1 k:3000 time:2174
+open time:694
+read time:14313
+j:1 k:3100 time:2220
+open time:579
+read time:9766
+j:1 k:3200 time:2275
+open time:682
+read time:10305
+j:1 k:3300 time:2129
+open time:715
+read time:11732
+j:1 k:3400 time:3543
+open time:629
+read time:16732
+j:1 k:3500 time:2225
+open time:782
+read time:13621
+j:1 k:3600 time:2126
+open time:658
+read time:16055
+j:1 k:3700 time:3011
+open time:709
+read time:29962
+j:1 k:3800 time:3082
+open time:712
+read time:13850
+j:1 k:3900 time:2086
+open time:765
+read time:16869
+j:1 k:4000 time:2345
+open time:714
+read time:12271
+j:1 k:4100 time:2284
+open time:691
+read time:13477
+j:1 k:4200 time:2174
+open time:578
+read time:10352
+j:1 k:4300 time:2060
+open time:621
+read time:10755
+j:1 k:4400 time:2274
+open time:757
+read time:25961
+j:1 k:4500 time:2239
+open time:659
+read time:18442
+j:1 k:4600 time:2098
+open time:661
+read time:10837
+j:1 k:4700 time:1852
+open time:568
+read time:8192
+j:1 k:4800 time:2176
+open time:731
+read time:12874
+j:1 k:4900 time:1624
+open time:590
+read time:7538
+j:1 k:5000 time:2005
+open time:579
+read time:11231
+j:1 k:5100 time:3000
+open time:604
+read time:18509
+j:1 k:5200 time:4288
+open time:726
+read time:29013
+j:1 k:5300 time:1871
+open time:627
+read time:7960
+j:1 k:5400 time:2066
+open time:661
+read time:9590
+j:1 k:5500 time:1917
+open time:700
+read time:8871
+j:1 k:5600 time:2370
+open time:745
+read time:17961
+j:1 k:5700 time:2211
+open time:836
+read time:16174
+j:1 k:5800 time:2048
+open time:731
+read time:11980
+j:1 k:5900 time:1970
+open time:715
+read time:12936
+j:1 k:6000 time:1928
+open time:785
+read time:12356
+j:1 k:6100 time:1805
+open time:719
+read time:8570
+j:1 k:6200 time:2419
+open time:566
+read time:11967
+j:1 k:6300 time:2492
+open time:524
+read time:11402
+j:1 k:6400 time:2096
+open time:625
+read time:12059
+j:1 k:6500 time:1717
+open time:573
+read time:9932
+j:1 k:6600 time:2676
+open time:651
+read time:14238
+j:1 k:6700 time:2060
+open time:592
+read time:12513
+j:1 k:6800 time:1861
+open time:741
+read time:10131
+j:1 k:6900 time:2012
+open time:688
+read time:11067
+j:1 k:7000 time:1689
+open time:599
+read time:9423
+j:1 k:7100 time:2866
+open time:668
+read time:14979
+j:1 k:7200 time:2244
+open time:710
+read time:14026
+j:1 k:7300 time:2228
+open time:722
+read time:12999
+j:1 k:7400 time:1900
+open time:605
+read time:7540
+j:1 k:7500 time:3567
+open time:741
+read time:16302
+j:1 k:7600 time:2729
+open time:717
+read time:17746
+j:1 k:7700 time:2050
+open time:676
+read time:13899
+j:1 k:7800 time:2315
+open time:677
+read time:12420
+j:1 k:7900 time:1792
+open time:659
+read time:9057
+j:1 k:8000 time:2177
+open time:727
+read time:13422
+j:1 k:8100 time:2177
+open time:689
+read time:11136
+j:1 k:8200 time:6117
+open time:780
+read time:23232
+j:1 k:8300 time:2382
+open time:709
+read time:11307
+j:1 k:8400 time:3837
+open time:757
+read time:27681
+j:1 k:8500 time:3551
+open time:766
+read time:15751
+j:1 k:8600 time:3705
+open time:717
+read time:11250
+j:1 k:8700 time:2661
+open time:776
+read time:16154
+j:1 k:8800 time:5127
+open time:801
+read time:18812
+j:1 k:8900 time:2233
+open time:735
+read time:15939
+j:1 k:9000 time:2183
+open time:755
+read time:13518
+j:1 k:9100 time:2397
+open time:769
+read time:14497
+j:1 k:9200 time:2553
+open time:801
+read time:16565
+j:1 k:9300 time:2151
+open time:669
+read time:8326
+j:1 k:9400 time:2398
+open time:731
+read time:12024
+j:1 k:9500 time:2219
+open time:709
+read time:12609
+j:1 k:9600 time:3440
+open time:820
+read time:15923
+j:1 k:9700 time:2188
+open time:743
+read time:15816
+j:1 k:9800 time:1928
+open time:597
+read time:8252
+j:1 k:9900 time:2329
+open time:703
+read time:11814

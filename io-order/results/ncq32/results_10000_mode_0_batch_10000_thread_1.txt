@@ -1,0 +1,5 @@
+sort time: 1
+j:0 k:0 time:143444562
+open time:134652
+read time:143251672
+total time: 143444562

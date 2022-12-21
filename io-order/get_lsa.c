@@ -19,7 +19,7 @@
 
 
 #define NUM_FILES 1281167
-#define NUM_READS 100000
+#define NUM_READS 10000
 
 
 typedef struct sample {
@@ -131,9 +131,9 @@ int main(int argc, char *argv[]) {
     // printf("%s\n", filepaths[NUM_FILES-1]);
 
     // sampling
-    snprintf(fsamples_name, 100, "samples_%d.txt", NUM_READS);
+    snprintf(fsamples_name, 100, "samples/samples_%d.txt", NUM_READS);
     fsamples = fopen(fsamples_name, "r");
-    snprintf(fsamples_inodes_lba_name, 100, "samples_inodes_lba_%d.txt", NUM_READS);
+    snprintf(fsamples_inodes_lba_name, 100, "samples/samples_inodes_lba_%d.txt", NUM_READS);
     fsamples_inodes_lba = fopen(fsamples_inodes_lba_name, "w");
     
     i = 0;
@@ -175,6 +175,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (i = 0; i < NUM_READS; i++) {
+        printf("%s\n", fsamples_inodes_lba_name);
         fprintf(fsamples_inodes_lba, "%d %u %llu\n", 
                 samples[i].index, samples[i].inode, samples[i].start_physical);
     }

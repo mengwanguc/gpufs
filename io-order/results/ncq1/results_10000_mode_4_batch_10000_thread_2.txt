@@ -1,0 +1,5 @@
+sort time: 3837
+j:0 k:0 time:64503420
+open time:114810
+read time:128826414
+total time: 64503420

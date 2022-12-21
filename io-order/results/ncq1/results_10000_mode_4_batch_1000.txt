@@ -1,0 +1,32 @@
+sort time: 3605
+j:0 k:0 time:12029930
+open time:284632613
+read time:96048320
+j:0 k:1000 time:8917196
+open time:183786059
+read time:95643258
+j:0 k:2000 time:7173535
+open time:125800506
+read time:99835972
+j:0 k:3000 time:6387118
+open time:90859711
+read time:109051918
+j:0 k:4000 time:6007972
+open time:86565446
+read time:100940475
+j:0 k:5000 time:6831740
+open time:91549261
+read time:123241517
+j:0 k:6000 time:5637171
+open time:65997485
+read time:110180420
+j:0 k:7000 time:5568683
+open time:59541587
+read time:113867602
+j:0 k:8000 time:5307861
+open time:58375495
+read time:107379159
+j:0 k:9000 time:5128069
+open time:45564527
+read time:111737990
+total time: 68989275
