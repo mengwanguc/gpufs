@@ -1,3 +1,11 @@
+# Dec 18
+
+## check inode cache usage:
+
+`sudo slabtop --once`
+
+https://serverfault.com/questions/561350/unusually-high-dentry-cache-usage
+
 # Dec 17
 
 ## pin inodes to cache
