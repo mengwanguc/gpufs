@@ -102,4 +102,5 @@ instances = make_dataset(train_folder, class_to_idx, IMG_EXTENSIONS, None)
 
 with open(sys.argv[2], 'w') as f:
     for path, target_class in instances:
-        f.write('{}\n'.format(path))
+        file_size = os.path.getsize(path)
+        f.write('{} {}\n'.format(path, file_size))
