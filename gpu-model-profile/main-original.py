@@ -290,13 +290,17 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
-
+        
+        start = time.time()
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
+        end = (time.time() - start)
 
+        print("the time for data transfer from cpu to gpu is :", end-start)
         # compute output
+        start_2 = time.time()
         output = model(images)
         loss = criterion(output, target)
 
@@ -310,6 +314,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        end_2 = time.time()
+        print("the gpu compute time is :", end_2-start_2)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
