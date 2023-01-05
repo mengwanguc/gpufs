@@ -291,14 +291,20 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure data loading time
         data_time.update(time.time() - end)
         
+        if i == 100 :
+            break
         start = time.time()
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
-        end = (time.time() - start)
-
-        print("the time for data transfer from cpu to gpu is :", end-start)
+        end = time.time()
+        
+        total_time = end - start
+        print("the time for data transfer from cpu to gpu is :", total_time)
+        total_batch_time = 0 + total_time
+        average = total_batch_time / 100
+        print("Average Data Transfer time is :", average)
         # compute output
         start_2 = time.time()
         output = model(images)
