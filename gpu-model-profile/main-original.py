@@ -290,7 +290,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
-        
+        print("iteration",i)
         if i == 100 :
             break
         start = time.time()
