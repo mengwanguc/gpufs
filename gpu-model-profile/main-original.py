@@ -301,6 +301,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end = time.time()
         
         total_time = end - start
+        
         print("the time for data transfer from cpu to gpu is :", total_time)
         total_batch_time = 0 + total_time
         average = total_batch_time / 100
