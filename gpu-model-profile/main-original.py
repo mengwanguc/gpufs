@@ -291,7 +291,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure data loading time
         data_time.update(time.time() - end)
         print("iteration",i)
-        if i == 100 :
+        if i == 106 :
             break
         start = time.time()
         if args.gpu is not None:
@@ -301,11 +301,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end = time.time()
         
         total_time = end - start
-        
-        print("the time for data transfer from cpu to gpu is :", total_time)
+        if i >= 5 :
+            print("the time for data transfer from cpu to gpu is :", total_time)
         total_batch_time = 0 + total_time
-        average = total_batch_time / 100
-        print("Average Data Transfer time is :", average)
+        
         # compute output
         start_2 = time.time()
         output = model(images)
@@ -322,6 +321,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         loss.backward()
         optimizer.step()
         end_2 = time.time()
+        
+        if i >= 5 :
         print("the gpu compute time is :", end_2-start_2)
 
         # measure elapsed time
@@ -330,6 +331,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
+            
+    average = total_batch_time / 100
+    print("Average Data Transfer time is :", average)
 
 
 def validate(val_loader, model, criterion, args):
