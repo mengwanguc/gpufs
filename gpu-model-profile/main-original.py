@@ -287,12 +287,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
-    total_gpu_time = 0
     total_batch_time = 0
+    total_gpu_time = 0
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
-        print("iteration",i)
+        print("Batch ",i)
         if i == 106 :
             break
         start = time.time()
@@ -308,7 +308,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             total_batch_time += total_time
         
         # compute output
-        start_2 = time.time()
+        if i >= 6 :
+            start_2 = time.time()
         output = model(images)
         loss = criterion(output, target)
 
@@ -322,7 +323,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        end_2 = time.time()
+        if i >= 6 :
+            end_2 = time.time()
         
         total_time_2 = end_2 - start_2
         if i >= 6 :
