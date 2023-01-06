@@ -338,7 +338,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     average1 = total_batch_time / 100
     average2 = total_gpu_time / 100
     print("Average Data Transfer time is :", average1)
-    print("Average GPU Time is :",total_gpu_time)
+    print("Average GPU Time is :",average2)
 
 
 def validate(val_loader, model, criterion, args):
