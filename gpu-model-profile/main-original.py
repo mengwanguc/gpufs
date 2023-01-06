@@ -287,6 +287,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
+    total_gpu_time = 0
     total_batch_time = 0
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
@@ -324,14 +325,18 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end_2 = time.time()
         
         if i >= 5 :
-            print("the gpu compute time is :", end_2-start_2)
+            total_time_2 = end_2 - start_2
+            print("the gpu compute time is :", total_time_2)
+            total_gpu_time += total_time_2
 
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
 
-    average = total_batch_time / 100
-    print("Average Data Transfer time is :", average)
+    average1 = total_batch_time / 100
+    average2 = total_gpu_time / 100
+    print("Average Data Transfer time is :", average1)
+    print("Average GPU Time is :",total_gpu_time)
 
 
 def validate(val_loader, model, criterion, args):
