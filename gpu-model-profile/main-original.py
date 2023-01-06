@@ -325,8 +325,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.step()
         if i >= 6 :
             end_2 = time.time()
+            total_time_2 = end_2 - start_2
         
-        total_time_2 = end_2 - start_2
         if i >= 6 :
             print("the gpu compute time is :", total_time_2)
             total_gpu_time += total_time_2
