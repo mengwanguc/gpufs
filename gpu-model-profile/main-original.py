@@ -301,7 +301,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end = time.time()
         
         total_time = end - start
-        if i >= 5 :
+        if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
         total_batch_time = 0 + total_time
         
