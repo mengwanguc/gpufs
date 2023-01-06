@@ -323,7 +323,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end_2 = time.time()
         
         if i >= 5 :
-        print("the gpu compute time is :", end_2-start_2)
+            print("the gpu compute time is :", end_2-start_2)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
