@@ -287,6 +287,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
+    total_batch_time = 0
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
@@ -303,7 +304,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_time = end - start
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
-        total_batch_time = 0 + total_time
+            total_batch_time += total_time
         
         # compute output
         start_2 = time.time()
@@ -329,9 +330,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         batch_time.update(time.time() - end)
         end = time.time()
 
-        if i % args.print_freq == 0:
-            progress.display(i)
-            
     average = total_batch_time / 100
     print("Average Data Transfer time is :", average)
 
