@@ -287,16 +287,29 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
+    total_batch_time = 0
+    total_gpu_time = 0
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
-
+        print("Batch ",i)
+        if i == 106 :
+            break
+        start = time.time()
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
-
+        end = time.time()
+        
+        total_time = end - start
+        if i >= 6 :
+            print("the time for data transfer from cpu to gpu is :", total_time)
+            total_batch_time += total_time
+        
         # compute output
+        if i >= 6 :
+            start_2 = time.time()
         output = model(images)
         loss = criterion(output, target)
 
@@ -310,13 +323,22 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        if i >= 6 :
+            end_2 = time.time()
+            total_time_2 = end_2 - start_2
+        
+        if i >= 6 :
+            print("the gpu compute time is :", total_time_2)
+            total_gpu_time += total_time_2
 
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
 
-        if i % args.print_freq == 0:
-            progress.display(i)
+    average1 = total_batch_time / 100
+    average2 = total_gpu_time / 100
+    print("Average Data Transfer time is :", average1)
+    print("Average GPU Time is :",average2)
 
 
 def validate(val_loader, model, criterion, args):
