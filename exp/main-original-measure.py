@@ -79,7 +79,6 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
 
 best_acc1 = 0
 
-
 def main():
     args = parser.parse_args()
 
@@ -271,8 +270,14 @@ def main_worker(gpu, ngpus_per_node, args):
                 'scheduler' : scheduler.state_dict()
             }, is_best)
 
+io_time = 0
+load_time = 0
+model_time = 0
 
 def train(train_loader, model, criterion, optimizer, epoch, args):
+    global io_time
+    global load_time
+    global model_time
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -287,15 +292,23 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
+    current_time = time.time()
+    print("current_time------------------: ", current_time)
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
+        #io_time += (time.time() - end)
+        print("io_time: ",time.time()-current_time)
 
+        #now = time.time()
         if args.gpu is not None:
-            images = images.cuda(args.gpu, non_blocking=True)
+            images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
-            target = target.cuda(args.gpu, non_blocking=True)
+            target = target.cuda(args.gpu, non_blocking=False)
+        #load_time = (time.time() - now)
+        print("load_time: ",time.time()-current_time)
 
+        #nowr = time.time()
         # compute output
         output = model(images)
         loss = criterion(output, target)
@@ -310,6 +323,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        #model_time = (time.time() - nowr)
+        print("model_time: ",time.time()-current_time)
+        print("-----------------------------------------")
 
         # measure elapsed time
         batch_time.update(time.time() - end)
@@ -317,6 +333,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
+
+    #print('io_time: ', io_time,'load_time: ',load_time, 'model_time: ',model_time)
 
 
 def validate(val_loader, model, criterion, args):
