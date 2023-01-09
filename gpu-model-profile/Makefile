@@ -45,4 +45,4 @@ batch128:
 
 run: batch64 batch128
 
-.PHONY: run
+.PHONY: run batch64 batch128
