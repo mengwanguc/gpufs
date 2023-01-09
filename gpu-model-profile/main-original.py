@@ -115,15 +115,12 @@ def main():
         main_worker(args.gpu, ngpus_per_node, args)
 
 
-def main_worker(gpu, batch-size, ngpus_per_node, args):
+def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
     args.gpu = gpu
-    args.batch_size = batch-size
 
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
-    if args.batch_size is not None:
-        print("Use Batch Size: {} for training".format(args.batch_size))
     
     if args.distributed:
         if args.dist_url == "env://" and args.rank == -1:
