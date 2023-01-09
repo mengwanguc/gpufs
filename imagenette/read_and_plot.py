@@ -8,8 +8,9 @@ batch_size = 0
 model = ""
 batch_top1_top5_train = {}
 batch_top1_top5_val = {}
+file_name = 'resnet101/resnet101_batch_128_gsize_64_epo_50'
 
-with open('resnet18/resnet18_batch_128_gsize_1_epo_50') as json_file:
+with open(file_name) as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == 'train_top1':
@@ -60,8 +61,8 @@ plt.show(block=True)
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = 'resnet18/'
-sample_file_name = model+"_ec_" + "_batch_" + bat +"_epo_"+ ep +".png" 
-plt.savefig(results_dir + sample_file_name)
+sample_file_name = file_name 
+plt.savefig(file_name)
 
 """
 plt.plot(batch_train_range, batch_train_top1, label = 'train_top1_per100_batch')
