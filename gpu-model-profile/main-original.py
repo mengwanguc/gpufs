@@ -121,7 +121,9 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
-
+    if args.b is not None:
+        print("Use Batch Size: {} for training".format(args.b))
+    
     if args.distributed:
         if args.dist_url == "env://" and args.rank == -1:
             args.rank = int(os.environ["RANK"])
