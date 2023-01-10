@@ -1,0 +1,126 @@
+python main-original.py --epoch 1 --gpu=0 -b 64 -a alexnet ~/data/imagenette2 || true
+=> creating model 'alexnet'
+Average Data Transfer time is : 0.02883798360824585
+Average GPU Time is : 0.021614086627960206
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet121 ~/data/imagenette2 || true
+=> creating model 'densenet121'
+Average Data Transfer time is : 0.0032552838325500487
+Average GPU Time is : 0.6075592589378357
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet161 ~/data/imagenette2 || true
+=> creating model 'densenet161'
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet169 ~/data/imagenette2 || true
+=> creating model 'densenet169'
+Average Data Transfer time is : 0.003192496299743652
+Average GPU Time is : 0.7304680562019348
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet201 ~/data/imagenette2 || true
+=> creating model 'densenet201'
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet101 ~/data/imagenette2 || true
+=> creating model 'resnet101'
+Average Data Transfer time is : 0.010540506839752196
+Average GPU Time is : 0.8896703100204468
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet152 ~/data/imagenette2 || true
+=> creating model 'resnet152'
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet18 ~/data/imagenette2 || true
+=> creating model 'resnet18'
+Average Data Transfer time is : 0.10656412363052369
+Average GPU Time is : 0.06664141416549682
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet34 ~/data/imagenette2 || true
+=> creating model 'resnet34'
+Average Data Transfer time is : 0.17371677875518798
+Average GPU Time is : 0.11260404348373414
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet50 ~/data/imagenette2 || true
+=> creating model 'resnet50'
+Average Data Transfer time is : 0.2863841199874878
+Average GPU Time is : 0.27904281616210935
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_0 ~/data/imagenette2 || true
+=> creating model 'squeezenet1_0'
+Average Data Transfer time is : 0.09551194667816162
+Average GPU Time is : 0.0742119550704956
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_1 ~/data/imagenette2 || true
+=> creating model 'squeezenet1_1'
+Average Data Transfer time is : 0.036663010120391845
+Average GPU Time is : 0.04861921787261963
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11 ~/data/imagenette2 || true
+=> creating model 'vgg11'
+Average Data Transfer time is : 0.30247568130493163
+Average GPU Time is : 0.15500378847122193
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11_bn ~/data/imagenette2 || true
+=> creating model 'vgg11_bn'
+Average Data Transfer time is : 0.3498009181022644
+Average GPU Time is : 0.18780558109283446
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13 ~/data/imagenette2 || true
+=> creating model 'vgg13'
+Average Data Transfer time is : 0.4940729928016663
+Average GPU Time is : 0.2330430817604065
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13_bn ~/data/imagenette2 || true
+=> creating model 'vgg13_bn'
+Average Data Transfer time is : 0.5741660404205322
+Average GPU Time is : 0.2856802678108215
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16 ~/data/imagenette2 || true
+=> creating model 'vgg16'
+Average Data Transfer time is : 0.5850028896331787
+Average GPU Time is : 0.28459200382232663
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16_bn ~/data/imagenette2 || true
+=> creating model 'vgg16_bn'
+Average Data Transfer time is : 0.6409382224082947
+Average GPU Time is : 0.3403400254249573
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19 ~/data/imagenette2 || true
+=> creating model 'vgg19'
+Average Data Transfer time is : 0.6765221905708313
+Average GPU Time is : 0.3346613144874573
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19_bn ~/data/imagenette2 || true
+=> creating model 'vgg19_bn'
+Average Data Transfer time is : 0.7385518789291382
+Average GPU Time is : 0.39866766691207883
+python main-original.py --epoch 1 --gpu=0 -b 128 -a alexnet ~/data/imagenette2 || true
+=> creating model 'alexnet'
+Average Data Transfer time is : 0.049027514457702634
+Average GPU Time is : 0.038784852027893064
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet121 ~/data/imagenette2 || true
+=> creating model 'densenet121'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet161 ~/data/imagenette2 || true
+=> creating model 'densenet161'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet169 ~/data/imagenette2 || true
+=> creating model 'densenet169'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet201 ~/data/imagenette2 || true
+=> creating model 'densenet201'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet101 ~/data/imagenette2 || true
+=> creating model 'resnet101'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet152 ~/data/imagenette2 || true
+=> creating model 'resnet152'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet18 ~/data/imagenette2 || true
+=> creating model 'resnet18'
+Average Data Transfer time is : 0.21166940689086913
+Average GPU Time is : 0.1158771014213562
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet34 ~/data/imagenette2 || true
+=> creating model 'resnet34'
+Average Data Transfer time is : 0.3436290812492371
+Average GPU Time is : 0.19720900535583497
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet50 ~/data/imagenette2 || true
+=> creating model 'resnet50'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_0 ~/data/imagenette2 || true
+=> creating model 'squeezenet1_0'
+Average Data Transfer time is : 0.20371801853179933
+Average GPU Time is : 0.1343261981010437
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_1 ~/data/imagenette2 || true
+=> creating model 'squeezenet1_1'
+Average Data Transfer time is : 0.06381383895874024
+Average GPU Time is : 0.07900168895721435
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11 ~/data/imagenette2 || true
+=> creating model 'vgg11'
+Average Data Transfer time is : 0.59284987449646
+Average GPU Time is : 0.29729824542999267
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11_bn ~/data/imagenette2 || true
+=> creating model 'vgg11_bn'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13 ~/data/imagenette2 || true
+=> creating model 'vgg13'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13_bn ~/data/imagenette2 || true
+=> creating model 'vgg13_bn'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16 ~/data/imagenette2 || true
+=> creating model 'vgg16'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16_bn ~/data/imagenette2 || true
+=> creating model 'vgg16_bn'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19 ~/data/imagenette2 || true
+=> creating model 'vgg19'
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19_bn ~/data/imagenette2 || true
+=> creating model 'vgg19_bn'
