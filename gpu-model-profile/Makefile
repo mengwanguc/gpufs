@@ -43,8 +43,6 @@ batch128:
 	python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19_bn ~/data/imagenette2 || true
 	
 installer:
-	wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
-	bash Anaconda3-2021.11-Linux-x86_64.sh
 	conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake cffi typing_extensions future six requests dataclasses
 	cd ~
 	git clone git@github.com:mengwanguc/pytorch-meng.git
