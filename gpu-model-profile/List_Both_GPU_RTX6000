@@ -1,0 +1,307 @@
+python main-original.py --epoch 1 --gpu=0 -b 64 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.02883798360824585
+Average GPU Time is : 0.021614086627960206
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet121 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032552838325500487
+Average GPU Time is : 0.6075592589378357
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet161 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet169 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.003192496299743652
+Average GPU Time is : 0.7304680562019348
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet201 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet101 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.010540506839752196
+Average GPU Time is : 0.8896703100204468
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet152 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.10656412363052369
+Average GPU Time is : 0.06664141416549682
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.17371677875518798
+Average GPU Time is : 0.11260404348373414
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet50 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.2863841199874878
+Average GPU Time is : 0.27904281616210935
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.09551194667816162
+Average GPU Time is : 0.0742119550704956
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.036663010120391845
+Average GPU Time is : 0.04861921787261963
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.30247568130493163
+Average GPU Time is : 0.15500378847122193
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.3498009181022644
+Average GPU Time is : 0.18780558109283446
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.4940729928016663
+Average GPU Time is : 0.2330430817604065
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.5741660404205322
+Average GPU Time is : 0.2856802678108215
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.5850028896331787
+Average GPU Time is : 0.28459200382232663
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.6409382224082947
+Average GPU Time is : 0.3403400254249573
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.6765221905708313
+Average GPU Time is : 0.3346613144874573
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.7385518789291382
+Average GPU Time is : 0.39866766691207883
+python main-original.py --epoch 1 --gpu=0 -b 128 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.049027514457702634
+Average GPU Time is : 0.038784852027893064
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet121 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet161 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet169 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet201 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet101 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet152 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.21166940689086913
+Average GPU Time is : 0.1158771014213562
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.3436290812492371
+Average GPU Time is : 0.19720900535583497
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet50 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.20371801853179933
+Average GPU Time is : 0.1343261981010437
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.06381383895874024
+Average GPU Time is : 0.07900168895721435
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.59284987449646
+Average GPU Time is : 0.29729824542999267
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11_bn ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13_bn ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16_bn ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19_bn ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 64 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.013936331272125244
+Average GPU Time is : 0.03877789974212646
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet121 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032790470123291015
+Average GPU Time is : 0.6192460370063781
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet161 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.003218562602996826
+Average GPU Time is : 1.1607364344596862
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet169 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.003221127986907959
+Average GPU Time is : 0.8088808870315551
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet201 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032117533683776855
+Average GPU Time is : 1.0074630403518676
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet101 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.004344041347503662
+Average GPU Time is : 0.750743899345398
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet152 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.004001407623291015
+Average GPU Time is : 1.0899986290931702
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.028505656719207764
+Average GPU Time is : 0.15606711864471434
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.024896817207336427
+Average GPU Time is : 0.3105824112892151
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet50 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.015860729217529297
+Average GPU Time is : 0.4153315210342407
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.012672419548034669
+Average GPU Time is : 0.1202852201461792
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.006663196086883545
+Average GPU Time is : 0.10784784793853759
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.08024324178695678
+Average GPU Time is : 0.2926709532737732
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.09141194581985473
+Average GPU Time is : 0.3150689697265625
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.17248164176940917
+Average GPU Time is : 0.4711749792098999
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.18972585201263428
+Average GPU Time is : 0.535776879787445
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1716040253639221
+Average GPU Time is : 0.633738956451416
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.18601616382598876
+Average GPU Time is : 0.7077349638938903
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1709190011024475
+Average GPU Time is : 0.7964091491699219
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1513311505317688
+Average GPU Time is : 0.9261700820922851
+python main-original.py --epoch 1 --gpu=0 -b 128 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.018662679195404052
+Average GPU Time is : 0.08342529773712158
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet121 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.006357662677764893
+Average GPU Time is : 1.2503214478492737
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet161 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet169 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0063768506050109865
+Average GPU Time is : 1.5963503408432007
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet201 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet101 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.008743994235992432
+Average GPU Time is : 1.4940075635910035
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet152 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0068936324119567875
+Average GPU Time is : 2.1744661474227907
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.03553586483001709
+Average GPU Time is : 0.33224270343780515
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0322951865196228
+Average GPU Time is : 0.6345423698425293
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet50 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.016891915798187256
+Average GPU Time is : 0.8419410443305969
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.024165856838226318
+Average GPU Time is : 0.2416534948348999
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.011144933700561523
+Average GPU Time is : 0.18933898448944092
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.06960286855697632
+Average GPU Time is : 0.6633235549926758
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.08676793813705444
+Average GPU Time is : 0.7521365594863891
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1027848744392395
+Average GPU Time is : 1.1740873098373412
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.10422505617141724
+Average GPU Time is : 1.3399105501174926
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16 ~/data/imagenette2 || true
+the gpu compute time is : python main-original.py --epoch 1 --gpu=0 -b 64 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.013086750507354736
+Average GPU Time is : 0.039811935424804684
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet121 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032399702072143555
+Average GPU Time is : 0.6237705564498901
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet161 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032090187072753907
+Average GPU Time is : 1.1399343919754028
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet169 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.003207848072052002
+Average GPU Time is : 0.8120887756347657
+python main-original.py --epoch 1 --gpu=0 -b 64 -a densenet201 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0032074618339538574
+Average GPU Time is : 0.9849183678627014
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet101 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.005190386772155762
+Average GPU Time is : 0.7482027268409729
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet152 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.003383634090423584
+Average GPU Time is : 1.095048849582672
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.028486833572387696
+Average GPU Time is : 0.1565093493461609
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.025322957038879393
+Average GPU Time is : 0.3104758286476135
+python main-original.py --epoch 1 --gpu=0 -b 64 -a resnet50 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.016335420608520508
+Average GPU Time is : 0.4144935607910156
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.013349385261535644
+Average GPU Time is : 0.12260380744934082
+python main-original.py --epoch 1 --gpu=0 -b 64 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.008095390796661377
+Average GPU Time is : 0.0917546010017395
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.08056887626647949
+Average GPU Time is : 0.29263326168060305
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg11_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0914050030708313
+Average GPU Time is : 0.31533546686172487
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1723345160484314
+Average GPU Time is : 0.4709680128097534
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg13_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.18652563095092772
+Average GPU Time is : 0.5119464039802551
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.17172805547714234
+Average GPU Time is : 0.6336646223068237
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg16_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.18718507051467895
+Average GPU Time is : 0.7168739175796509
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.17087333917617797
+Average GPU Time is : 0.7955077481269837
+python main-original.py --epoch 1 --gpu=0 -b 64 -a vgg19_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.1507422137260437
+Average GPU Time is : 0.9178879809379578
+python main-original.py --epoch 1 --gpu=0 -b 128 -a alexnet ~/data/imagenette2 || true
+Average Data Transfer time is : 0.017816531658172607
+Average GPU Time is : 0.08290492057800293
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet121 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.00636829137802124
+Average GPU Time is : 1.2485121250152589
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet161 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet169 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.006371762752532959
+Average GPU Time is : 1.5977389121055603
+python main-original.py --epoch 1 --gpu=0 -b 128 -a densenet201 ~/data/imagenette2 || true
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet101 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.009135739803314209
+Average GPU Time is : 1.4935499405860901
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet152 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.006492586135864258
+Average GPU Time is : 2.1764781212806703
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet18 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.03542838573455811
+Average GPU Time is : 0.3321146559715271
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet34 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.032504849433898926
+Average GPU Time is : 0.6365596222877502
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet50 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.01705122709274292
+Average GPU Time is : 0.8424252271652222
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_0 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.024800169467926025
+Average GPU Time is : 0.2362645936012268
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_1 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.01249636173248291
+Average GPU Time is : 0.17438549280166626
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.06951857328414918
+Average GPU Time is : 0.6632379770278931
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.0872975754737854
+Average GPU Time is : 0.7521891069412231
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.10280020236968994
+Average GPU Time is : 1.172263264656067
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.10419475793838501
+Average GPU Time is : 1.3377605390548706
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.09700276851654052
+Average GPU Time is : 1.5011221027374269
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.09328716039657593
+Average GPU Time is : 1.6898260116577148
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19 ~/data/imagenette2 || true
+Average Data Transfer time is : 0.09273206233978272
+Average GPU Time is : 1.8281144070625306
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19_bn ~/data/imagenette2 || true
+Average Data Transfer time is : 0.08195250034332276
+Average GPU Time is : 2.075104629993439
