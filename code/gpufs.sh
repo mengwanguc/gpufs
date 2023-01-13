@@ -15,6 +15,7 @@ benchmark(){
 }
 
 benchmark 1 50
+benchmark 1 50
 benchmark 2 50
 benchmark 4 50
 benchmark 8 50
