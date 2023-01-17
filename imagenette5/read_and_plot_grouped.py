@@ -22,11 +22,11 @@ batch_top1_top5_size64 = {}
 
 
 short_batch = '128'
-current_p = 'train_top1'
-current_title = 'Epoch related Training top 1 Accuracy'
-process = '_trainingtop1_'
+current_p = 'train_top5'
+current_title = 'Epoch related Training top 5 Accuracy'
+process = '_trainingtop5_'
 
-with open('resnet18_batch_'+short_batch+'_gsize_1_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_1_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
@@ -37,33 +37,33 @@ with open('resnet18_batch_'+short_batch+'_gsize_1_epo_50') as json_file:
             epochs = data[k]	
         elif k == 'args.batch_size':
             batch_size = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_2_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_2_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             print(type(batch_top1_top5_size2))
             batch_top1_top5_size2 = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_4_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_4_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size4 = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size8 = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size16 = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_32_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_32_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size32 = data[k]
-with open('resnet18_batch_'+short_batch+'_gsize_64_epo_50') as json_file:
+with open('resnet101_batch_'+short_batch+'_gsize_64_epo_50') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:

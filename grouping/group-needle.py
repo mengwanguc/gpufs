@@ -106,7 +106,7 @@ print("number of images: {}".format(len(instances)))
 
 generator = torch.Generator()
 
-with open('perms/seed5.txt') as f:
+with open('perms/seed1.txt') as f:
     seed = int(f.read())
     f.close()
 
