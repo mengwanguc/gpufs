@@ -20,6 +20,7 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
+import numpy
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -293,7 +294,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure data loading time
         data_time.update(time.time() - end)
         print("Batch ",i)
-        if i == 106 :
+        if i == 16 :
             break
         start = time.time()
         if args.gpu is not None:
@@ -305,6 +306,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_time = end - start
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
+            total_time_array.append(total_time)
             total_batch_time += total_time
         
         # compute output
@@ -326,6 +328,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if i >= 6 :
             end_2 = time.time()
             total_time_2 = end_2 - start_2
+            total_time_2_array.append(total_time_2)
         
         if i >= 6 :
             print("the gpu compute time is :", total_time_2)
@@ -339,6 +342,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     average2 = total_gpu_time / 100
     print("Average Data Transfer time is :", average1)
     print("Average GPU Time is :",average2)
+    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_array))
+    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_array_2))
 
 
 def validate(val_loader, model, criterion, args):
