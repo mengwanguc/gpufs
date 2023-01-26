@@ -305,6 +305,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         total_time = end - start
         total_time_array = []
+        total_time_2_array = []
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
             total_time_array.append(total_time)
@@ -326,7 +327,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        total_time_2_array = []
         if i >= 6 :
             end_2 = time.time()
             total_time_2 = end_2 - start_2
@@ -342,10 +342,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
     average1 = total_batch_time / 100
     average2 = total_gpu_time / 100
+    print(total_time_array)
+    print(total_time_2_array)
     print("Average Data Transfer time is :", average1)
     print("Average GPU Time is :",average2)
     print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_array))
-    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_array_2))
+    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_2_array))
 
 
 def validate(val_loader, model, criterion, args):
