@@ -288,8 +288,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
-    total_batch_time = 0
-    total_gpu_time = 0
     total_time_list = []
     total_time_2_list = []
     for i, (images, target) in enumerate(train_loader):
@@ -309,7 +307,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
             total_time_list.append(total_time)
-            total_batch_time += total_time
         
         # compute output
         if i >= 6 :
@@ -334,18 +331,15 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         if i >= 6 :
             print("the gpu compute time is :", total_time_2)
-            total_gpu_time += total_time_2
 
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
 
-    average1 = total_batch_time / 100
-    average2 = total_gpu_time / 100
     print(total_time_list)
     print(total_time_2_list)
-    print("Average Data Transfer time is :", average1)
-    print("Average GPU Time is :",average2)
+    print("Average Data Transfer time is :", numpy.average(total_time_list))
+    print("Average GPU Time is :", numpy.average(total_time_2_list))
     print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_list))
     print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_2_list))
 
