@@ -336,12 +336,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         batch_time.update(time.time() - end)
         end = time.time()
 
-    print(total_time_list)
-    print(total_time_2_list)
     print("Average Data Transfer time is :", numpy.average(total_time_list))
-    print("Average GPU Time is :", numpy.average(total_time_2_list))
+    print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
     print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_list))
-    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_2_list))
+    print("Standar Deviation of GPU Compute Time is :", numpy.std(total_time_2_list))
 
 
 def validate(val_loader, model, criterion, args):
