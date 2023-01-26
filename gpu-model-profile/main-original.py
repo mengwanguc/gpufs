@@ -304,6 +304,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end = time.time()
         
         total_time = end - start
+        total_time_array = []
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
             total_time_array.append(total_time)
@@ -325,6 +326,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        total_time_2_array = []
         if i >= 6 :
             end_2 = time.time()
             total_time_2 = end_2 - start_2
