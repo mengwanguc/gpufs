@@ -290,6 +290,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     end = time.time()
     total_batch_time = 0
     total_gpu_time = 0
+    total_time_list = []
+    total_time_2_list = []
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
@@ -304,11 +306,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         end = time.time()
         
         total_time = end - start
-        total_time_list = []
-        total_time_2_list = []
         if i >= 6 :
             print("the time for data transfer from cpu to gpu is :", total_time)
-            total_time_list.insert(1,total_time)
+            total_time_list.append(total_time)
             total_batch_time += total_time
         
         # compute output
@@ -330,7 +330,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if i >= 6 :
             end_2 = time.time()
             total_time_2 = end_2 - start_2
-            total_time_2_list.insert(1,total_time_2)
+            total_time_2_list.append(total_time_2)
         
         if i >= 6 :
             print("the gpu compute time is :", total_time_2)
