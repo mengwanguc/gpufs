@@ -106,7 +106,7 @@ print("number of images: {}".format(len(instances)))
 
 generator = torch.Generator()
 
-# with open('perms/seed1.txt') as f:
+# with open('/home/cc/gpufs/gpufs/grouping/perms/seed1.txt') as f:
 #     seed = int(f.read())
 #     f.close()
 
@@ -117,7 +117,7 @@ it = iter(permutation)
 group_num = int(len(permutation) / group_size)
 
 
-
+idx_sequential = 0
 with open(mytar_save_folder + "metadata.txt", 'w') as metadata_writer:
     metadata_writer.write('{}\n'.format(len(classes)))
     for class_name in classes:
@@ -130,8 +130,9 @@ with open(mytar_save_folder + "metadata.txt", 'w') as metadata_writer:
         offset = 0
         metadata += '{},{}\n'.format(mytar_name,group_size)
         for j in range(group_size):
-            idx = permutation[i*group_size + j]
-            img_path, target_class = instances[idx]
+            # idx = permutation[i*group_size + j]
+            img_path, target_class = instances[idx_sequential]
+            idx_sequential += 1
             img_size = os.path.getsize(img_path)
             metadata += '{},{},{},{},{}\n'.format(j, target_class, offset, img_size,img_path)
             offset += img_size

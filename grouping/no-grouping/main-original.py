@@ -1,12 +1,13 @@
+# https://github.com/pytorch/examples/blob/6ab697cbaaa164b6eca551e8e8428dfa3b1d1e4b/imagenet/main.py
+
+import matplotlib.pyplot as plt
+import json
 import argparse
 import os
 import random
 import shutil
 import time
 import warnings
-
-import matplotlib.pyplot as plt
-import json
 
 import torch
 import torch.nn as nn
@@ -27,12 +28,8 @@ model_names = sorted(name for name in models.__dict__
     and callable(models.__dict__[name]))
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-parser.add_argument('train_data', metavar='TRAIN_DIR',
-                    help='path to training data, which should be grouped')
-parser.add_argument('validate_data', metavar='VALIDATE_DIR',
-                    help='path to validation data, which does NOT need to be grouped.')
-
-
+parser.add_argument('data', metavar='DIR',
+                    help='path to dataset')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     choices=model_names,
                     help='model architecture: ' +
@@ -82,35 +79,11 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'fastest way to use PyTorch for either single node or '
                          'multi node data parallel training')
 
-parser.add_argument('--img_per_tar', default=1, type=int,
-                    help='img per tar')
-parser.add_argument('--is_async', default=0, type=int,
-                    help='async preprocessing')
-
-
-
-
-
-
 best_acc1 = 0
-
-img_per_tar = 1
-is_async = 0
-
-
-total_data_time = 0
-total_train_time = 0
 
 
 def main():
     args = parser.parse_args()
-
-    global img_per_tar
-    global is_async
-    img_per_tar = args.img_per_tar
-    is_async = args.is_async
-    print("args.img_per_tar:", args.img_per_tar)
-    print("args.is_async:", args.is_async)
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -148,8 +121,6 @@ train_top5 = []
 val_top1 = []
 val_top5 =[]
 def main_worker(gpu, ngpus_per_node, args):
-    print("img_per_tar: ", img_per_tar)
-    print("is_async: ", is_async)
     global best_acc1
     global train_top1
     global train_top5
@@ -236,7 +207,6 @@ def main_worker(gpu, ngpus_per_node, args):
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
             scheduler.load_state_dict(checkpoint['scheduler'])
-            print(best_acc1)
             print("=> loaded checkpoint '{}' (epoch {})"
                   .format(args.resume, checkpoint['epoch']))
         else:
@@ -245,8 +215,8 @@ def main_worker(gpu, ngpus_per_node, args):
     cudnn.benchmark = True
 
     # Data loading code
-    traindir = args.train_data
-    valdir = args.validate_data
+    traindir = os.path.join(args.data, 'train')
+    valdir = os.path.join(args.data, 'val')
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
@@ -257,11 +227,7 @@ def main_worker(gpu, ngpus_per_node, args):
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
-        ]),
-        is_tar = True,
-        is_async = (is_async == 1),
-        is_mytar = True,
-        group_size = img_per_tar)
+        ]))
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -269,7 +235,7 @@ def main_worker(gpu, ngpus_per_node, args):
         train_sampler = None
 
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=int(args.batch_size/img_per_tar), shuffle=(train_sampler is None),
+        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
     val_loader = torch.utils.data.DataLoader(
@@ -292,13 +258,11 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # train for one epoch
         tt1, tt5 = train(train_loader, model, criterion, optimizer, epoch, args)
-
         # evaluate on validation set
         vt1, vt5 = validate(val_loader, model, criterion, args)
         
         scheduler.step()
 
-        
         # remember best acc@1 and save checkpoint
         is_best = vt1 > best_acc1
         best_acc1 = max(vt1, best_acc1)
@@ -313,7 +277,7 @@ def main_worker(gpu, ngpus_per_node, args):
                 'optimizer' : optimizer.state_dict(),
                 'scheduler' : scheduler.state_dict()
             }, is_best)
-
+         
         train_top1.append(float((tt1.cpu().numpy())))
         train_top5.append(float((tt5.cpu().numpy())))
         val_top1.append(float((vt1.cpu().numpy())))
@@ -334,13 +298,12 @@ def main_worker(gpu, ngpus_per_node, args):
     'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
     bat = str(args.batch_size)
     epo = str(args.epochs)
-    txt = "/home/cc/gpufs/gpufs/imagenette2/" + strs + "_batch_" + bat +"_gsize_"+ str(img_per_tar) + "_epo_" + epo+ "_sampler-seed-0"
+    txt = strs + "_batch_" + bat + "_epo_" + epo
     with open(txt , 'w') as convert_file:
         convert_file.write(json.dumps(model_data))
     
 curr_batch_train = 0
 batch_top1_top5_train = {}
-
 def train(train_loader, model, criterion, optimizer, epoch, args):
     global curr_batch_train
     global batch_top1_top5_train
@@ -387,6 +350,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         batch_time.update(time.time() - end)
         end = time.time()
 
+    
         if i % args.print_freq == 0:
             progress.display(i)
             curr_batch_train += i
@@ -415,9 +379,10 @@ def validate(val_loader, model, criterion, args):
 
     # switch to evaluate mode
     model.eval()
-    temp = 0
+
     with torch.no_grad():
         end = time.time()
+        temp = 0
         for i, (images, target) in enumerate(val_loader):
             if args.gpu is not None:
                 images = images.cuda(args.gpu, non_blocking=True)
@@ -489,6 +454,7 @@ class ProgressMeter(object):
         self.batch_fmtstr = self._get_batch_fmtstr(num_batches)
         self.meters = meters
         self.prefix = prefix
+        self.num_batches = num_batches
 
     def display(self, batch):
         entries = [self.prefix + self.batch_fmtstr.format(batch)]

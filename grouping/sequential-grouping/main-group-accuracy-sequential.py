@@ -86,6 +86,9 @@ parser.add_argument('--img_per_tar', default=1, type=int,
                     help='img per tar')
 parser.add_argument('--is_async', default=0, type=int,
                     help='async preprocessing')
+parser.add_argument('--sampler-name', default=' ', type=str,
+                    help='add sampler name on last name file result')
+
 
 
 
@@ -236,7 +239,6 @@ def main_worker(gpu, ngpus_per_node, args):
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
             scheduler.load_state_dict(checkpoint['scheduler'])
-            print(best_acc1)
             print("=> loaded checkpoint '{}' (epoch {})"
                   .format(args.resume, checkpoint['epoch']))
         else:
@@ -334,7 +336,7 @@ def main_worker(gpu, ngpus_per_node, args):
     'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
     bat = str(args.batch_size)
     epo = str(args.epochs)
-    txt = "/home/cc/gpufs/gpufs/imagenette2/" + strs + "_batch_" + bat +"_gsize_"+ str(img_per_tar) + "_epo_" + epo+ "_sampler-seed-0"
+    txt = "sequential-grouping" + strs + "_batch_" + bat +"_gsize_"+ str(img_per_tar) + "_epo_" + epo + "_" + args.sampler_name
     with open(txt , 'w') as convert_file:
         convert_file.write(json.dumps(model_data))
     
