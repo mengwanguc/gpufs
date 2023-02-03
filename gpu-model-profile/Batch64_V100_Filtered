@@ -1,0 +1,840 @@
+=> creating model 'alexnet'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.02647686004638672
+the gpu compute time is : 0.033294677734375
+Batch  7
+the time for data transfer from cpu to gpu is : 0.02545905113220215
+the gpu compute time is : 0.03694915771484375
+Batch  8
+the time for data transfer from cpu to gpu is : 0.021497488021850586
+the gpu compute time is : 0.03320765495300293
+Batch  9
+the time for data transfer from cpu to gpu is : 0.003308534622192383
+the gpu compute time is : 0.033396244049072266
+Batch  10
+the time for data transfer from cpu to gpu is : 0.02527904510498047
+the gpu compute time is : 0.03310513496398926
+Batch  11
+the time for data transfer from cpu to gpu is : 0.0252993106842041
+the gpu compute time is : 0.033510446548461914
+Batch  12
+the time for data transfer from cpu to gpu is : 0.02516460418701172
+the gpu compute time is : 0.033188581466674805
+Batch  13
+the time for data transfer from cpu to gpu is : 0.003257274627685547
+the gpu compute time is : 0.0363461971282959
+Batch  14
+the time for data transfer from cpu to gpu is : 0.02483057975769043
+the gpu compute time is : 0.03320646286010742
+Batch  15
+the time for data transfer from cpu to gpu is : 0.025293350219726562
+the gpu compute time is : 0.03312325477600098
+Batch  16
+Average Data Transfer time is : 0.020586609840393066
+Average GPU Compute Time is : 0.03393278121948242
+Standar Deviation of Data Transfer Time is : 0.0087375877031571
+Standar Deviation of GPU Compute Time is : 0.0013690883608619428
+=> creating model 'densenet121'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.0036377906799316406
+the gpu compute time is : 0.628852367401123
+Batch  7
+the time for data transfer from cpu to gpu is : 0.003669261932373047
+the gpu compute time is : 0.6305062770843506
+Batch  8
+the time for data transfer from cpu to gpu is : 0.003642559051513672
+the gpu compute time is : 0.6231818199157715
+Batch  9
+the time for data transfer from cpu to gpu is : 0.003669261932373047
+the gpu compute time is : 0.6230099201202393
+Batch  10
+the time for data transfer from cpu to gpu is : 0.0036373138427734375
+the gpu compute time is : 0.6230165958404541
+Batch  11
+the time for data transfer from cpu to gpu is : 0.0036072731018066406
+the gpu compute time is : 0.6227552890777588
+Batch  12
+the time for data transfer from cpu to gpu is : 0.003580331802368164
+the gpu compute time is : 0.6224210262298584
+Batch  13
+the time for data transfer from cpu to gpu is : 0.003576040267944336
+the gpu compute time is : 0.6225533485412598
+Batch  14
+the time for data transfer from cpu to gpu is : 0.0035483837127685547
+the gpu compute time is : 0.6266477108001709
+Batch  15
+the time for data transfer from cpu to gpu is : 0.0034334659576416016
+the gpu compute time is : 0.6225523948669434
+Batch  16
+Average Data Transfer time is : 0.0036001682281494142
+Average GPU Compute Time is : 0.624549674987793
+Standar Deviation of Data Transfer Time is : 6.755554152169622e-05
+Standar Deviation of GPU Compute Time is : 0.0028410146519110583
+=> creating model 'densenet161'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.0031991004943847656
+the gpu compute time is : 1.1052088737487793
+Batch  7
+the time for data transfer from cpu to gpu is : 0.0032007694244384766
+the gpu compute time is : 1.1118886470794678
+Batch  8
+the time for data transfer from cpu to gpu is : 0.0032067298889160156
+the gpu compute time is : 1.1050808429718018
+Batch  9
+the time for data transfer from cpu to gpu is : 0.003210306167602539
+the gpu compute time is : 1.1087872982025146
+Batch  10
+the time for data transfer from cpu to gpu is : 0.0032167434692382812
+the gpu compute time is : 1.110102653503418
+Batch  11
+the time for data transfer from cpu to gpu is : 0.003202676773071289
+the gpu compute time is : 1.1111257076263428
+Batch  12
+the time for data transfer from cpu to gpu is : 0.003206491470336914
+the gpu compute time is : 1.1105635166168213
+Batch  13
+the time for data transfer from cpu to gpu is : 0.0032117366790771484
+the gpu compute time is : 1.1044261455535889
+Batch  14
+the time for data transfer from cpu to gpu is : 0.0032148361206054688
+the gpu compute time is : 1.1051440238952637
+Batch  15
+the time for data transfer from cpu to gpu is : 0.0032072067260742188
+the gpu compute time is : 1.1049370765686035
+Batch  16
+Average Data Transfer time is : 0.0032076597213745116
+Average GPU Compute Time is : 1.10772647857666
+Standar Deviation of Data Transfer Time is : 5.528484230534429e-06
+Standar Deviation of GPU Compute Time is : 0.0028701653403714784
+=> creating model 'densenet169'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.00318145751953125
+the gpu compute time is : 0.8113033771514893
+Batch  7
+the time for data transfer from cpu to gpu is : 0.003195047378540039
+the gpu compute time is : 0.8075392246246338
+Batch  8
+the time for data transfer from cpu to gpu is : 0.003194093704223633
+the gpu compute time is : 0.8041102886199951
+Batch  9
+the time for data transfer from cpu to gpu is : 0.0032033920288085938
+the gpu compute time is : 0.8042023181915283
+Batch  10
+the time for data transfer from cpu to gpu is : 0.003186464309692383
+the gpu compute time is : 0.8041591644287109
+Batch  11
+the time for data transfer from cpu to gpu is : 0.003184080123901367
+the gpu compute time is : 0.8086593151092529
+Batch  12
+the time for data transfer from cpu to gpu is : 0.0031890869140625
+the gpu compute time is : 0.8129754066467285
+Batch  13
+the time for data transfer from cpu to gpu is : 0.003199338912963867
+the gpu compute time is : 0.8105347156524658
+Batch  14
+the time for data transfer from cpu to gpu is : 0.003184795379638672
+the gpu compute time is : 0.8110859394073486
+Batch  15
+the time for data transfer from cpu to gpu is : 0.0031936168670654297
+the gpu compute time is : 0.8113665580749512
+Batch  16
+Average Data Transfer time is : 0.0031911373138427735
+Average GPU Compute Time is : 0.8085936307907104
+Standar Deviation of Data Transfer Time is : 6.763023624989089e-06
+Standar Deviation of GPU Compute Time is : 0.0032307241520879884
+=> creating model 'densenet201'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.0032041072845458984
+the gpu compute time is : 0.9855039119720459
+Batch  7
+the time for data transfer from cpu to gpu is : 0.00319671630859375
+the gpu compute time is : 0.9910769462585449
+Batch  8
+the time for data transfer from cpu to gpu is : 0.003212451934814453
+the gpu compute time is : 0.9843616485595703
+Batch  9
+the time for data transfer from cpu to gpu is : 0.003201007843017578
+the gpu compute time is : 0.99635910987854
+Batch  10
+the time for data transfer from cpu to gpu is : 0.0032215118408203125
+the gpu compute time is : 0.9849972724914551
+Batch  11
+the time for data transfer from cpu to gpu is : 0.0031888484954833984
+the gpu compute time is : 0.9840097427368164
+Batch  12
+the time for data transfer from cpu to gpu is : 0.0033702850341796875
+the gpu compute time is : 0.9843707084655762
+Batch  13
+the time for data transfer from cpu to gpu is : 0.003222942352294922
+the gpu compute time is : 0.9847848415374756
+Batch  14
+the time for data transfer from cpu to gpu is : 0.003186941146850586
+the gpu compute time is : 0.9830713272094727
+Batch  15
+the time for data transfer from cpu to gpu is : 0.003206014633178711
+the gpu compute time is : 0.9847400188446045
+Batch  16
+Average Data Transfer time is : 0.00322108268737793
+Average GPU Compute Time is : 0.9863275527954102
+Standar Deviation of Data Transfer Time is : 5.104516722837244e-05
+Standar Deviation of GPU Compute Time is : 0.003926912215380057
+=> creating model 'resnet101'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.006054878234863281
+the gpu compute time is : 0.726609468460083
+Batch  7
+the time for data transfer from cpu to gpu is : 0.006074666976928711
+the gpu compute time is : 0.7261004447937012
+Batch  8
+the time for data transfer from cpu to gpu is : 0.006032705307006836
+the gpu compute time is : 0.726207971572876
+Batch  9
+the time for data transfer from cpu to gpu is : 0.0060498714447021484
+the gpu compute time is : 0.7269580364227295
+Batch  10
+the time for data transfer from cpu to gpu is : 0.0060520172119140625
+the gpu compute time is : 0.7288963794708252
+Batch  11
+the time for data transfer from cpu to gpu is : 0.006096363067626953
+the gpu compute time is : 0.7270400524139404
+Batch  12
+the time for data transfer from cpu to gpu is : 0.006043434143066406
+the gpu compute time is : 0.7277214527130127
+Batch  13
+the time for data transfer from cpu to gpu is : 0.006029844284057617
+the gpu compute time is : 0.7282543182373047
+Batch  14
+the time for data transfer from cpu to gpu is : 0.006057262420654297
+the gpu compute time is : 0.726553201675415
+Batch  15
+the time for data transfer from cpu to gpu is : 0.006047248840332031
+the gpu compute time is : 0.7276451587677002
+Batch  16
+Average Data Transfer time is : 0.006053829193115234
+Average GPU Compute Time is : 0.7271986484527588
+Standar Deviation of Data Transfer Time is : 1.8568874060175098e-05
+Standar Deviation of GPU Compute Time is : 0.0008662389090415606
+=> creating model 'resnet152'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.003939390182495117
+the gpu compute time is : 1.0661275386810303
+Batch  7
+the time for data transfer from cpu to gpu is : 0.0043792724609375
+the gpu compute time is : 1.064814805984497
+Batch  8
+the time for data transfer from cpu to gpu is : 0.004353046417236328
+the gpu compute time is : 1.0653398036956787
+Batch  9
+the time for data transfer from cpu to gpu is : 0.004273176193237305
+the gpu compute time is : 1.0663142204284668
+Batch  10
+the time for data transfer from cpu to gpu is : 0.004396915435791016
+the gpu compute time is : 1.0656440258026123
+Batch  11
+the time for data transfer from cpu to gpu is : 0.004418134689331055
+the gpu compute time is : 1.0660793781280518
+Batch  12
+the time for data transfer from cpu to gpu is : 0.004308462142944336
+the gpu compute time is : 1.0653626918792725
+Batch  13
+the time for data transfer from cpu to gpu is : 0.0044176578521728516
+the gpu compute time is : 1.0657668113708496
+Batch  14
+the time for data transfer from cpu to gpu is : 0.0043430328369140625
+the gpu compute time is : 1.0642292499542236
+Batch  15
+the time for data transfer from cpu to gpu is : 0.00435328483581543
+the gpu compute time is : 1.0653915405273438
+Batch  16
+Average Data Transfer time is : 0.0043182373046875
+Average GPU Compute Time is : 1.0655070066452026
+Standar Deviation of Data Transfer Time is : 0.000133598462959719
+Standar Deviation of GPU Compute Time is : 0.000602034540297806
+=> creating model 'resnet18'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.025852203369140625
+the gpu compute time is : 0.16187381744384766
+Batch  7
+the time for data transfer from cpu to gpu is : 0.02580714225769043
+the gpu compute time is : 0.1624927520751953
+Batch  8
+the time for data transfer from cpu to gpu is : 0.02584981918334961
+the gpu compute time is : 0.16440701484680176
+Batch  9
+the time for data transfer from cpu to gpu is : 0.023720502853393555
+the gpu compute time is : 0.16281962394714355
+Batch  10
+the time for data transfer from cpu to gpu is : 0.02590489387512207
+the gpu compute time is : 0.1619091033935547
+Batch  11
+the time for data transfer from cpu to gpu is : 0.025805234909057617
+the gpu compute time is : 0.16287469863891602
+Batch  12
+the time for data transfer from cpu to gpu is : 0.025572776794433594
+the gpu compute time is : 0.16281700134277344
+Batch  13
+the time for data transfer from cpu to gpu is : 0.025791406631469727
+the gpu compute time is : 0.16343975067138672
+Batch  14
+the time for data transfer from cpu to gpu is : 0.02581048011779785
+the gpu compute time is : 0.16232872009277344
+Batch  15
+the time for data transfer from cpu to gpu is : 0.02582859992980957
+the gpu compute time is : 0.16288328170776367
+Batch  16
+Average Data Transfer time is : 0.025594305992126466
+Average GPU Compute Time is : 0.16278457641601562
+Standar Deviation of Data Transfer Time is : 0.0006300895521998
+Standar Deviation of GPU Compute Time is : 0.0007050252175179455
+=> creating model 'resnet34'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.0226442813873291
+the gpu compute time is : 0.3285400867462158
+Batch  7
+the time for data transfer from cpu to gpu is : 0.022546052932739258
+the gpu compute time is : 0.331465482711792
+Batch  8
+the time for data transfer from cpu to gpu is : 0.01852726936340332
+the gpu compute time is : 0.32863593101501465
+Batch  9
+the time for data transfer from cpu to gpu is : 0.02262592315673828
+the gpu compute time is : 0.33371973037719727
+Batch  10
+the time for data transfer from cpu to gpu is : 0.018764257431030273
+the gpu compute time is : 0.3318324089050293
+Batch  11
+the time for data transfer from cpu to gpu is : 0.021923065185546875
+the gpu compute time is : 0.32947278022766113
+Batch  12
+the time for data transfer from cpu to gpu is : 0.02251458168029785
+the gpu compute time is : 0.32886505126953125
+Batch  13
+the time for data transfer from cpu to gpu is : 0.023624897003173828
+the gpu compute time is : 0.32848167419433594
+Batch  14
+the time for data transfer from cpu to gpu is : 0.022394895553588867
+the gpu compute time is : 0.32813119888305664
+Batch  15
+the time for data transfer from cpu to gpu is : 0.022555112838745117
+the gpu compute time is : 0.32734036445617676
+Batch  16
+Average Data Transfer time is : 0.021812033653259278
+Average GPU Compute Time is : 0.32964847087860105
+Standar Deviation of Data Transfer Time is : 0.0016326886716628748
+Standar Deviation of GPU Compute Time is : 0.0019114267217770725
+=> creating model 'resnet50'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.014863252639770508
+the gpu compute time is : 0.4061315059661865
+Batch  7
+the time for data transfer from cpu to gpu is : 0.014253854751586914
+the gpu compute time is : 0.4056100845336914
+Batch  8
+the time for data transfer from cpu to gpu is : 0.014335393905639648
+the gpu compute time is : 0.40958476066589355
+Batch  9
+the time for data transfer from cpu to gpu is : 0.011343717575073242
+the gpu compute time is : 0.4110572338104248
+Batch  10
+the time for data transfer from cpu to gpu is : 0.011899709701538086
+the gpu compute time is : 0.4057655334472656
+Batch  11
+the time for data transfer from cpu to gpu is : 0.01484990119934082
+the gpu compute time is : 0.406707763671875
+Batch  12
+the time for data transfer from cpu to gpu is : 0.014046669006347656
+the gpu compute time is : 0.4108741283416748
+Batch  13
+the time for data transfer from cpu to gpu is : 0.014741182327270508
+the gpu compute time is : 0.4064483642578125
+Batch  14
+the time for data transfer from cpu to gpu is : 0.017148971557617188
+the gpu compute time is : 0.40920114517211914
+Batch  15
+the time for data transfer from cpu to gpu is : 0.012211084365844727
+the gpu compute time is : 0.4048595428466797
+Batch  16
+Average Data Transfer time is : 0.01396937370300293
+Average GPU Compute Time is : 0.4076240062713623
+Standar Deviation of Data Transfer Time is : 0.0016361514199145645
+Standar Deviation of GPU Compute Time is : 0.002197351167900328
+=> creating model 'squeezenet1_0'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.011418819427490234
+the gpu compute time is : 0.13287711143493652
+Batch  7
+the time for data transfer from cpu to gpu is : 0.011392593383789062
+the gpu compute time is : 0.1328723430633545
+Batch  8
+the time for data transfer from cpu to gpu is : 0.011555910110473633
+the gpu compute time is : 0.13288331031799316
+Batch  9
+the time for data transfer from cpu to gpu is : 0.011149883270263672
+the gpu compute time is : 0.13295984268188477
+Batch  10
+the time for data transfer from cpu to gpu is : 0.01124882698059082
+the gpu compute time is : 0.13322234153747559
+Batch  11
+the time for data transfer from cpu to gpu is : 0.01111745834350586
+the gpu compute time is : 0.13005614280700684
+Batch  12
+the time for data transfer from cpu to gpu is : 0.014513969421386719
+the gpu compute time is : 0.1302947998046875
+Batch  13
+the time for data transfer from cpu to gpu is : 0.014077901840209961
+the gpu compute time is : 0.13030672073364258
+Batch  14
+the time for data transfer from cpu to gpu is : 0.014199495315551758
+the gpu compute time is : 0.1303544044494629
+Batch  15
+the time for data transfer from cpu to gpu is : 0.014115571975708008
+the gpu compute time is : 0.1300513744354248
+Batch  16
+Average Data Transfer time is : 0.012479043006896973
+Average GPU Compute Time is : 0.13158783912658692
+Standar Deviation of Data Transfer Time is : 0.0014361785868113393
+Standar Deviation of GPU Compute Time is : 0.0013815138230729486
+=> creating model 'squeezenet1_1'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.010116100311279297
+the gpu compute time is : 0.0927581787109375
+Batch  7
+the time for data transfer from cpu to gpu is : 0.009469985961914062
+the gpu compute time is : 0.09212279319763184
+Batch  8
+the time for data transfer from cpu to gpu is : 0.01002049446105957
+the gpu compute time is : 0.09282922744750977
+Batch  9
+the time for data transfer from cpu to gpu is : 0.009397745132446289
+the gpu compute time is : 0.09602093696594238
+Batch  10
+the time for data transfer from cpu to gpu is : 0.010042428970336914
+the gpu compute time is : 0.09249639511108398
+Batch  11
+the time for data transfer from cpu to gpu is : 0.009870052337646484
+the gpu compute time is : 0.09354090690612793
+Batch  12
+the time for data transfer from cpu to gpu is : 0.009912490844726562
+the gpu compute time is : 0.09399008750915527
+Batch  13
+the time for data transfer from cpu to gpu is : 0.00791478157043457
+the gpu compute time is : 0.09494900703430176
+Batch  14
+the time for data transfer from cpu to gpu is : 0.009467124938964844
+the gpu compute time is : 0.09612655639648438
+Batch  15
+the time for data transfer from cpu to gpu is : 0.010027408599853516
+the gpu compute time is : 0.09292197227478027
+Batch  16
+Average Data Transfer time is : 0.009623861312866211
+Average GPU Compute Time is : 0.09377560615539551
+Standar Deviation of Data Transfer Time is : 0.000624652656877116
+Standar Deviation of GPU Compute Time is : 0.0013810896687417647
+=> creating model 'vgg11'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.07559895515441895
+the gpu compute time is : 0.2946591377258301
+Batch  7
+the time for data transfer from cpu to gpu is : 0.07514238357543945
+the gpu compute time is : 0.2954432964324951
+Batch  8
+the time for data transfer from cpu to gpu is : 0.0754694938659668
+the gpu compute time is : 0.2944810390472412
+Batch  9
+the time for data transfer from cpu to gpu is : 0.07542228698730469
+the gpu compute time is : 0.2926344871520996
+Batch  10
+the time for data transfer from cpu to gpu is : 0.0753016471862793
+the gpu compute time is : 0.29409193992614746
+Batch  11
+the time for data transfer from cpu to gpu is : 0.07552742958068848
+the gpu compute time is : 0.29421091079711914
+Batch  12
+the time for data transfer from cpu to gpu is : 0.0753321647644043
+the gpu compute time is : 0.29797887802124023
+Batch  13
+the time for data transfer from cpu to gpu is : 0.07421422004699707
+the gpu compute time is : 0.29239511489868164
+Batch  14
+the time for data transfer from cpu to gpu is : 0.07540225982666016
+the gpu compute time is : 0.2925078868865967
+Batch  15
+the time for data transfer from cpu to gpu is : 0.07525944709777832
+the gpu compute time is : 0.29267001152038574
+Batch  16
+Average Data Transfer time is : 0.07526702880859375
+Average GPU Compute Time is : 0.2941072702407837
+Standar Deviation of Data Transfer Time is : 0.0003729356004347167
+Standar Deviation of GPU Compute Time is : 0.0016417629457580016
+=> creating model 'vgg11_bn'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.08386921882629395
+the gpu compute time is : 0.3138148784637451
+Batch  7
+the time for data transfer from cpu to gpu is : 0.08360767364501953
+the gpu compute time is : 0.3148837089538574
+Batch  8
+the time for data transfer from cpu to gpu is : 0.08394622802734375
+the gpu compute time is : 0.3148829936981201
+Batch  9
+the time for data transfer from cpu to gpu is : 0.0838019847869873
+the gpu compute time is : 0.314852237701416
+Batch  10
+the time for data transfer from cpu to gpu is : 0.08382463455200195
+the gpu compute time is : 0.3140299320220947
+Batch  11
+the time for data transfer from cpu to gpu is : 0.08396482467651367
+the gpu compute time is : 0.3144874572753906
+Batch  12
+the time for data transfer from cpu to gpu is : 0.08382081985473633
+the gpu compute time is : 0.31575512886047363
+Batch  13
+the time for data transfer from cpu to gpu is : 0.08273458480834961
+the gpu compute time is : 0.3146023750305176
+Batch  14
+the time for data transfer from cpu to gpu is : 0.08391189575195312
+the gpu compute time is : 0.3153560161590576
+Batch  15
+the time for data transfer from cpu to gpu is : 0.08397126197814941
+the gpu compute time is : 0.3152914047241211
+Batch  16
+Average Data Transfer time is : 0.08374531269073486
+Average GPU Compute Time is : 0.3147956132888794
+Standar Deviation of Data Transfer Time is : 0.00035191314080364585
+Standar Deviation of GPU Compute Time is : 0.0005638743579182405
+=> creating model 'vgg13'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.12549400329589844
+the gpu compute time is : 0.46589159965515137
+Batch  7
+the time for data transfer from cpu to gpu is : 0.1255040168762207
+the gpu compute time is : 0.4660799503326416
+Batch  8
+the time for data transfer from cpu to gpu is : 0.12545561790466309
+the gpu compute time is : 0.46569228172302246
+Batch  9
+the time for data transfer from cpu to gpu is : 0.12526226043701172
+the gpu compute time is : 0.4662594795227051
+Batch  10
+the time for data transfer from cpu to gpu is : 0.12531614303588867
+the gpu compute time is : 0.46584653854370117
+Batch  11
+the time for data transfer from cpu to gpu is : 0.1254713535308838
+the gpu compute time is : 0.46741437911987305
+Batch  12
+the time for data transfer from cpu to gpu is : 0.12523484230041504
+the gpu compute time is : 0.4637753963470459
+Batch  13
+the time for data transfer from cpu to gpu is : 0.12512660026550293
+the gpu compute time is : 0.46303343772888184
+Batch  14
+the time for data transfer from cpu to gpu is : 0.12526154518127441
+the gpu compute time is : 0.46446943283081055
+Batch  15
+the time for data transfer from cpu to gpu is : 0.1246492862701416
+the gpu compute time is : 0.46454620361328125
+Batch  16
+Average Data Transfer time is : 0.12527756690979003
+Average GPU Compute Time is : 0.46530086994171144
+Standar Deviation of Data Transfer Time is : 0.00024263381695618054
+Standar Deviation of GPU Compute Time is : 0.0012458678138154964
+=> creating model 'vgg13_bn'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.1370854377746582
+the gpu compute time is : 0.5046544075012207
+Batch  7
+the time for data transfer from cpu to gpu is : 0.13728904724121094
+the gpu compute time is : 0.5043859481811523
+Batch  8
+the time for data transfer from cpu to gpu is : 0.13730072975158691
+the gpu compute time is : 0.5031235218048096
+Batch  9
+the time for data transfer from cpu to gpu is : 0.13719630241394043
+the gpu compute time is : 0.5045065879821777
+Batch  10
+the time for data transfer from cpu to gpu is : 0.13727760314941406
+the gpu compute time is : 0.5040256977081299
+Batch  11
+the time for data transfer from cpu to gpu is : 0.1372225284576416
+the gpu compute time is : 0.5034570693969727
+Batch  12
+the time for data transfer from cpu to gpu is : 0.1373589038848877
+the gpu compute time is : 0.5029442310333252
+Batch  13
+the time for data transfer from cpu to gpu is : 0.13700556755065918
+the gpu compute time is : 0.5045216083526611
+Batch  14
+the time for data transfer from cpu to gpu is : 0.13744258880615234
+the gpu compute time is : 0.5032806396484375
+Batch  15
+the time for data transfer from cpu to gpu is : 0.13742518424987793
+the gpu compute time is : 0.5036630630493164
+Batch  16
+Average Data Transfer time is : 0.13726038932800294
+Average GPU Compute Time is : 0.5038562774658203
+Standar Deviation of Data Transfer Time is : 0.0001318661585581332
+Standar Deviation of GPU Compute Time is : 0.0006089870391734035
+=> creating model 'vgg16'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.12394213676452637
+the gpu compute time is : 0.634160041809082
+Batch  7
+the time for data transfer from cpu to gpu is : 0.12400412559509277
+the gpu compute time is : 0.6365833282470703
+Batch  8
+the time for data transfer from cpu to gpu is : 0.12375593185424805
+the gpu compute time is : 0.6341767311096191
+Batch  9
+the time for data transfer from cpu to gpu is : 0.12404870986938477
+the gpu compute time is : 0.6340842247009277
+Batch  10
+the time for data transfer from cpu to gpu is : 0.12373781204223633
+the gpu compute time is : 0.6344397068023682
+Batch  11
+the time for data transfer from cpu to gpu is : 0.12313342094421387
+the gpu compute time is : 0.6286575794219971
+Batch  12
+the time for data transfer from cpu to gpu is : 0.12391495704650879
+the gpu compute time is : 0.6309621334075928
+Batch  13
+the time for data transfer from cpu to gpu is : 0.1236262321472168
+the gpu compute time is : 0.6271035671234131
+Batch  14
+the time for data transfer from cpu to gpu is : 0.12365150451660156
+the gpu compute time is : 0.627633810043335
+Batch  15
+the time for data transfer from cpu to gpu is : 0.1239933967590332
+the gpu compute time is : 0.6282958984375
+Batch  16
+Average Data Transfer time is : 0.12378082275390626
+Average GPU Compute Time is : 0.6316097021102905
+Standar Deviation of Data Transfer Time is : 0.0002594320017316181
+Standar Deviation of GPU Compute Time is : 0.0032892499850441913
+=> creating model 'vgg16_bn'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.13459229469299316
+the gpu compute time is : 0.6757912635803223
+Batch  7
+the time for data transfer from cpu to gpu is : 0.13453435897827148
+the gpu compute time is : 0.6766173839569092
+Batch  8
+the time for data transfer from cpu to gpu is : 0.13442635536193848
+the gpu compute time is : 0.6774389743804932
+Batch  9
+the time for data transfer from cpu to gpu is : 0.1344926357269287
+the gpu compute time is : 0.6762051582336426
+Batch  10
+the time for data transfer from cpu to gpu is : 0.13455820083618164
+the gpu compute time is : 0.6794378757476807
+Batch  11
+the time for data transfer from cpu to gpu is : 0.1348588466644287
+the gpu compute time is : 0.6768696308135986
+Batch  12
+the time for data transfer from cpu to gpu is : 0.13431525230407715
+the gpu compute time is : 0.6776790618896484
+Batch  13
+the time for data transfer from cpu to gpu is : 0.1345531940460205
+the gpu compute time is : 0.6766326427459717
+Batch  14
+the time for data transfer from cpu to gpu is : 0.13462400436401367
+the gpu compute time is : 0.6775953769683838
+Batch  15
+the time for data transfer from cpu to gpu is : 0.13457798957824707
+the gpu compute time is : 0.6793613433837891
+Batch  16
+Average Data Transfer time is : 0.13455331325531006
+Average GPU Compute Time is : 0.6773628711700439
+Standar Deviation of Data Transfer Time is : 0.00013316629575548336
+Standar Deviation of GPU Compute Time is : 0.00116627110257734
+=> creating model 'vgg19'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.12325119972229004
+the gpu compute time is : 0.7943229675292969
+Batch  7
+the time for data transfer from cpu to gpu is : 0.1228494644165039
+the gpu compute time is : 0.7927367687225342
+Batch  8
+the time for data transfer from cpu to gpu is : 0.1228647232055664
+the gpu compute time is : 0.7930710315704346
+Batch  9
+the time for data transfer from cpu to gpu is : 0.12298893928527832
+the gpu compute time is : 0.7932083606719971
+Batch  10
+the time for data transfer from cpu to gpu is : 0.12191486358642578
+the gpu compute time is : 0.7934403419494629
+Batch  11
+the time for data transfer from cpu to gpu is : 0.12272405624389648
+the gpu compute time is : 0.7924017906188965
+Batch  12
+the time for data transfer from cpu to gpu is : 0.12269854545593262
+the gpu compute time is : 0.7934939861297607
+Batch  13
+the time for data transfer from cpu to gpu is : 0.12307047843933105
+the gpu compute time is : 0.7923049926757812
+Batch  14
+the time for data transfer from cpu to gpu is : 0.12296247482299805
+the gpu compute time is : 0.7938058376312256
+Batch  15
+the time for data transfer from cpu to gpu is : 0.1224055290222168
+the gpu compute time is : 0.7944619655609131
+Batch  16
+Average Data Transfer time is : 0.12277302742004395
+Average GPU Compute Time is : 0.7933248043060303
+Standar Deviation of Data Transfer Time is : 0.00035962908946060015
+Standar Deviation of GPU Compute Time is : 0.0006984658640829538
+=> creating model 'vgg19_bn'
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+the time for data transfer from cpu to gpu is : 0.10298442840576172
+the gpu compute time is : 0.8782517910003662
+Batch  7
+the time for data transfer from cpu to gpu is : 0.10303926467895508
+the gpu compute time is : 0.882429838180542
+Batch  8
+the time for data transfer from cpu to gpu is : 0.1029517650604248
+the gpu compute time is : 0.8814806938171387
+Batch  9
+the time for data transfer from cpu to gpu is : 0.10306549072265625
+the gpu compute time is : 0.8830678462982178
+Batch  10
+the time for data transfer from cpu to gpu is : 0.10306334495544434
+the gpu compute time is : 0.8789663314819336
+Batch  11
+the time for data transfer from cpu to gpu is : 0.10303831100463867
+the gpu compute time is : 0.8792855739593506
+Batch  12
+the time for data transfer from cpu to gpu is : 0.10303306579589844
+the gpu compute time is : 0.879127025604248
+Batch  13
+the time for data transfer from cpu to gpu is : 0.1031041145324707
+the gpu compute time is : 0.8820996284484863
+Batch  14
+the time for data transfer from cpu to gpu is : 0.10304760932922363
+the gpu compute time is : 0.8793284893035889
+Batch  15
+the time for data transfer from cpu to gpu is : 0.10327696800231934
+the gpu compute time is : 0.8831400871276855
+Batch  16
+Average Data Transfer time is : 0.1030604362487793
+Average GPU Compute Time is : 0.8807177305221557
+Standar Deviation of Data Transfer Time is : 8.26231527901498e-05
+Standar Deviation of GPU Compute Time is : 0.0018020428749134627
