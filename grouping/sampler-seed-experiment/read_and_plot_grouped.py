@@ -22,15 +22,14 @@ batch_top1_top5_size64 = {}
 
 
 short_batch = '128'
-current_p = 'train_top5'
-current_title = 'Epoch 100-200 Training top 5 Accuracy Sequential Grouping'
-process = '_trainingtop5_'
+current_p = 'train_top1'
+current_title = 'Epoch related Training top 1 Accuracy'
+process = '_trainingtop1_'
 
-with open('sequential-groupingresnet18_batch_128_gsize_64_epo_200_') as json_file:
+with open('diffclass-grouping_resnet18_batch_128_gsize_64_epo_100') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
-            print(len(data[k]))
             batch_top1_top5 = data[k]
         elif k == 'model':
             model = data[k]           
@@ -38,21 +37,21 @@ with open('sequential-groupingresnet18_batch_128_gsize_64_epo_200_') as json_fil
             epochs = data[k]	
         elif k == 'args.batch_size':
             batch_size = data[k]
-# with open('resnet101_batch_'+short_batch+'_gsize_2_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size2 = data[k]
-# with open('resnet101_batch_'+short_batch+'_gsize_4_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size4 = data[k]
-# with open('resnet101_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size8 = data[k]
+with open('no-grouping_resnet18_batch_256_epo_100') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size2 = data[k]
+with open('sequential-grouping_resnet18_batch_128_gsize_64_epo_100') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size4 = data[k]
+with open('grouping_resnet18_batch_128_gsize_64_epo_100') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size8 = data[k]
 # with open('resnet101_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -68,6 +67,7 @@ with open('sequential-groupingresnet18_batch_128_gsize_64_epo_200_') as json_fil
 #     for k,v in data.items():
 #         if k == current_p:
 #             batch_top1_top5_size64 = data[k]
+
 
 def helper(batches):
     batch_range = []
@@ -88,12 +88,11 @@ def helper(batches):
 # x64, top1s64, top5s64 = helper(batch_top1_top5_size64)
 
 
-epoch_range = range(1,100+1)
-print("epoch",epochs)
-plt.plot(epoch_range, batch_top1_top5, label = 'sequential-grouping')
-# plt.plot(epoch_range, batch_top1_top5_size2, label = 'groupsize_2')
-# plt.plot(epoch_range, batch_top1_top5_size4, label = 'groupsize_4')
-# plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
+epoch_range = range(1,epochs+1)
+plt.plot(epoch_range, batch_top1_top5, '-', label = 'different_class_grouping')
+plt.plot(epoch_range, batch_top1_top5_size2, '-.', label = 'no_grouping')
+plt.plot(epoch_range, batch_top1_top5_size4, ':',label = 'sequential_grouping')
+plt.plot(epoch_range, batch_top1_top5_size8, '--',label = 'perm_random_grouping')
 # plt.plot(epoch_range, batch_top1_top5_size16, label = 'groupsize_16')
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'groupsize_32')
 # plt.plot(epoch_range, batch_top1_top5_size64, label = 'groupsize_64')
@@ -106,7 +105,7 @@ plt.show(block=True)
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +".png" 
+sample_file_name = "eksperimen-grouping_"+model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """

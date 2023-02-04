@@ -334,7 +334,7 @@ def main_worker(gpu, ngpus_per_node, args):
     'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
     bat = str(args.batch_size)
     epo = str(args.epochs)
-    txt = "/home/cc/gpufs/gpufs/imagenette2/" + strs + "_batch_" + bat +"_gsize_"+ str(img_per_tar) + "_epo_" + epo + "_" + args.sampler_name
+    txt = "rand-perm_" + strs + "_batch_" + bat +"_gsize_"+ str(img_per_tar) + "_epo_" + epo + "_" + args.sampler_name
     with open(txt , 'w') as convert_file:
         convert_file.write(json.dumps(model_data))
     
