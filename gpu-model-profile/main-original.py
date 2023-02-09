@@ -333,7 +333,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		batch_time.update(time.time() - end)
 		end = time.time()
 		
-	calculateSTD(total_time_list, total_time_2_list)
 
 def calculateSTD(total_time_list, total_time_2_list):
     total_data_transfer = numpy.array(total_time_list)
