@@ -335,7 +335,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
-
+    print("array of data transfer time :",total_time_list)
+    print("array of gpu compute time :", total_time_2_list)
     print("Average Data Transfer time is :", numpy.average(total_time_list))
     print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
     print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_list))
