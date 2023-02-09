@@ -294,7 +294,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure data loading time
         data_time.update(time.time() - end)
         print("Batch ",i)
-        if i == 16 :
+        if i == 36 :
             break
         start = time.time()
         if args.gpu is not None:
