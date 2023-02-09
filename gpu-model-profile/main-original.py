@@ -336,27 +336,32 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 	calculateSTD(total_time_list, total_time_2_list)
 
 def calculateSTD(total_time_list, total_time_2_list):
-	print("The Data Transfer Time is : ")
-	total_data_transfer = numpy.array(total_time_list)
-	result_1 = numpy.transpose(total_data_transfer)
-	for i in result_1:
-		print(i)
-	
-	print("The GPU Compute Time is : ")
-	total_gpu_compute = numpy.array(total_time_2_list)
-	result_2 = numpy.transpose(total_gpu_compute)
-	for i in result_2:
-		print(i)
-		
-	print("Average Data Transfer time is :", numpy.average(total_time_list))
-	print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+    total_data_transfer = numpy.array(total_time_list)
+    result_1 = numpy.transpose(total_data_transfer)
+    
+    
+    total_gpu_compute = numpy.array(total_time_2_list)
+    result_2 = numpy.transpose(total_gpu_compute)
+    
 
-	stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64)
-	stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64)
-	
-	print("Standar Deviation of Data Transfer Time is :", stdDataTf)
-	print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
-	return stdDataTf, stdGPUComputeTime
+    stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64)
+    stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64)
+
+    if float(stdDataTf) < float(5) and float(stdGPUComputeTime) < float(5):
+        print("The Data Transfer Time is : ")
+        for i in result_1:
+            print(i)
+        print("The GPU Compute Time is : ")
+        for i in result_2:
+            print(i)
+        print("Standar Deviation of Data Transfer Time is :", stdDataTf)
+        print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
+            
+        print("Average Data Transfer time is :", numpy.average(total_time_list))
+        print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+    
+
+    return stdDataTf, stdGPUComputeTime
 
 
 def validate(val_loader, model, criterion, args):
