@@ -294,7 +294,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		print("Batch ",i)
 		if (i - 6) % 10 == 0 and (i-6) > 0:
 			stdDataTf, stdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
-			if stdDataTf < 5 and stdGPUComputeTime < 5:
+			if float(stdDataTf) < float(5) and float(stdGPUComputeTime) < float(5):
 				break
 		start = time.time()
 		if args.gpu is not None:
