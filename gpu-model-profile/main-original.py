@@ -328,13 +328,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             end_2 = time.time()
             total_time_2 = end_2 - start_2
             total_time_2_list.append(total_time_2)
-        
-        if i >= 6 :
-            #print("the gpu compute time is :", total_time_2)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
+        
     print("The Data Transfer Time is : ")
     total_data_transfer = numpy.array(total_time_list)
     result_1 = numpy.transpose(total_data_transfer)
