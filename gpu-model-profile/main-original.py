@@ -292,8 +292,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		# measure data loading time
 		data_time.update(time.time() - end)
 		print("Batch ",i)
-		if (i - 6) % 10 == 0:
-            
+		if (i - 6) % 10 == 0 and (i-6) > 0:
 			stdDataTf, stdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
 			if stdDataTf < 5 and stdGPUComputeTime < 5:
 				break
