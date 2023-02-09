@@ -338,7 +338,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     total_data_transfer = numpy.array(total_time_list)
     result = numpy.transpose(total_data_transfer)
     for i in result:
-        print(*i)
+        print(i)
     print("array of data transfer time :",total_time_list)
     print("array of gpu compute time :", total_time_2_list)
     print("Average Data Transfer time is :", numpy.average(total_time_list))
