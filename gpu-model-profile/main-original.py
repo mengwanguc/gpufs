@@ -305,7 +305,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         total_time = end - start
         if i >= 6 :
-            print("the time for data transfer from cpu to gpu is :", total_time)
+            #print("the time for data transfer from cpu to gpu is :", total_time)
             total_time_list.append(total_time)
         
         # compute output
@@ -330,21 +330,28 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             total_time_2_list.append(total_time_2)
         
         if i >= 6 :
-            print("the gpu compute time is :", total_time_2)
+            #print("the gpu compute time is :", total_time_2)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
+    print("The Data Transfer Time is : ")
     total_data_transfer = numpy.array(total_time_list)
-    result = numpy.transpose(total_data_transfer)
+    result_1 = numpy.transpose(total_data_transfer)
     for i in result:
         print(i)
-    print("array of data transfer time :",total_time_list)
-    print("array of gpu compute time :", total_time_2_list)
+    
+    print("The GPU Compute Time is : ")
+    total_gpu_compute = numpy.array(total_time_2_list)
+    result_2 = numpy.transpose(total_gpu_compute)
+    for i in result:
+        print(i)
+        
     print("Average Data Transfer time is :", numpy.average(total_time_list))
     print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
-    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_time_list))
-    print("Standar Deviation of GPU Compute Time is :", numpy.std(total_time_2_list))
+    
+    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_data_transfer, dtype=numpy.float64))
+    print("Standar Deviation of GPU Compute Time is :", numpy.std(total_gpu_compute, dtype=numpy.float64))
 
 
 def validate(val_loader, model, criterion, args):
