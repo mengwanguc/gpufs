@@ -1,5 +1,213 @@
+ekseleber
+#4280
+
+ekseleber — 02/03/2023 7:37 AM
+Ooooh
+waitt aku cobaa
+krobus — 02/03/2023 7:37 AM
+cat namafile.ext | grep keyword1|keyword2
+ekseleber — 02/03/2023 7:39 AM
+terus masukinnya tinggal pake tanda panah ya > Namafile.ext
+gitu ya?
+krobus — 02/03/2023 7:39 AM
+iya
+cat namafile.ext | grep keyword1|keyword2 > filter.txt
+ekseleber — 02/03/2023 7:39 AM
+Wokaaii
+Tq bang'
+ekseleber — Today at 1:12 PM
+bang mikel mau tanyaa wkwk
+krobus — Today at 1:12 PM
+oy
+ekseleber — Today at 1:12 PM
+pernah nemu masalh gini gaa
+jadi ada suatu kodingan buat nemu jawaban. Taruhlah jawaban itu harus "kurang dari 5" kalau lebih dari 5 dia ngubah variabel tertentu dalam kodingan dan run ulang
+krobus — Today at 1:16 PM
+hmm klo casenya input gitu blm pernah nemu si
+gw biasanya pake buat live reload kalau ada changes di codenya aja
+ekseleber — Today at 1:16 PM
+Hmmm
+kalo dibuat variabelnya itu di array terus dia nyoba ngubah variabelnya itu sesuai yg di array bisa kan ya?
+jadi a = 8 b = 2 hasilnya harus == 10 tapi disini array a itu isinya 1,2,3,4,5,6,7,8 gitu kalau hasilnya ga 10 dia masukin ke variabel a
+krobus — Today at 1:18 PM
+paling simple si bikin logic di codenya
+func bootstrap() {
+  // ini logic appnya
+}
+
+func main() {
+  // ini nanya
+  looping kalau jawaban g sesuai {
+     bootstrap()
+  }
+}
+ekseleber — Today at 1:20 PM
+Oooh
+I see
+krobus — Today at 1:20 PM
+dari pada lu ngoding bash mending bikin di codenya aja KWKWKWKW
+ekseleber — Today at 1:21 PM
+WKWKWKWKW
+wait wait
+kok puseng ya bang
+krobus — Today at 1:26 PM
+pake bahasa apa nin ?
+ekseleber — Today at 1:26 PM
+pitong bang
+tp logicnya dari function" itu tu masi blm nemu wkwk
+ntar aku cobaa dulu bang wkwk
+doakan tidak meleduck
+krobus — Today at 1:29 PM
+ini soal apa si wkwkw
+tech test ato ngide nin ? wkwkwk
+krobus — Today at 1:30 PM
+ini gw masi blm nangkep maksudnya
+ekseleber — Today at 1:30 PM
+inii buat tugas riset beasiswa bang wkwk
+eh fungsi tu bisa manggil dirinya sendiri kan?
+krobus — Today at 1:31 PM
+bisa
+sini soal nya
+gw jawabin pake chat gpt
+ekseleber — Today at 1:31 PM
+kayak def mikel (parameter)
+mikel(parameter)
+krobus — Today at 1:31 PM
+1 org udah lolos tech test
+siapa tau lu jd yg ke 2 KWKWKWKW
+ekseleber — Today at 1:31 PM
+aku bingung njirr
+pertanyaannya kyk gimanaa
+mo coba sharescreen kah wkwk?
+krobus — Today at 1:32 PM
+bisa sharescreen ga ?
+gas
+wkwkk
+ekseleber — Today at 1:32 PM
+naahh
+ekseleber
+ started a call.
+ — Today at 1:32 PM
+krobus — Today at 1:37 PM
+https://www.programiz.com/python-programming/global-keyword
+Python Global Keyword (With Examples)
+In this tutorial, we'll learn about the global keyword with the help of examples.
+ekseleber — Today at 1:47 PM
 # https://github.com/pytorch/examples/blob/6ab697cbaaa164b6eca551e8e8428dfa3b1d1e4b/imagenet/main.py
 
+import argparse
+import os
+import random
+import shutil
+Expand
+message.txt
+19 KB
+krobus — Today at 1:56 PM
+import argparse
+import os
+import random
+import shutil
+import time
+import warnings
+
+import torch
+import torch.nn as nn
+import torch.nn.parallel
+import torch.backends.cudnn as cudnn
+import torch.distributed as dist
+import torch.optim
+from torch.optim.lr_scheduler import *
+import torch.multiprocessing as mp
+import torch.utils.data
+import torch.utils.data.distributed
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
+import torchvision.models as models
+import numpy
+
+model_names = sorted(name for name in models.__dict__
+    if name.islower() and not name.startswith("__")
+    and callable(models.__dict__[name]))
+
+parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
+parser.add_argument('data', metavar='DIR',
+                    help='path to dataset')
+parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
+                    choices=model_names,
+                    help='model architecture: ' +
+                        ' | '.join(model_names) +
+                        ' (default: resnet18)')
+parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+                    help='number of data loading workers (default: 4)')
+parser.add_argument('--epochs', default=90, type=int, metavar='N',
+                    help='number of total epochs to run')
+parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
+                    help='manual epoch number (useful on restarts)')
+parser.add_argument('-b', '--batch-size', default=256, type=int,
+                    metavar='N',
+                    help='mini-batch size (default: 256), this is the total '
+                         'batch size of all GPUs on the current node when '
+                         'using Data Parallel or Distributed Data Parallel')
+parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
+                    metavar='LR', help='initial learning rate', dest='lr')
+parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
+                    help='momentum')
+parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
+                    metavar='W', help='weight decay (default: 1e-4)',
+                    dest='weight_decay')
+parser.add_argument('-p', '--print-freq', default=10, type=int,
+                    metavar='N', help='print frequency (default: 10)')
+parser.add_argument('--resume', default='', type=str, metavar='PATH',
+                    help='path to latest checkpoint (default: none)')
+parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
+                    help='evaluate model on validation set')
+parser.add_argument('--pretrained', dest='pretrained', action='store_true',
+                    help='use pre-trained model')
+parser.add_argument('--world-size', default=-1, type=int,
+                    help='number of nodes for distributed training')
+parser.add_argument('--rank', default=-1, type=int,
+                    help='node rank for distributed training')
+parser.add_argument('--dist-url', default='tcp://224.66.41.62:23456', type=str,
+                    help='url used to set up distributed training')
+parser.add_argument('--dist-backend', default='nccl', type=str,
+                    help='distributed backend')
+parser.add_argument('--seed', default=None, type=int,
+                    help='seed for initializing training. ')
+parser.add_argument('--gpu', default=None, type=int,
+                    help='GPU id to use.')
+parser.add_argument('--multiprocessing-distributed', action='store_true',
+                    help='Use multi-processing distributed training to launch '
+                         'N processes per node, which has N GPUs. This is the '
+                         'fastest way to use PyTorch for either single node or '
+                         'multi node data parallel training')
+
+best_acc1 = 0
+
+
+def main():
+    args = parser.parse_args()
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        torch.manual_seed(args.seed)
+        cudnn.deterministic = True
+        warnings.warn('You have chosen to seed training. '
+                      'This will turn on the CUDNN deterministic setting, '
+                      'which can slow down your training considerably! '
+                      'You may see unexpected behavior when restarting '
+                      'from checkpoints.')
+
+    if args.gpu is not None:
+        warnings.warn('You have chosen a specific GPU. This will completely '
+                      'disable data parallelism.')
+
+    if args.dist_url == "env://" and args.world_size == -1:
+        args.world_size = int(os.environ["WORLD_SIZE"])
+... (371 lines left)
+Collapse
+main.py
+19 KB
+﻿
 import argparse
 import os
 import random
@@ -294,8 +502,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure data loading time
         data_time.update(time.time() - end)
         print("Batch ",i)
-        if i == 36 :
-            break
+        if (i - 6) % 10 == 0:
+			stdDataTf, stdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
+			if stdDataTf < 5 AND stdGPUComputeTime < 5:
+				break
         start = time.time()
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
@@ -333,7 +543,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         batch_time.update(time.time() - end)
         end = time.time()
         
-    print("The Data Transfer Time is : ")
+	calculateSTD(total_time_list, total_time_2_list)
+
+def calculateSTD(total_time_list, total_time_2_list):
+	print("The Data Transfer Time is : ")
     total_data_transfer = numpy.array(total_time_list)
     result_1 = numpy.transpose(total_data_transfer)
     for i in result_1:
@@ -347,9 +560,13 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
     print("Average Data Transfer time is :", numpy.average(total_time_list))
     print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+
+	stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64)
+	stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64)
     
-    print("Standar Deviation of Data Transfer Time is :", numpy.std(total_data_transfer, dtype=numpy.float64))
-    print("Standar Deviation of GPU Compute Time is :", numpy.std(total_gpu_compute, dtype=numpy.float64))
+    print("Standar Deviation of Data Transfer Time is :", stdDataTf)
+    print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
+	return stdDataTf, stdGPUComputeTime
 
 
 def validate(val_loader, model, criterion, args):
@@ -462,3 +679,5 @@ def accuracy(output, target, topk=(1,)):
 
 if __name__ == '__main__':
     main()
+main.py
+19 KB
