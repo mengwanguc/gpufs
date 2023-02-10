@@ -292,9 +292,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		# measure data loading time
 		data_time.update(time.time() - end)
 		print("Batch ",i)
-		if (i - 6) % 10 == 0 and (i-6) > 0:
-			relativestdDataTF, relativestdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
-			if float(relativestdDataTF) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
+		if i == 106:
+			#relativestdDataTF, relativestdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
+			#if float(relativestdDataTF) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
 				break
 		start = time.time()
 		if args.gpu is not None:
@@ -332,6 +332,38 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		# measure elapsed time
 		batch_time.update(time.time() - end)
 		end = time.time()
+
+	total_data_transfer = numpy.array(total_time_list)
+	result_1 = numpy.transpose(total_data_transfer)
+    
+    
+	total_gpu_compute = numpy.array(total_time_2_list)
+	result_2 = numpy.transpose(total_gpu_compute)
+    
+
+	stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64, ddof=1)
+	averageDataTf = numpy.average(total_data_transfer)
+	stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
+	averageGPUComputeTime = numpy.average(total_gpu_compute)
+
+	relativestdDataTf = stdDataTf/averageDataTf
+	relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
+
+print("The Data Transfer Time is : ")
+for i in result_1:
+        	print(i)
+print("The GPU Compute Time is : ")
+for i in result_2:
+    print(i)
+	
+print("Standar Deviation of Data Transfer Time is : {:.20f}".format(stdDataTf))
+print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
+            
+print("Average Data Transfer time is :", numpy.average(total_time_list))
+print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+	
+print("Relative STD of Data Transfer Time is : {:.4%}".format(relativestdDataTf))
+print("Relative STD of GPU Compute Time is : {:.4%}".format(relativestdGPUComputeTime))
 		
 
 def calculateSTD(total_time_list, total_time_2_list):
