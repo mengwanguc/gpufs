@@ -351,7 +351,7 @@ relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
 
 print("The Data Transfer Time is : ")
 for i in result_1:
-        	print(i)
+        	print(i) 
 print("The GPU Compute Time is : ")
 for i in result_2:
     print(i)
