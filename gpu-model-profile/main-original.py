@@ -293,8 +293,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		data_time.update(time.time() - end)
 		print("Batch ",i)
 		if (i - 6) % 10 == 0 and (i-6) > 0:
-			stdDataTf, stdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
-			if float(stdDataTf) < float(5) and float(stdGPUComputeTime) < float(5):
+			relativestdDataTF, relativestdGPUComputeTime = calculateSTD(total_time_list, total_time_2_list)
+			if float(relativestdDataTF) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
 				break
 		start = time.time()
 		if args.gpu is not None:
@@ -343,10 +343,15 @@ def calculateSTD(total_time_list, total_time_2_list):
     result_2 = numpy.transpose(total_gpu_compute)
     
 
-    stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64)
-    stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64)
+    stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64, ddof=1)
+    averageDataTf = numpy.average(total_data_transfer, dtype=numpy.float64)
+    stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
+    averageGPUComputeTime = numpy.average(total_gpu_compute, dtype=numpy.float64)
 
-    if float(stdDataTf) < float(5) and float(stdGPUComputeTime) < float(5):
+    relativestdDataTf = stdDataTf/averageDataTF
+    relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
+
+    if float(relativestdDataTF) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
         print("The Data Transfer Time is : ")
         for i in result_1:
             print(i)
@@ -358,9 +363,12 @@ def calculateSTD(total_time_list, total_time_2_list):
             
         print("Average Data Transfer time is :", numpy.average(total_time_list))
         print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+	
+	print("Relative STD of Data Transfer Time is : ",relativestdDataTF)
+	print("Relative STD of GPU Compute Time is : ",relativestdGPUComputeTime)
     
 
-    return stdDataTf, stdGPUComputeTime
+    return relativestdDataTF, relativestdGPUComputeTime
 
 
 def validate(val_loader, model, criterion, args):
