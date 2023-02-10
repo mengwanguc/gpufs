@@ -1,0 +1,471 @@
+=> creating model 'alexnet'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+alexnet self forward time: 0.3763759136199951
+Batch  1
+alexnet self forward time: 0.4730567932128906
+Batch  2
+alexnet self forward time: 0.5683057308197021
+Batch  3
+--
+The Data Transfer Time is : 
+0.19730782508850098
+0.19787955284118652
+0.1979389190673828
+0.19827985763549805
+0.1972339153289795
+0.1977849006652832
+0.19750499725341797
+0.19765877723693848
+0.19782352447509766
+0.19758129119873047
+The GPU Compute Time is : 
+0.4638557434082031
+0.46135616302490234
+0.4641709327697754
+0.4631533622741699
+0.46350717544555664
+0.46361589431762695
+0.46178722381591797
+0.46524739265441895
+0.46292638778686523
+0.4623894691467285
+Standar Deviation of Data Transfer Time is : 0.00029544406275849112
+Standar Deviation of GPU Compute Time is : 0.0010936869847434092
+Average Data Transfer time is : 0.19769935607910155
+Average GPU Compute Time is : 0.4632009744644165
+alexnet self forward time: 1.9091367721557617
+Test: [ 0/31]	Time  1.490 ( 1.490)	Loss nan (nan)	Acc@1   0.00 (  0.00)	Acc@5 100.00 (100.00)
+alexnet self forward time: 2.010044813156128
+alexnet self forward time: 2.1107559204101562
+alexnet self forward time: 2.211663007736206
+alexnet self forward time: 2.312717914581299
+alexnet self forward time: 2.4136013984680176
+alexnet self forward time: 2.5144236087799072
+--
+=> creating model 'densenet121'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+densenet single_forward_time: 0.006047487258911133
+densenet single_forward_time: 0.1344921588897705
+densenet single_forward_time: 0.10663819313049316
+densenet single_forward_time: 0.12626314163208008
+densenet single_forward_time: 0.12383580207824707
+densenet single_forward_time: 0.118316650390625
+--
+=> creating model 'densenet161'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+densenet single_forward_time: 0.006940603256225586
+densenet single_forward_time: 0.17032861709594727
+densenet single_forward_time: 0.19674444198608398
+densenet single_forward_time: 0.1824626922607422
+densenet single_forward_time: 0.1738440990447998
+densenet single_forward_time: 0.17212581634521484
+--
+=> creating model 'densenet169'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+densenet single_forward_time: 0.0057828426361083984
+densenet single_forward_time: 0.11170125007629395
+densenet single_forward_time: 0.12928438186645508
+densenet single_forward_time: 0.12633895874023438
+densenet single_forward_time: 0.12378597259521484
+densenet single_forward_time: 0.11827754974365234
+--
+=> creating model 'densenet201'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+densenet single_forward_time: 0.0056552886962890625
+densenet single_forward_time: 0.11172103881835938
+densenet single_forward_time: 0.13686680793762207
+densenet single_forward_time: 0.13272714614868164
+densenet single_forward_time: 0.12557458877563477
+densenet single_forward_time: 0.12118649482727051
+--
+=> creating model 'resnet101'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet152 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'resnet152'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet18 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'resnet18'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+--
+The Data Transfer Time is : 
+0.18270540237426758
+0.18244361877441406
+0.18233442306518555
+0.18215203285217285
+0.18221211433410645
+0.18240785598754883
+0.18285036087036133
+0.18267416954040527
+0.1818370819091797
+0.18265366554260254
+The GPU Compute Time is : 
+2.1049838066101074
+2.0989878177642822
+2.100463390350342
+2.110219955444336
+2.1135032176971436
+2.1073594093322754
+2.105790853500366
+2.1060612201690674
+2.107532262802124
+2.1159589290618896
+Standar Deviation of Data Transfer Time is : 0.00029124072642107993
+Standar Deviation of GPU Compute Time is : 0.00496579744063926
+Average Data Transfer time is : 0.1824270725250244
+Average GPU Compute Time is : 2.1070860862731933
+Test: [ 0/31]	Time  2.114 ( 2.114)	Loss 2.2324e+01 (2.2324e+01)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [10/31]	Time  0.724 ( 0.850)	Loss 1.1949e+01 (1.8778e+01)	Acc@1   0.00 (  0.00)	Acc@5   2.34 (  0.57)
+Test: [20/31]	Time  0.726 ( 0.790)	Loss 8.4000e-01 (1.6331e+01)	Acc@1  42.97 (  5.99)	Acc@5 100.00 ( 14.17)
+Test: [30/31]	Time  0.483 ( 0.762)	Loss 2.9211e+01 (1.4899e+01)	Acc@1   0.00 ( 10.55)	Acc@5   0.00 ( 30.80)
+ * Acc@1 10.548 Acc@5 30.803
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet34 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'resnet34'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+--
+The Data Transfer Time is : 
+0.13620805740356445
+0.13613152503967285
+0.136643648147583
+0.13659882545471191
+0.1369173526763916
+0.1361377239227295
+0.13694500923156738
+0.13670063018798828
+0.1371290683746338
+0.13695144653320312
+The GPU Compute Time is : 
+4.163986682891846
+4.164931058883667
+4.173901557922363
+4.170334577560425
+4.175374746322632
+4.171456575393677
+4.169283628463745
+4.166226148605347
+4.1618640422821045
+4.177602052688599
+Standar Deviation of Data Transfer Time is : 0.00034767719129406865
+Standar Deviation of GPU Compute Time is : 0.004943670984420237
+Average Data Transfer time is : 0.1366363286972046
+Average GPU Compute Time is : 4.16949610710144
+Test: [ 0/31]	Time  2.663 ( 2.663)	Loss 1.9285e+04 (1.9285e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [10/31]	Time  1.434 ( 1.545)	Loss 1.3637e+04 (3.1528e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [20/31]	Time  1.430 ( 1.492)	Loss 2.7680e+03 (2.3307e+04)	Acc@1   0.00 (  0.00)	Acc@5 100.00 ( 28.05)
+Test: [30/31]	Time  0.953 ( 1.458)	Loss 1.7519e+04 (2.0252e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 ( 19.95)
+ * Acc@1 0.000 Acc@5 19.949
+python main-original.py --epoch 1 --gpu=0 -b 128 -a resnet50 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'resnet50'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+--
+The Data Transfer Time is : 
+0.059767723083496094
+0.059313297271728516
+0.0597383975982666
+0.05977344512939453
+0.05981945991516113
+0.05984902381896973
+0.05962991714477539
+0.059441328048706055
+0.059511661529541016
+0.06017661094665527
+The GPU Compute Time is : 
+5.026179790496826
+5.038904905319214
+5.034928321838379
+5.031635761260986
+5.032087326049805
+5.038350582122803
+5.036807537078857
+5.030186176300049
+5.038851022720337
+5.034755229949951
+Standar Deviation of Data Transfer Time is : 0.00023062553519818499
+Standar Deviation of GPU Compute Time is : 0.004000744486063608
+Average Data Transfer time is : 0.059702086448669436
+Average GPU Compute Time is : 5.0342686653137205
+Test: [ 0/31]	Time  2.773 ( 2.773)	Loss 1.0567e+04 (1.0567e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [10/31]	Time  1.556 ( 1.664)	Loss 1.4837e+04 (1.3087e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [20/31]	Time  1.554 ( 1.611)	Loss 2.3592e+04 (2.5054e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+Test: [30/31]	Time  1.029 ( 1.575)	Loss 1.2063e+05 (3.6074e+04)	Acc@1   0.00 (  0.00)	Acc@5   0.00 (  0.00)
+ * Acc@1 0.000 Acc@5 0.000
+python main-original.py --epoch 1 --gpu=0 -b 128 -a squeezenet1_0 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'squeezenet1_0'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+squeezenet single_forward_time: 0.7220926284790039
+Batch  1
+squeezenet single_forward_time: 0.34751129150390625
+Batch  2
+squeezenet single_forward_time: 0.3425126075744629
+Batch  3
+--
+The Data Transfer Time is : 
+0.13041138648986816
+0.13015961647033691
+0.1301867961883545
+0.1303727626800537
+0.12880706787109375
+0.12837862968444824
+0.12781929969787598
+0.1282186508178711
+0.12822461128234863
+0.12783479690551758
+The GPU Compute Time is : 
+1.3798854351043701
+1.3815343379974365
+1.3785183429718018
+1.3777344226837158
+1.3752813339233398
+1.3767049312591553
+1.3761918544769287
+1.3750417232513428
+1.3740367889404297
+1.3778162002563477
+Standar Deviation of Data Transfer Time is : 0.00104877959058908036
+Standar Deviation of GPU Compute Time is : 0.0021898086915079383
+Average Data Transfer time is : 0.12904136180877684
+Average GPU Compute Time is : 1.3772745370864867
+squeezenet single_forward_time: 0.3445298671722412
+Test: [ 0/31]	Time  1.685 ( 1.685)	Loss nan (nan)	Acc@1   0.00 (  0.00)	Acc@5 100.00 (100.00)
+squeezenet single_forward_time: 0.34401655197143555
+squeezenet single_forward_time: 0.3437821865081787
+squeezenet single_forward_time: 0.34386467933654785
+squeezenet single_forward_time: 0.34377288818359375
+squeezenet single_forward_time: 0.3440845012664795
+squeezenet single_forward_time: 0.3439779281616211
+--
+=> creating model 'squeezenet1_1'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+squeezenet single_forward_time: 0.524151086807251
+Batch  1
+squeezenet single_forward_time: 0.20089459419250488
+Batch  2
+squeezenet single_forward_time: 0.2017652988433838
+Batch  3
+--
+The Data Transfer Time is : 
+0.06731939315795898
+0.06740665435791016
+0.0653085708618164
+0.0655975341796875
+0.06574511528015137
+0.06543540954589844
+0.06566929817199707
+0.06595182418823242
+0.06489062309265137
+0.06331491470336914
+The GPU Compute Time is : 
+0.8811464309692383
+0.8802633285522461
+0.880573034286499
+0.8801639080047607
+0.8803224563598633
+0.8794701099395752
+0.8790833950042725
+0.8791823387145996
+0.8810546398162842
+0.8792815208435059
+Standar Deviation of Data Transfer Time is : 0.00110299301639770332
+Standar Deviation of GPU Compute Time is : 0.0007232957938099776
+Average Data Transfer time is : 0.06566393375396729
+Average GPU Compute Time is : 0.8800541162490845
+squeezenet single_forward_time: 0.2067246437072754
+Test: [ 0/31]	Time  1.634 ( 1.634)	Loss nan (nan)	Acc@1   0.00 (  0.00)	Acc@5 100.00 (100.00)
+squeezenet single_forward_time: 0.20659756660461426
+squeezenet single_forward_time: 0.2067396640777588
+squeezenet single_forward_time: 0.20661592483520508
+squeezenet single_forward_time: 0.20657634735107422
+squeezenet single_forward_time: 0.20677876472473145
+squeezenet single_forward_time: 0.20682358741760254
+--
+=> creating model 'vgg11'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+--
+The Data Transfer Time is : 
+0.3038787841796875
+0.3043708801269531
+0.30492472648620605
+0.30492329597473145
+0.30422019958496094
+0.30491185188293457
+0.30507755279541016
+0.3052849769592285
+0.30513978004455566
+0.30499863624572754
+The GPU Compute Time is : 
+4.311765909194946
+4.3208231925964355
+4.319599390029907
+4.301227331161499
+4.292366981506348
+4.296538352966309
+4.262678384780884
+4.265784025192261
+4.200474262237549
+4.110103368759155
+Standar Deviation of Data Transfer Time is : 0.00043267913725004862
+Standar Deviation of GPU Compute Time is : 0.06277308397188981
+Average Data Transfer time is : 0.30477306842803953
+Average GPU Compute Time is : 4.268136119842529
+Test: [ 0/31]	Time  2.636 ( 2.636)	Loss nan (nan)	Acc@1   0.00 (  0.00)	Acc@5 100.00 (100.00)
+Test: [10/31]	Time  1.320 ( 1.438)	Loss nan (nan)	Acc@1   0.00 ( 28.05)	Acc@5 100.00 (100.00)
+Test: [20/31]	Time  1.320 ( 1.382)	Loss nan (nan)	Acc@1   0.00 ( 14.69)	Acc@5   0.00 ( 71.95)
+Test: [30/31]	Time  0.885 ( 1.348)	Loss nan (nan)	Acc@1   0.00 ( 10.06)	Acc@5   0.00 ( 49.27)
+ * Acc@1 10.064 Acc@5 49.274
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg11_bn ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg11_bn'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg13'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+Batch  2
+Batch  3
+Batch  4
+Batch  5
+Batch  6
+--
+The Data Transfer Time is : 
+0.27455735206604004
+0.2769336700439453
+0.27956628799438477
+0.2794044017791748
+0.2806072235107422
+0.2803645133972168
+0.28087735176086426
+0.28073596954345703
+0.2782254219055176
+0.27962779998779297
+The GPU Compute Time is : 
+7.812265634536743
+7.679145574569702
+7.612571954727173
+7.610103607177734
+7.6121299266815186
+7.6164398193359375
+7.6119444370269775
+7.625133037567139
+7.6250786781311035
+7.620852708816528
+Standar Deviation of Data Transfer Time is : 0.00190754482646051781
+Standar Deviation of GPU Compute Time is : 0.059763931051837055
+Average Data Transfer time is : 0.2790899991989136
+Average GPU Compute Time is : 7.642566537857055
+Test: [ 0/31]	Time  3.431 ( 3.431)	Loss nan (nan)	Acc@1   0.00 (  0.00)	Acc@5 100.00 (100.00)
+Test: [10/31]	Time  2.136 ( 2.256)	Loss nan (nan)	Acc@1   0.00 ( 28.05)	Acc@5 100.00 (100.00)
+Test: [20/31]	Time  2.140 ( 2.202)	Loss nan (nan)	Acc@1   0.00 ( 14.69)	Acc@5   0.00 ( 71.95)
+Test: [30/31]	Time  1.432 ( 2.159)	Loss nan (nan)	Acc@1   0.00 ( 10.06)	Acc@5   0.00 ( 49.27)
+ * Acc@1 10.064 Acc@5 49.274
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg13_bn ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg13_bn'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg16'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg16_bn ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg16_bn'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19 ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg19'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
+Batch  1
+python main-original.py --epoch 1 --gpu=0 -b 128 -a vgg19_bn ~/data/imagenette2 || true
+Use GPU: 0 for training
+=> creating model 'vgg19_bn'
+using random sampler...
+
+meng: new generator manual seed 0
+Batch  0
