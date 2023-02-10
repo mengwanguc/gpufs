@@ -348,10 +348,10 @@ def calculateSTD(total_time_list, total_time_2_list):
     stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
     averageGPUComputeTime = numpy.average(total_gpu_compute, dtype=numpy.float64)
 
-    relativestdDataTf = stdDataTf/averageDataTF
+    relativestdDataTf = stdDataTf/averageDataTf
     relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
 
-    if float(relativestdDataTF) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
+    if float(relativestdDataTf) < float(0.05) and float(relativestdGPUComputeTime) < float(0.05):
         print("The Data Transfer Time is : ")
         for i in result_1:
             print(i)
@@ -361,11 +361,11 @@ def calculateSTD(total_time_list, total_time_2_list):
         print("Standar Deviation of Data Transfer Time is : {:.20f}".format(stdDataTf))
         print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
             
-	print("Average Data Transfer time is :", numpy.average(total_time_list))
-	print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+        print("Average Data Transfer time is :", numpy.average(total_time_list))
+        print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
 	
-	print("Relative STD of Data Transfer Time is : ",relativestdDataTF)
-	print("Relative STD of GPU Compute Time is : ",relativestdGPUComputeTime)
+        print("Relative STD of Data Transfer Time is : ",relativestdDataTf)
+        print("Relative STD of GPU Compute Time is : ",relativestdGPUComputeTime)
     
 
     return relativestdDataTF, relativestdGPUComputeTime
