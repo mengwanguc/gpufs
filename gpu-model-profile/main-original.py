@@ -361,8 +361,8 @@ def calculateSTD(total_time_list, total_time_2_list):
         print("Standar Deviation of Data Transfer Time is : {:.20f}".format(stdDataTf))
         print("Standar Deviation of GPU Compute Time is :", stdGPUComputeTime)
             
-        print("Average Data Transfer time is :", numpy.average(total_time_list))
-        print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
+	print("Average Data Transfer time is :", numpy.average(total_time_list))
+	print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
 	
 	print("Relative STD of Data Transfer Time is : ",relativestdDataTF)
 	print("Relative STD of GPU Compute Time is : ",relativestdGPUComputeTime)
