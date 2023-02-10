@@ -333,21 +333,21 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 		batch_time.update(time.time() - end)
 		end = time.time()
 
-	total_data_transfer = numpy.array(total_time_list)
-	result_1 = numpy.transpose(total_data_transfer)
+total_data_transfer = numpy.array(total_time_list)
+result_1 = numpy.transpose(total_data_transfer)
     
     
-	total_gpu_compute = numpy.array(total_time_2_list)
-	result_2 = numpy.transpose(total_gpu_compute)
+total_gpu_compute = numpy.array(total_time_2_list)
+result_2 = numpy.transpose(total_gpu_compute)
     
 
-	stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64, ddof=1)
-	averageDataTf = numpy.average(total_data_transfer)
-	stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
-	averageGPUComputeTime = numpy.average(total_gpu_compute)
+stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64, ddof=1)
+averageDataTf = numpy.average(total_data_transfer)
+stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
+averageGPUComputeTime = numpy.average(total_gpu_compute)
 
-	relativestdDataTf = stdDataTf/averageDataTf
-	relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
+relativestdDataTf = stdDataTf/averageDataTf
+relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
 
 print("The Data Transfer Time is : ")
 for i in result_1:
