@@ -364,8 +364,8 @@ def calculateSTD(total_time_list, total_time_2_list):
         print("Average Data Transfer time is :", numpy.average(total_time_list))
         print("Average GPU Compute Time is :", numpy.average(total_time_2_list))
 	
-        print("Relative STD of Data Transfer Time is : {:.0%}".format(relativestdDataTf))
-        print("Relative STD of GPU Compute Time is : {:.0%}".format(relativestdGPUComputeTime))
+        print("Relative STD of Data Transfer Time is : {:.4%}".format(relativestdDataTf))
+        print("Relative STD of GPU Compute Time is : {:.4%}".format(relativestdGPUComputeTime))
     
 
     return relativestdDataTf, relativestdGPUComputeTime
