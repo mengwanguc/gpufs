@@ -344,9 +344,9 @@ def calculateSTD(total_time_list, total_time_2_list):
     
 
     stdDataTf = numpy.std(total_data_transfer, dtype=numpy.float64, ddof=1)
-    averageDataTf = numpy.average(total_data_transfer, dtype=numpy.float64)
+    averageDataTf = numpy.average(total_data_transfer)
     stdGPUComputeTime = numpy.std(total_gpu_compute, dtype=numpy.float64, ddof=1)
-    averageGPUComputeTime = numpy.average(total_gpu_compute, dtype=numpy.float64)
+    averageGPUComputeTime = numpy.average(total_gpu_compute)
 
     relativestdDataTf = stdDataTf/averageDataTf
     relativestdGPUComputeTime = stdGPUComputeTime/averageGPUComputeTime
