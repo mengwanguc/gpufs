@@ -368,7 +368,7 @@ def calculateSTD(total_time_list, total_time_2_list):
         print("Relative STD of GPU Compute Time is : ",relativestdGPUComputeTime)
     
 
-    return relativestdDataTF, relativestdGPUComputeTime
+    return relativestdDataTf, relativestdGPUComputeTime
 
 
 def validate(val_loader, model, criterion, args):
