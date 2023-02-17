@@ -116,6 +116,7 @@ def main():
 
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
+    global t
     args.gpu = gpu
 
     if args.gpu is not None:
@@ -242,12 +243,45 @@ def main_worker(gpu, ngpus_per_node, args):
         validate(val_loader, model, criterion, args)
         return
 
+    i=0
+    tio1=0
+    tlt1=0
+    tmt1=0
+    tio2=0
+    tlt2=0
+    tmt2=0
+    tio3=0
+    tlt3=0
+    tmt3=0
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
 
         # train for one epoch
         train(train_loader, model, criterion, optimizer, epoch, args)
+        #added by Haoran below
+        
+        if (i==0):
+            tio1=total_io_time
+            tlt1=total_load_time
+            tmt1=total_model_time
+            print('total_io_time1: ', tio1,'total_load_time1: ',tlt1, 'total_model_time1: ',tmt1)
+            i+=1
+        elif(i==1):
+            tio2=total_io_time-tio1
+            tlt2=total_load_time-tlt1
+            tmt2=total_model_time-tmt1
+            print('total_io_time1: ', tio1,'total_load_time1: ',tlt1, 'total_model_time1: ',tmt1)
+            print('total_io_time2: ', tio2,'total_load_time2: ',tlt2, 'total_model_time2: ',tmt2)
+            i+=1
+        elif(i==2):
+            tio3=total_io_time-tio1-tio2
+            tlt3=total_load_time-tlt1-tlt2
+            tmt3=total_model_time-tmt1-tmt2
+            print('total_io_time1: ', tio1,'total_load_time1: ',tlt1, 'total_model_time1: ',tmt1)
+            print('total_io_time2: ', tio2,'total_load_time2: ',tlt2, 'total_model_time2: ',tmt2)
+            print('total_io_time3: ', tio3,'total_load_time3: ',tlt3, 'total_model_time3: ',tmt3)
+        
 
         # evaluate on validation set
         acc1 = validate(val_loader, model, criterion, args)
@@ -273,13 +307,23 @@ def main_worker(gpu, ngpus_per_node, args):
 io_time = 0
 load_time = 0
 model_time = 0
+total_io_time=0
+total_load_time=0
+total_model_time=0
 #only use for the first time
 Time_time = 0
+i=0
+t=0
 def train(train_loader, model, criterion, optimizer, epoch, args):
     global io_time
     global load_time
     global model_time
     global Time_time
+    global i
+    global total_io_time
+    global total_load_time
+    global total_model_time
+    
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -294,7 +338,13 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
 
     end = time.time()
+    
     current_time = time.time()
+    
+    if i==0:
+        total_io_time-=current_time
+        i+=1
+    
     print("current_time------------------: ", current_time)
 
     for i, (images, target) in enumerate(train_loader):
@@ -302,7 +352,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         data_time.update(time.time() - end)
         #io_time += (time.time() - end)
         io_time = time.time()-Time_time
-        print("io_time: ",io_time)
+        #print("io_time: ",io_time)
+        total_io_time+=io_time
 
         #now = time.time()
         if args.gpu is not None:
@@ -311,7 +362,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             target = target.cuda(args.gpu, non_blocking=False)
         #load_time = (time.time() - now)
         load_time = time.time()-io_time-Time_time
-        print("load_time: ",load_time)
+        #print("load_time: ",load_time)
+        total_load_time+=load_time
 
         #nowr = time.time()
         # compute output
@@ -330,7 +382,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.step()
         #model_time = (time.time() - nowr)
         model_time = time.time()-load_time-io_time-Time_time
-        print("model_time: ", model_time)
+        #print("model_time: ", model_time)
+        total_model_time+=model_time
         print("-----------------------------------------")
 
         # measure elapsed time
@@ -343,8 +396,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
+        print('total_io_time: ', total_io_time,'total_load_time: ',total_load_time, 'total_model_time: ',total_model_time)
 
-    #print('io_time: ', io_time,'load_time: ',load_time, 'model_time: ',model_time)
 
 
 def validate(val_loader, model, criterion, args):
