@@ -1,0 +1,5 @@
+ #replace CPU->GPU Time with measured time (A): time.sleep(A)
+        time.sleep(0.006509 )
+        print("load_time: ",time.time()-current_time)
+#replace model time with measured time (B): time.sleep(B)
+        time.sleep(0.2240743 )
