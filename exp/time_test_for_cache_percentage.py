@@ -357,17 +357,25 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_io_time+=io_time
 
         #now = time.time()
+
+        
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
+        
         #load_time = (time.time() - now)
+        #replace CPU->GPU Time with measured time (A): time.sleep(A)
+        #time.sleep(0.006509 )
+
         load_time = time.time()-io_time-Time_time
         #print("load_time: ",load_time)
         total_load_time+=load_time
 
         #nowr = time.time()
         # compute output
+
+        
         output = model(images)
         loss = criterion(output, target)
 
@@ -381,7 +389,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
         #model_time = (time.time() - nowr)
+        #replace model time with measured time (B): time.sleep(B)
+        #time.sleep(0.2240743 )
+
         model_time = time.time()-load_time-io_time-Time_time
         #print("model_time: ", model_time)
         total_model_time+=model_time
@@ -397,7 +409,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
-        print('total_io_time: ', total_io_time,'total_load_time: ',total_load_time, 'total_model_time: ',total_model_time)
+        print('io_time: ', io_time,'load_time: ',load_time, 'model_time: ',model_time)
 
 
 
