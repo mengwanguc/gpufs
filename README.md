@@ -2,9 +2,13 @@
 
 ## Installation
 
+#### Note: the commands below should be run on your reserved Chameleon node connected through ssh, not your local laptop.
+
 1. Chameleon image
 
-Please use image "ubuntu20-cuda11."
+Please use image "ubuntu20-xxx-cuda11-xxx."
+
+"xxx" means we don't care about what's there, as long as it's using ubuntu20 and cuda11.
 
 I've tested it on both TACC and UC site. Both work well.
 
