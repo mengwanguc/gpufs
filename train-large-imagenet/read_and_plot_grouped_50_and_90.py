@@ -22,11 +22,11 @@ batch_top1_top5_size64 = {}
 
 
 short_batch = '256'
-current_p = 'train_top1'
-current_title = 'Resnet18 epoch related Training top 1 Accuracy on Large Imagenet'
-process = '_trainingtop1_'
+current_p = 'train_top5'
+current_title = 'alexnet epoch related Training top 5 Accuracy on Large Imagenet'
+process = '_trainingtop5_'
 
-with open('resnet18_batch_256_gsize_64_epo_90grouping') as json_file:
+with open('alexnet/alexnet_batch_256_gsize_64_epo_90grouping') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
@@ -39,34 +39,34 @@ with open('resnet18_batch_256_gsize_64_epo_90grouping') as json_file:
             epochs = data[k]	
         elif k == 'args.batch_size':
             batch_size = data[k]
-with open('resnet18_batch_256_epo_50_ ') as json_file:
+with open('alexnet/alexnet_batch_256_gsize_64_epo_50grouping') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size2 = data[k]
             print(data[k])
             print(len(batch_top1_top5_size2))
-# with open('sequential-groupingalexnet_batch_256_gsize_64_epo_50_sequential-grouping') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size4 = data[k]
-# with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size8 = data[k]
-# with open('resnet18_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size16 = data[k]
-# with open('resnet18_batch_'+short_batch+'_gsize_32_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size32 = data[k]
-# with open('resnet18_batch_'+short_batch+'_gsize_64_epo_50') as json_file:
+with open('alexnet/alexnet_batch_256_epo_90_ ') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size4 = data[k]
+with open('alexnet/alexnet_batch_256_epo_50_ ') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size8 = data[k]
+with open('resnet18/sequential-groupingresnet18_batch_256_gsize_64_epo_90_ ') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size16 = data[k]
+with open('resnet18/sequential-groupingresnet18_batch_256_gsize_64_epo_50_') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size32 = data[k]
+# with open('alexnet_batch_'+short_batch+'_gsize_64_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
 #         if k == current_p:
@@ -94,15 +94,21 @@ def helper(batches):
 for i in batch_top1_top5 :
     batch_top1_top5_size2.append(i)
 
+for i in batch_top1_top5_size4 :
+    batch_top1_top5_size8.append(i)
+
+for i in batch_top1_top5_size16 :
+    batch_top1_top5_size32.append(i)
+
 print(batch_top1_top5_size2)
 print(len(batch_top1_top5_size2))
 
 
 epoch_range = range(1,epochs+1)
 print(epoch_range)
-#plt.plot(epoch_range, batch_top1_top5, label = 'no_grouping', color="blue", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5_size8, label = 'no_grouping', color="blue", linewidth=1)
 plt.plot(epoch_range, batch_top1_top5_size2, '--', label = 'rand-perm-grouping', color="green", linewidth=3)
-# plt.plot(epoch_range, batch_top1_top5_size4, label = 'sequential-grouping', color="red", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5_size32, label = 'sequential-grouping', color="red", linewidth=1)
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
 # plt.plot(epoch_range, batch_top1_top5_size16, label = 'groupsize_16')
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'groupsize_32')
