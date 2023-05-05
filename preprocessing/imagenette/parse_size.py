@@ -33,7 +33,7 @@ after_totensor_sizes = []
 after_normalize_sizes = []
 
 for line in lines:
-    if 'filesize' in line and not 'after Resize' in line:
+    if 'filesize' in line and not 'after Resize' in line and not 'image_open_time' in line:
         size_dict = eval(line.strip())
         all_size_dict.append(size_dict)
         filesizes.append(int(size_dict[keys['filesize']]))
@@ -56,6 +56,8 @@ cdf(after_random_horizon_flip_sizes, label = "After RandomHorizontalFlip", color
 cdf(after_totensor_sizes, label = "After ToTensor", color='orange', linewidth=4)
 cdf(after_normalize_sizes, label = "After Normalize", color='purple', linestyle='--')
 
+with open('filesizes.txt', 'w') as f:
+    json.dump(filesizes, f)
 
 plt.xlim(0, 1350000)
 plt.ylim(0, 1.0)
