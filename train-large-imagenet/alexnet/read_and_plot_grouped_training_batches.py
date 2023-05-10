@@ -23,7 +23,7 @@ batch_top1_top5_size64 = {}
 
 short_batch = '256'
 current_p = 'batch_acc_train'
-current_title = 'Batch related Training top 1 Accuracy on Large Imagenet'
+current_title = 'Batch related Training top 5 Accuracy on Large Imagenet'
 process = '_trainingtop1_'
 
 with open('alexnet_batch_256_gsize_64_epo_90grouping') as json_file:
@@ -31,8 +31,9 @@ with open('alexnet_batch_256_gsize_64_epo_90grouping') as json_file:
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5 = data[k]
-            print(type(data[k]))
-            print(len(batch_top1_top5))
+            # print(data[k])
+            # print(type(data[k]))
+            # print(len(batch_top1_top5))
         elif k == 'model':
             model = data[k]           
         elif k == 'args.epochs':
@@ -44,8 +45,9 @@ with open('alexnet_batch_256_gsize_64_epo_50grouping') as json_file:
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size2 = data[k]
-            print(type(data[k]))
-            print(len(batch_top1_top5_size2))
+            # print(type(data[k]))
+            # print(len(batch_top1_top5_size2))
+            # print(data[k])
 with open('alexnet_batch_256_epo_90_ ') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
@@ -92,21 +94,27 @@ def helper(batches):
 # x64, top1s64, top5s64 = helper(batch_top1_top5_size64)
 
 def Merge(dict1, dict2):
-    return(dict2.update(dict1))
+    for i in range(250000, 450001, 100):
+        for j in range(100, 200001, 100):
+            dict2[str(i)] = dict1[str(j)]
 
-Merge(batch_top1_top5, batch_top1_top5_size2)
-Merge(batch_top1_top5_size4, batch_top1_top5_size8)
-Merge(batch_top1_top5_size16, batch_top1_top5_size32)
+# Merge(batch_top1_top5, batch_top1_top5_size2)
+# Merge(batch_top1_top5_size4, batch_top1_top5_size8)
+# Merge(batch_top1_top5_size16, batch_top1_top5_size32)
+
+# print(batch_top1_top5_size2)
 
 x1, top1s1, top5s1 = helper(batch_top1_top5_size2)
 x2, top1s2, top5s2 = helper(batch_top1_top5_size8)
 x4, top1s4, top5s4 = helper(batch_top1_top5_size32)
 
+print(batch_top1_top5_size2)
+
 epoch_range = range(1,epochs+1)
 print(epoch_range)
-plt.plot(x1, top1s1, label = 'no_grouping', color="blue", linewidth=1)
-plt.plot(x1, top1s2, '--', label = 'rand-perm-grouping_gsize64', color="green", linewidth=3)
-plt.plot(x1, top1s4, label = 'sequential-grouping_gsize64', color="red", linewidth=1)
+plt.plot(x1, top5s1, label = 'no_grouping', color="blue", linewidth=1)
+plt.plot(x1, top5s2, '--', label = 'rand-perm-grouping_gsize64', color="green", linewidth=3)
+plt.plot(x1, top5s4, label = 'sequential-grouping_gsize64', color="red", linewidth=1)
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
 # plt.plot(epoch_range, batch_top1_top5_size16, label = 'groupsize_16')
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'groupsize_32')
@@ -121,7 +129,7 @@ plt.show(block=True)
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = "batches-result_" + model+"_"+current_p + "_batch_top1" + bat +"_epo_"+ ep +".png" 
+sample_file_name = "batches-result_" + model+"_"+current_p + "_batch_top5" + bat +"_epo_"+ ep +".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """
