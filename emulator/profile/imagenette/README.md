@@ -2,7 +2,9 @@
 
 1. Run the command. Example:
 
+```
 python main-measure-time.py --epoch 1 ~/data/test-accuracy/imagenette2 --gpu 0 --gpu-type p100 -a alexnet --batch-size 256
+```
 
 Replace the parameters with your gpu-type (p100/v100/rtx6000/...), model type (alexnet/resnet101/...), batch size (256/128/64/...)
 
