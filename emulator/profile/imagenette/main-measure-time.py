@@ -73,6 +73,10 @@ parser.add_argument('--seed', default=None, type=int,
                     help='seed for initializing training. ')
 parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
+parser.add_argument('--gpu-type', default='unknown', type=str,
+                    help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
+parser.add_argument('--profile-batches', default=10, type=int,
+                    help='How many batches to run in order to profile the performance data')
 parser.add_argument('--multiprocessing-distributed', action='store_true',
                     help='Use multi-processing distributed training to launch '
                          'N processes per node, which has N GPUs. This is the '
@@ -288,12 +292,14 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
+    measurements = []
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
         io_wait_time = time.time() - end
 
+        torch.cuda.synchronize()
         cpu2gpu_start_time = time.time()
 
         if args.gpu is not None:
@@ -301,8 +307,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
         
+        torch.cuda.synchronize()
         cpu2gpu_time = time.time() - cpu2gpu_start_time
 
+        torch.cuda.synchronize()
         gpu_start_time = time.time()
 
         # compute output
@@ -324,16 +332,27 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         torch.cuda.synchronize()
         gpu_time = time.time() - gpu_start_time
 
-        print("io_time: {}\t cpu2gpu_time: {}\t gpu_time: {}\t".format(
-                io_wait_time, cpu2gpu_time, gpu_time
+        print("batch {} \t io_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
+                i, io_wait_time, cpu2gpu_time, gpu_time
         ))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
+
+        measurements.append((cpu2gpu_time, gpu_time))
         end = time.time()
 
-        if i % args.print_freq == 0:
-            progress.display(i)
+        if i >= args.profile_batches:
+            break
+        # if i % args.print_freq == 0:
+        #     progress.display(i)
+    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    with open(output_filename, 'w') as f:
+        f.write("{}\t{}\n".format("cpu2gpu_time", "gpu_time"))
+        for cpu2gpu_time, gpu_time in measurements:
+            f.write("{:.9f}\t{:.9f}\n".format(cpu2gpu_time, gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
