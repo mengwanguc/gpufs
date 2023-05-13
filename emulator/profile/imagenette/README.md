@@ -53,10 +53,15 @@ Read `run-all.sh` to understand it. Modify it to replace gpu-type with your curr
 
 
 <li>
-
-Open the file in e.g. `p100/` folder, e.g. `p100/alexnet-batch256.csv`, copy the **numbers**, and paste into the google sheet:
+In 
 
 https://docs.google.com/spreadsheets/d/1r2dfwMVD_5S8C_8em-hdN6r_iumH0bj4F2xWZKehUFc/edit#gid=0
+
+make a duplicate of the sheet "p100 (Meng)" and rename it to your own gpu type and name. Delete the existing values for batch 0-10 for all the models and batch sizes. BUT don't delete average/std/relative-std because these cells are formulas.
+</li>
+
+<li>
+Open the file in e.g. `p100/` folder, e.g. `p100/alexnet-batch256.csv`, copy the **numbers**, and paste into the google sheet.
 
 The google sheet will compute the average and std of batches 1-10.
 
@@ -72,8 +77,6 @@ Now you can copy paste into google sheets more easily.
 (You'll need to replace `p100` with your own gpu type)
 
 **Notes:**
-
-- You might need to create new rows in the sheet for a new model. Just follow the style of existing records.
 
 - It ignores batch 0 when computing average and std, because the values from batch 0 are very different from those
 from other batches. But please still copy paste batch 0's numbers into the google sheet as a record.
