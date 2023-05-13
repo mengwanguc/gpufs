@@ -6,6 +6,8 @@
 
 - Use "run-all.sh" to save your life when running experiments for a lot of models and batch sizes. See Step 1 to learn how to use it.
 
+- Please README thoroughly!!!
+
 ## Summary
 
 1. `bash run-all.sh &> output.log` using `tmux`
@@ -85,11 +87,13 @@ from other batches. But please still copy paste batch 0's numbers into the googl
 
 - If you are using `run-all.sh`, and see some `.csv` files are missing, that is probably caused by the `out of memory` error as mentioned above. So just go ahead check your output log file generated in step 1, e.g. `output.log`, and search for the model and batch size. If you see the `out of memory` error, then put `N/A`.
 
-- If the computed relative std is larger than 5%, please mark it using bold and red color in the google sheet.
+- If the computed relative std is larger than 5%, please mark it using **bold and red color** in the google sheet.
 
 </li>
 
 <li>
-If the relative std is smaller than 5%, copy the computed average values and paste into https://docs.google.com/spreadsheets/d/108u91potKYYNa4C_enAvwOuuOcTBwIL1ui_K8Cq1bUU/edit#gid=380424475
+Scroll down to the bottom of the sheet. You just see there are rows automatically gather all the average values. Copy the computed average values and paste into https://docs.google.com/spreadsheets/d/108u91potKYYNa4C_enAvwOuuOcTBwIL1ui_K8Cq1bUU/edit#gid=380424475
+
+(You might need to create a new sheet)
 </li>
 </ol>
