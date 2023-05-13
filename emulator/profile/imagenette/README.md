@@ -6,9 +6,15 @@
 
 - Use "run-all.sh" to save your life when running experiments for a lot of models and batch sizes. See Step 1 to learn how to use it.
 
+## Summary
 
+1. `bash run-all.sh &> output.log` using `tmux`
 
-## Steps
+2. `python parse-profiles.py p100`. Replace `p100` with your own GPU type
+
+3. Copy from `p100/all.txt` (or your own gpu type) and paste into google sheets
+
+## Detailed steps
 <ol>
 <!-- first step -->
 <li> Run the experiments
@@ -53,6 +59,17 @@ Open the file in e.g. `p100/` folder, e.g. `p100/alexnet-batch256.csv`, copy the
 https://docs.google.com/spreadsheets/d/1r2dfwMVD_5S8C_8em-hdN6r_iumH0bj4F2xWZKehUFc/edit#gid=0
 
 The google sheet will compute the average and std of batches 1-10.
+
+To reduce the number of copy-pastes, I created `parse-profiles.py`.
+
+For example, after generating all the profiles using `run-all.sh`, you can run:
+
+`python parse-profiles.py p100`
+
+This will parse all the generated profiles, gather them, and produce a summary file `p100/all.txt`. Open that file and you'll see what I mean.
+Now you can copy paste into google sheets more easily.
+
+(You'll need to replace `p100` with your own gpu type)
 
 **Notes:**
 
