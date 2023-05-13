@@ -32,8 +32,12 @@ Replace the parameters with your gpu-type (p100/v100/rtx6000/...), model type (a
 
 Read `run-all.sh` to understand it. Modify it to replace gpu-type with your current gpu node type, and add/remove model types and batch sizes.
 
-**NOTE**: I suggest you use `tmux` to run `run-all.sh` in the background. If you don't want what's `tmux` and how to use it, Google it. 
-I also recommend you save the output into a file. For example, `bash run-all.sh &> output.log`. Don't commit this log file, but this file will be great for debugging purpose.
+**NOTE**: 
+- I suggest you use `tmux` to run `run-all.sh` in the background. If you don't want what's `tmux` and how to use it, Google it. 
+
+- I also recommend you save the output into a file. For example, `bash run-all.sh &> output.log`. Don't commit this log file, but this file will be great for debugging purpose.
+
+- By using `tmux`, you don't have to keep your terminal open and connected when running the experiments. You can let the experiments run in the background, close the terminal, do something else, and come back after hours to check the results. Again if you don't know how to use `tmux`, google it. I believe it will be useful for your future work as well.
 
 </li>
 
