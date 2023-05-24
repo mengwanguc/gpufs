@@ -50,9 +50,7 @@ parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
                     metavar='LR', help='initial learning rate', dest='lr')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
                     help='momentum')
-parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
-                    metavar='W', help='weight decay (default: 1e-4)',
-                    dest='weight_decay')
+
 parser.add_argument('-p', '--print-freq', default=10, type=int,
                     metavar='N', help='print frequency (default: 10)')
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
@@ -80,6 +78,15 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'multi node data parallel training')
 parser.add_argument('--sampler-name', default=' ', type=str,
                     help='add sampler name on last name file result')
+
+parser.add_argument('--eps', default=0.1, type=float,
+                    help='epshilon parameter on adam optimizer')
+parser.add_argument('--weight_decay', default=1e-4, type=float,
+                    metavar='W', help='weight decay (default: 1e-4)',
+                    dest='weight_decay')
+parser.add_argument('--betas', default=(0.9, 0.999), type=tuple,
+                    help='add sampler name on last name file result')
+
 
 best_acc1 = 0
 
@@ -184,8 +191,8 @@ def main_worker(gpu, ngpus_per_node, args):
     # define loss function (criterion), optimizer, and learning rate scheduler
     criterion = nn.CrossEntropyLoss().cuda(args.gpu)
 
-    optimizer = torch.optim.Adam(model.parameters(), args.lr, eps = 0.1,
-                            weight_decay=args.weight_decay)
+    optimizer = torch.optim.Adam(model.parameters(), args.lr, eps = args.eps,
+                            weight_decay=args.weight_decay, betas = args.betas)
 
     # optimizer = torch.optim.SGD(model.parameters(), args.lr,
     #                             momentum=args.momentum,
@@ -303,7 +310,10 @@ def main_worker(gpu, ngpus_per_node, args):
     'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
     bat = str(args.batch_size)
     epo = str(args.epochs)
-    txt = strs + "_batch_" + bat + "_epo_" + epo + "_" + args.sampler_name
+    eps = str(args.eps)
+    weight_decay = str(args.weight_decay)
+    betas = str(args.betas)
+    txt = strs + "_batch_" + bat + "_epo_" + epo + '_eps_' + eps + '_wd_' + weight_decay + '_betas_' + betas
     with open(txt , 'w') as convert_file:
         convert_file.write(json.dumps(model_data))
     
