@@ -1,6 +1,10 @@
 # gpufs
 
-## Installation
+### Note: For installation on CPU-only nodes, please see [emulator/README.md](emulator/README.md)
+
+
+## Installation on GPU nodes
+
 
 #### Note: the commands below should be run on your reserved Chameleon node connected through ssh, not your local laptop.
 
