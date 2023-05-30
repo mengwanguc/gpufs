@@ -1,0 +1,39 @@
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+9.182681561	0.659250975	20.283540726
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.468541145	0.657206535	20.283069611
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.519614458	0.657423973	20.284185171
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.522766829	0.657292843	20.283885479
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.705804825	0.657146692	20.284436703
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.357508421	0.658257246	20.283187151
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.224542141	0.657341957	20.284562349
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+6.675405741	0.657327414	20.282805681
+no cache 64 threads 8 gpus
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+69.945339441	10.342360973	318.450037003
+all cache
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+73.113857746	10.316510916	318.222621202
+64 threads:
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+71.961014748	10.319883347	318.229881287
+32 threads:
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+69.607518435	10.317682981	318.223243952
+8 threads
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+475.901810169	10.314833879	318.243624210
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+472.849120378	10.315807104	318.242704868
+16 threads
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+86.894440889	10.331007719	318.265646458
+80 threads:
+total_io_wait_time	total_cpu2gpu_time	total_gpu_time
+76.970839977	10.319181919	318.218138933

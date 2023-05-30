@@ -343,11 +343,15 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
-    measurements = []
+    total_io_wait_time = 0
+    total_cpu2gpu_time = 0
+    total_gpu_time = 0
+
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         # data_time.update(time.time() - end)
+        # print("ioend:\t{}".format(time.time()))
         io_wait_time = time.time() - end
 
         cpu2gpu_start_time = time.time()
@@ -388,11 +392,27 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure elapsed time
         batch_time.update(time.time() - end)
 
-        measurements.append((cpu2gpu_time, gpu_time))
+        total_io_wait_time += io_wait_time
+        total_cpu2gpu_time += cpu2gpu_time
+        total_gpu_time += gpu_time
         end = time.time()
+        # print("end:\t{}".format(end))
+
+        # if i >= args.profile_batches:
+        #     break
 
         # if i % args.print_freq == 0:
         #     progress.display(i)
+    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    # with open(output_filename, 'w') as f:
+    #     f.write("{}\t{}\t{}\n".format("io_wait_time", "cpu2gpu_time", "gpu_time"))
+    #     for io_wait_time, cpu2gpu_time, gpu_time in measurements:
+    #         f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(io_wait_time, cpu2gpu_time, gpu_time))
+    with open(output_filename, 'a') as f:
+        f.write("{}\t{}\t{}\n".format("total_io_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
+        f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_io_wait_time, total_cpu2gpu_time, total_gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
