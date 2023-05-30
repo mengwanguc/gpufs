@@ -2,7 +2,7 @@
 
 ## NOTES
 
-- When you install our custom "pytorch-meng" and "torchvision-meng", please use branches "original-pytorch" and "original-torchvision" respectively.
+- When you install our custom "pytorch-meng" and "torchvision-meng", please use branches **"original-pytorch"** and **"original-torchvision"** respectively.
 
 - Use "run-all.sh" to save your life when running experiments for a lot of models and batch sizes. See Step 1 to learn how to use it.
 
