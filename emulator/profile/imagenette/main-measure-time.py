@@ -297,6 +297,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
+        torch.cuda.synchronize()
         io_wait_time = time.time() - end
 
         torch.cuda.synchronize()

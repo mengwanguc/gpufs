@@ -95,5 +95,7 @@ from other batches. But please still copy paste batch 0's numbers into the googl
 Scroll down to the bottom of the sheet. You just see there are rows automatically gather all the average values. Copy the computed average values and paste into https://docs.google.com/spreadsheets/d/108u91potKYYNa4C_enAvwOuuOcTBwIL1ui_K8Cq1bUU/edit#gid=380424475
 
 (You might need to create a new sheet)
+
+(You only need to paste into columns ``"Batch cpu-to-gpu time: (average 10 runs) (sec) std < 5% predictable"`` and 	``Batch gpu compute time (average 10 runs) (sec))``. Many other columns are computed by formula.)
 </li>
 </ol>
