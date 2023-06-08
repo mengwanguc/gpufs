@@ -35,7 +35,7 @@ git clone git@github.com:mengwanguc/gpufs.git
 
 ```
 wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
-bash Anaconda3-2021.11-Linux-x86_64.sh
+bash Anaconda3-2021.11-Linux-x86_64.sh -b
 ```
 After installation, log out and log in bash again.
 
