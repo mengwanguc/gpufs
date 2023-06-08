@@ -1,0 +1,46 @@
+ARG USE_CUDA=1
+ARG CUDA_VERSION=11.2.0
+ARG CUDNN_VERSION=8
+ARG LINUX_DISTRO=ubuntu
+ARG DISTRO_VERSION=20.04
+ARG TORCH_CUDA_ARCH_LIST="5.2 6.0 6.1 7.0 7.5 8.0 8.6+PTX"
+ARG BUILD_IMAGE=nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-${LINUX_DISTRO}${DISTRO_VERSION}
+
+FROM ${BUILD_IMAGE} AS build-base
+
+ENV PATH="/root/anaconda3/bin:${PATH}"
+ARG PATH="/root/anaconda3/bin:${PATH}"
+
+RUN  apt-get update \
+  && apt-get install -y wget \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.11-Linux-x86_64.sh
+
+RUN bash Anaconda3-2021.11-Linux-x86_64.sh -b
+RUN rm -f Anaconda3-2021.11-Linux-x86_64.sh
+
+RUN conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools \
+    cmake cffi typing_extensions future six requests dataclasses
+
+RUN conda install -y -c pytorch magma-cuda112
+
+WORKDIR /opt
+
+RUN apt-get update && apt-get install -y git
+RUN git clone https://github.com/mengwanguc/pytorch-meng.git
+RUN git clone https://github.com/mengwanguc//torchvision-meng.git
+
+FROM build-base AS build-torch
+
+ARG USE_CUDA
+ARG PYTORCH_VERSION_TAG=original-pytorch
+ARG TORCHVISION_VERSION_TAG=original-torchvision
+
+WORKDIR /opt/pytorch-meng
+RUN git checkout ${PYTORCH_VERSION_TAG}
+RUN git submodule update --init --recursive
+RUN export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
+RUN python setup.py install
+
+
