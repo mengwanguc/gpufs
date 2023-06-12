@@ -340,10 +340,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure elapsed time
         batch_time.update(time.time() - end)
 
-        measurements.append((cpu2gpu_time, gpu_time))
+        if epoch != 0:
+            measurements.append((io_wait_time, cpu2gpu_time, gpu_time))
         end = time.time()
 
-        if i >= args.profile_batches:
+        if args.profile_batches != -1 and i >= args.profile_batches:
             break
         # if i % args.print_freq == 0:
         #     progress.display(i)
@@ -351,9 +352,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     if not os.path.exists(args.gpu_type):
         os.makedirs(args.gpu_type)
     with open(output_filename, 'w') as f:
-        f.write("{}\t{}\n".format("cpu2gpu_time", "gpu_time"))
-        for cpu2gpu_time, gpu_time in measurements:
-            f.write("{:.9f}\t{:.9f}\n".format(cpu2gpu_time, gpu_time))
+        f.write("{}\t{}\t{}\n".format("io_time", "cpu2gpu_time", "gpu_time"))
+        for io_time, cpu2gpu_time, gpu_time in measurements:
+            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(io_time, cpu2gpu_time, gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
