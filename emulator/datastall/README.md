@@ -1,4 +1,7 @@
-To use the emulator, first update and rebuild pytorch-meng and torchvision-meng:
+To use the emulator, you need to first build Pytorch and Torchvision on a CPU node. Follow the guides in: [../README.md](../README.md)
+
+
+Then update and rebuild pytorch-meng and torchvision-meng:
 
 ```
 cd ~/pytorch-meng
