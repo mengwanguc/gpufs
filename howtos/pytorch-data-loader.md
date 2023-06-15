@@ -53,7 +53,7 @@ Every worker is given the indices of images in a batch. For example, assume batc
 
 For each image index, `self.dataset[idx]` calls `self.dataset.__get_item__()` to fetch the image. Since our dataset was defined as `ImageFolder`, it will call `ImageFolder.__getitem__`, which in turn calls `pil_loader`. (You can verify it by adding `print`).
 
-After the image is read from disk, it will be decoded (using `img.convert`) and transformed using your predefined transformation functions. Both decoding and image transforming belong to what is called `preprocessing`. Preprocessing is CPU-intensive, and here happens in `ImageFolder.__getitem__`.
+After the image is read from disk, it will be decoded (using `img.convert`) and transformed using your predefined transformation functions. Both decoding and image transforming belong to what is called "preprocessing". Preprocessing is CPU-intensive, and here happens in `ImageFolder.__getitem__`.
 
 After the worker reads and preprocesses on batch of images, the worker will put the one-batch data onto shared memory (SHM) and into the `_worker_result_queue` (it's called `data_queue` in `worker.py`, but it's not the `_data_queue` in `dataloder.py`. To avoid confusion, I will just call it `_worker_result_queue`).
 
