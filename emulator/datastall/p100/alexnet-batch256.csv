@@ -71,3 +71,9 @@ total_data_wait_time	total_cpu2gpu_time	total_gpu_time
 58.088269949	0.076445580	2.352427959
 total_data_wait_time	total_cpu2gpu_time	total_gpu_time
 1.478417397	0.601000071	18.822712183
+total_data_wait_time	total_cpu2gpu_time	total_gpu_time
+1.688926935	0.606957912	18.827281475
+total_data_wait_time	total_cpu2gpu_time	total_gpu_time
+2.764614820	0.147562742	2.414052010
+total_data_wait_time	total_cpu2gpu_time	total_gpu_time
+2.177708864	0.147904396	2.418545723

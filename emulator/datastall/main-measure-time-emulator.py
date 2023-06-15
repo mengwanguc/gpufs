@@ -409,12 +409,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         # if i % args.print_freq == 0:
         #     progress.display(i)
-    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
-    if not os.path.exists(args.gpu_type):
-        os.makedirs(args.gpu_type)
-    with open(output_filename, 'a') as f:
-        f.write("{}\t{}\t{}\n".format("total_data_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
-        f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
+    # output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    # if not os.path.exists(args.gpu_type):
+    #     os.makedirs(args.gpu_type)
+    # with open(output_filename, 'a') as f:
+    #     f.write("{}\t{}\t{}\n".format("total_data_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
+    #     f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
