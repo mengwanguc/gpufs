@@ -1,6 +1,8 @@
 # About -- How Pytorch implements its data loader
 
-Here I briefly introduce how Pytorch's data loder works (specifically for imagenet classification). For more details, please study the Pytorch source codes. Regarding how to study source codes, please see [learn-pytorch-source.md](learn-pytorch-source.md)
+Here I briefly introduce how Pytorch's data loder works (specifically for imagenet classification). For more details, please study the Pytorch source codes. 
+
+Regarding how to study source codes, please see [learn-pytorch-source.md](learn-pytorch-source.md). I learned all the things below by following this method and adding "print" here and there.
 
 In [imagenet training script](../exp/main-original.py), actually only 3 lines of codes are related to data loading:
 
