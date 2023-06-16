@@ -1,4 +1,6 @@
-## How to study Pytorch source codes
+# How to study Pytorch source codes
+
+## print
 
 To me, the easist and most effective way to study source codes of a large system is just adding "printf":
 
@@ -39,5 +41,13 @@ def A():
     print("functionB is implemented in file: {}  starting_line_number: {}".format(file_path, starting_line_number))
     functionB()
 ```
+
+## Comments
+
+People's comments are useful. The developers added comments for you to understand their thoughts when they implement the codes. So do read the comments.
+
+Sometimes the comments are long. When this happens, focus the comments that you feel are important for your task.
+
+## Don't be afraid
 
 Don't be afraid of reading system source codes... It's all about time commitment. As long as you spend enough time, you will learn it. And the process of learning is fun :)
