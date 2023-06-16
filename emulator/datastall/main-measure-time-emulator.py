@@ -86,6 +86,8 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'N processes per node, which has N GPUs. This is the '
                          'fastest way to use PyTorch for either single node or '
                          'multi node data parallel training')
+parser.add_argument('--emulator-version', default=0, type=int,
+                    help='Version of the emulator')
 
 best_acc1 = 0
 
@@ -237,9 +239,13 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         train_sampler = None
 
+    estimated_pin_mem_time = 0.04
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
-        num_workers=args.workers, pin_memory=True, sampler=train_sampler)
+        num_workers=args.workers, pin_memory=True, sampler=train_sampler, 
+        is_emulator = True,
+        estimated_pin_mem_time = estimated_pin_mem_time,
+        emulator_version=args.emulator_version)
 
     val_loader = torch.utils.data.DataLoader(
         datasets.ImageFolder(valdir, transforms.Compose([
@@ -343,7 +349,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
-    total_io_wait_time = 0
+    total_data_wait_time = 0
     total_cpu2gpu_time = 0
     total_gpu_time = 0
 
@@ -351,8 +357,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         # data_time.update(time.time() - end)
-        # print("ioend:\t{}".format(time.time()))
-        io_wait_time = time.time() - end
+        # print("App got data:\t{}".format(time.time()))
+        data_wait_time = time.time() - end
 
         cpu2gpu_start_time = time.time()
 
@@ -385,14 +391,14 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         gpu_time = time.time() - gpu_start_time
 
-        print("batch {} \t io_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
-                i, io_wait_time, cpu2gpu_time, gpu_time
+        print("batch {} \t data_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
+                i, data_wait_time, cpu2gpu_time, gpu_time
         ))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
 
-        total_io_wait_time += io_wait_time
+        total_data_wait_time += data_wait_time
         total_cpu2gpu_time += cpu2gpu_time
         total_gpu_time += gpu_time
         end = time.time()
@@ -403,16 +409,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         # if i % args.print_freq == 0:
         #     progress.display(i)
-    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
-    if not os.path.exists(args.gpu_type):
-        os.makedirs(args.gpu_type)
-    # with open(output_filename, 'w') as f:
-    #     f.write("{}\t{}\t{}\n".format("io_wait_time", "cpu2gpu_time", "gpu_time"))
-    #     for io_wait_time, cpu2gpu_time, gpu_time in measurements:
-    #         f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(io_wait_time, cpu2gpu_time, gpu_time))
-    with open(output_filename, 'a') as f:
-        f.write("{}\t{}\t{}\n".format("total_io_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
-        f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_io_wait_time, total_cpu2gpu_time, total_gpu_time))
+    # output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    # if not os.path.exists(args.gpu_type):
+    #     os.makedirs(args.gpu_type)
+    # with open(output_filename, 'a') as f:
+    #     f.write("{}\t{}\t{}\n".format("total_data_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
+    #     f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
