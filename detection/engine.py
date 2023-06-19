@@ -8,6 +8,7 @@ import torchvision.models.detection.mask_rcnn
 from coco_utils import get_coco_api_from_dataset
 from coco_eval import CocoEvaluator
 import utils
+import inspect
 
 
 def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
@@ -89,6 +90,7 @@ def evaluate(model, data_loader, device):
         outputs = model(images)
 
         outputs = [{k: v.to(cpu_device) for k, v in t.items()} for t in outputs]
+        #print("outputs", outputs)
         model_time = time.time() - model_time
 
         res = {target["image_id"].item(): output for target, output in zip(targets, outputs)}
@@ -105,5 +107,14 @@ def evaluate(model, data_loader, device):
     # accumulate predictions from all images
     coco_evaluator.accumulate()
     coco_evaluator.summarize()
+    coco_eval_var = coco_evaluator.summarize()
+    #print(inspect.getmodule(collections))
+    # print("coco_eval_var --> ", coco_eval_var)
+    # print("coco_evaluator.stats ->", coco_evaluator.stats())
+    #print("test inspect...")
+    #inspect.getsource(coco_evaluator.summarize())
     torch.set_num_threads(n_threads)
+
+    print("coco_evaluator", coco_evaluator)
+
     return coco_evaluator

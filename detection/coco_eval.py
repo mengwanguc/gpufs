@@ -15,6 +15,9 @@ from collections import defaultdict
 
 import utils
 
+import inspect
+print(inspect.getmodule(COCOeval))
+
 
 class CocoEvaluator(object):
     def __init__(self, coco_gt, iou_types):
@@ -53,6 +56,7 @@ class CocoEvaluator(object):
     def accumulate(self):
         for coco_eval in self.coco_eval.values():
             coco_eval.accumulate()
+            #print("coco_eval-->", coco_eval)
 
     def summarize(self):
         for iou_type, coco_eval in self.coco_eval.items():

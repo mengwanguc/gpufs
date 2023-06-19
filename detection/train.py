@@ -123,6 +123,15 @@ def main(args):
     print("Start training")
     start_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):
+        # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
+        #         f.write('\n'.join("Epoch "+ str(epoch)))
+
+        f = open("/home/cc/gpufs/detection/result.txt", "a")
+        f.write("\n")
+        f.write("Epoch "+ str(epoch))
+
+        f.close()
+
         if args.distributed:
             train_sampler.set_epoch(epoch)
         train_one_epoch(model, optimizer, data_loader, device, epoch, args.print_freq)
