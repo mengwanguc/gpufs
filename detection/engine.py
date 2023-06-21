@@ -107,6 +107,7 @@ def evaluate(model, data_loader, device):
     # accumulate predictions from all images
     coco_evaluator.accumulate()
     coco_evaluator.summarize()
+    print("summarize() -> ",type(coco_evaluator.summarize()))
     coco_eval_var = coco_evaluator.summarize()
     #print(inspect.getmodule(collections))
     # print("coco_eval_var --> ", coco_eval_var)

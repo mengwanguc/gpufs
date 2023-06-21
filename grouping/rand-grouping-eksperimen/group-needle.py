@@ -102,6 +102,7 @@ classes, class_to_idx = find_classes(train_folder)
 print("classes: \n {} \n class_to_idx: \n {}".format(classes, class_to_idx))
 
 instances = make_dataset(train_folder, class_to_idx, IMG_EXTENSIONS, None)
+print("instances -> ", instances[0])
 print("number of images: {}".format(len(instances)))
 
 generator = torch.Generator()
