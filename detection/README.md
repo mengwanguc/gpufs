@@ -59,9 +59,18 @@
    ```
    
 5. Training the model
-   Note: if you have error like this "Loss function result is NaN", fixing it by change learning rates with formula  0.02/8*$NGPU. Lr it depends on how many gpu we are using.
+
+   Note: if you have error "Loss function result is NaN", fixing it by change learning rates with formula  0.02/8*$NGPU. Lr depends on how many gpu we are using. And n_workers > 0 will reproduce segmentation fault error
    ```
-   python train.py --data-path ~/mini-coco-dataset/coco_minitrain_25k --epoch 2 --lr 0.0025 
+   python train.py --data-path ~/mini-coco-dataset/coco_minitrain_25k --epoch 2 --lr 0.0025 --workers 0
+   ```
+
+   Parameter information:
+   ```
+   usage: train.py [-h] [--data-path DATA_PATH] [--dataset DATASET] [--model MODEL] [--device DEVICE] [-b BATCH_SIZE] [--epochs N] [-j N] [--lr LR]
+                [--momentum M] [--wd W] [--lr-step-size LR_STEP_SIZE] [--lr-steps LR_STEPS [LR_STEPS ...]] [--lr-gamma LR_GAMMA]
+                [--print-freq PRINT_FREQ] [--output-dir OUTPUT_DIR] [--resume RESUME] [--start_epoch START_EPOCH]
+                [--aspect-ratio-group-factor ASPECT_RATIO_GROUP_FACTOR] [--test-only] [--pretrained] [--world-size WORLD_SIZE] [--dist-url DIST_URL]
    ```
 
 ## Original Readme
