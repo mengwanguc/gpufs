@@ -62,6 +62,7 @@
 
    Note: if you have error "Loss function result is NaN", fixing it by change learning rates with formula  0.02/8*$NGPU. Lr depends on how many gpu we are using. And n_workers > 0 will reproduce segmentation fault error
    ```
+   cd ~/gpufs/detection/
    python train.py --data-path ~/mini-coco-dataset/coco_minitrain_25k --epoch 2 --lr 0.0025 --workers 0
    ```
 
