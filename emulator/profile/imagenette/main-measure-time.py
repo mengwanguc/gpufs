@@ -37,6 +37,8 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
+                    type=int, metavar='CACHESIZE')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
@@ -217,7 +219,15 @@ def main_worker(gpu, ngpus_per_node, args):
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
+    # 10:1 train:validation split, and an expected 128 MB max item size. Change
+    # this max item size if minio starts giving copy errors.
+    val_cache_size = args.cache_size // 11
+    train_cache_size = (args.cache_size * 10) // 11
+    max_item_size = 128 * 1024 * 1024
+
     train_dataset = datasets.ImageFolder(
+        train_cache_size,
+        max_item_size,
         traindir,
         transforms.Compose([
             transforms.RandomResizedCrop(224),
@@ -236,12 +246,13 @@ def main_worker(gpu, ngpus_per_node, args):
         num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
     val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(valdir, transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize,
-        ])),
+        datasets.ImageFolder(val_cache_size, max_item_size, valdir,
+                             transforms.Compose([
+                                transforms.Resize(256),
+                                transforms.CenterCrop(224),
+                                transforms.ToTensor(),
+                                normalize,
+                            ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
