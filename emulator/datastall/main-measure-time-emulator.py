@@ -273,6 +273,11 @@ def main_worker(gpu, ngpus_per_node, args):
         validate(val_loader, model, criterion, args)
         return
 
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
+        f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
+
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
@@ -365,6 +370,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     total_cpu2gpu_time = 0
     total_gpu_time = 0
 
+    measurements = []
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
@@ -414,19 +420,19 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_cpu2gpu_time += cpu2gpu_time
         total_gpu_time += gpu_time
         end = time.time()
-        # print("end:\t{}".format(end))
 
-        # if i >= args.profile_batches:
-        #     break
+        if epoch != 0:
+            measurements.append((data_wait_time, cpu2gpu_time, gpu_time))
+        
+        if args.profile_batches != -1 and i >= args.profile_batches:
+            break
 
-        # if i % args.print_freq == 0:
-        #     progress.display(i)
-    # output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
-    # if not os.path.exists(args.gpu_type):
-    #     os.makedirs(args.gpu_type)
-    # with open(output_filename, 'a') as f:
-    #     f.write("{}\t{}\t{}\n".format("total_data_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
-    #     f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
+    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    with open(output_filename, 'a') as f:
+        for data_wait_time, cpu2cpu_time, gpu_time in measurements:
+            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
