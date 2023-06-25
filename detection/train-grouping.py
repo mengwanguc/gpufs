@@ -38,17 +38,13 @@ import transforms as T
 
 
 def get_dataset(name, image_set, transform, data_path):
-    #
     paths = {
         "coco": (data_path, get_coco, 91),
         "coco_kp": (data_path, get_coco_kp, 2)
     }
-    print('paths ->',paths)
     p, ds_fn, num_classes = paths[name]
-    print("p, ds_fn, num_classes", p, ds_fn, num_classes)
 
     ds = ds_fn(p, image_set=image_set, transforms=transform)
-    print("ds",type(ds))
     return ds, num_classes
 
 
@@ -71,7 +67,6 @@ def main(args):
 
     dataset, num_classes = get_dataset(args.dataset, "train", get_transform(train=True), args.data_path)
     dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path)
-    print("main dataset->", type(dataset))
 
     print("Creating data loaders")
     if args.distributed:
@@ -81,17 +76,12 @@ def main(args):
         train_sampler = torch.utils.data.RandomSampler(dataset)
         test_sampler = torch.utils.data.SequentialSampler(dataset_test)
 
-    print("Group by Aspect Ratio")
     if args.aspect_ratio_group_factor >= 0:
         group_ids = create_aspect_ratio_groups(dataset, k=args.aspect_ratio_group_factor)
         train_batch_sampler = GroupedBatchSampler(train_sampler, group_ids, args.batch_size)
     else:
         train_batch_sampler = torch.utils.data.BatchSampler(
             train_sampler, args.batch_size, drop_last=True)
-    
-    print('stop')
-    quit()
-    print('stop')
 
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_sampler=train_batch_sampler, num_workers=args.workers,
@@ -104,7 +94,7 @@ def main(args):
 
     print("Creating model")
     model = torchvision.models.detection.__dict__[args.model](num_classes=num_classes,
-                                                              pretrained=args.pretrained)
+                                                              pretrained=False)
     model.to(device)
 
     model_without_ddp = model
@@ -133,6 +123,15 @@ def main(args):
     print("Start training")
     start_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):
+        # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
+        #         f.write('\n'.join("Epoch "+ str(epoch)))
+
+        f = open("/home/cc/gpufs/detection/result.txt", "a")
+        f.write("\n")
+        f.write("Epoch "+ str(epoch))
+
+        f.close()
+
         if args.distributed:
             train_sampler.set_epoch(epoch)
         train_one_epoch(model, optimizer, data_loader, device, epoch, args.print_freq)
@@ -161,7 +160,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--data-path', default='/home/cc/mini-coco-dataset/coco_minitrain_25k', help='dataset')
     parser.add_argument('--dataset', default='coco', help='dataset')
-    parser.add_argument('--model', default='maskrcnn_resnet50_fpn', help='model')
+    parser.add_argument('--model', default='fasterrcnn_resnet50_fpn', help='model')
     parser.add_argument('--device', default='cuda', help='device')
     parser.add_argument('-b', '--batch-size', default=2, type=int,
                         help='images per gpu, the total batch size is $NGPU x batch_size')

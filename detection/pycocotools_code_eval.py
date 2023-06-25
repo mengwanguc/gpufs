@@ -453,11 +453,18 @@ class COCOeval:
                 mean_s = -1
             else:
                 mean_s = np.mean(s[s>-1])
-            print(iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s))
+            
+            final_result = iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s)
+            print(final_result)
 
             #print("save evaluated result to txt /home/cc/gpufs/detection/result.txt ...")
-            with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
-                f.write('\n'.join(iStr.format(titleStr, typeStr, iouStr, areaRng, maxDets, mean_s)))
+            # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
+            #     f.write('\n'.join(final_result))
+
+            f = open("/home/cc/gpufs/detection/result.txt", "a")
+            f.write("\n")
+            f.write(final_result)
+            f.close()
 
             return mean_s
         def _summarizeDets():
