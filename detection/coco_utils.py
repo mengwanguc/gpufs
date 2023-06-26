@@ -230,37 +230,57 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         # print("img, target=", img, target)
         image_id = self.ids[idx]
         target = dict(image_id=image_id, annotations=target)
+        # print("target -> ", target)
         if self._transforms is not None:
             img, target = self._transforms(img, target)
         return img, target
 
 
 def get_coco(root, image_set, transforms, mode='instances'):
-    anno_file_template = "{}_{}2017.json"
-    PATHS = {
-        "train": ("images/train2017", os.path.join("annotations", anno_file_template.format(mode, "train"))),
-        "val": ("images/val2017", os.path.join("annotations", anno_file_template.format(mode, "val"))),
-        # "train": ("val2017", os.path.join("annotations", anno_file_template.format(mode, "val")))
-    }
+    is_mytar=True
+    if image_set == "train":
+        print("tar")
+        t = [ConvertCocoPolysToMask()]
 
-    t = [ConvertCocoPolysToMask()]
+        if transforms is not None:
+            t.append(transforms)
+        transforms = T.Compose(t)
+        annFile = "/home/cc/mini-coco-dataset/coco_minitrain_25k/instances_val2017.json"
+        dataset = CocoDetection(root, annFile, transforms=transforms, is_mytar=True)
+        return dataset
+    else:
+        print("val")
+        anno_file_template = "{}_{}2017.json"
+        PATHS = {
+            "train": ("images/train2017", os.path.join("annotations", anno_file_template.format(mode, "train"))),
+            "val": ("images/val2017", os.path.join("annotations", anno_file_template.format(mode, "val"))),
+            # "train": ("val2017", os.path.join("annotations", anno_file_template.format(mode, "val")))
+        }
 
-    if transforms is not None:
-        t.append(transforms)
-    transforms = T.Compose(t)
-    # print("TESTING")
-    # print("->", image_set)
-    img_folder, ann_file = PATHS[image_set]
-    # print("->", img_folder, ann_file)
-    img_folder = os.path.join(root, img_folder)
-    ann_file = os.path.join(root, ann_file)
-    # print("->", img_folder, ann_file)
+        t = [ConvertCocoPolysToMask()]
 
-    dataset = CocoDetection(img_folder, ann_file, transforms=transforms)
+        if transforms is not None:
+            t.append(transforms)
+        transforms = T.Compose(t)
+        # print("TESTING")
+        # print("->", image_set)
+        img_folder, ann_file = PATHS[image_set]
+        # print("->", img_folder, ann_file)
+        img_folder = os.path.join(root, img_folder)
+        ann_file = os.path.join(root, ann_file)
+        # print("->", img_folder, ann_file)
+
+        t = [ConvertCocoPolysToMask()]
+
+        if transforms is not None:
+            t.append(transforms)
+        transforms = T.Compose(t)
+        annFile = "/home/cc/mini-coco-dataset/coco_minitrain_25k/instances_val2017.json"
+        dataset = CocoDetection(root, annFile, transforms=transforms, is_mytar=False)
     # print('dataset=', dataset)
 
-    if image_set == "train":
-        dataset = _coco_remove_images_without_annotations(dataset)
+    # if image_set == "train":
+    #     dataset = _coco_remove_images_without_annotations(dataset)
 
     # dataset = torch.utils.data.Subset(dataset, [i for i in range(500)])
     return dataset
