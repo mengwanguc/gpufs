@@ -2,7 +2,7 @@
 set -e
 
 gpu_type="p100"
-model="resnet18"
+model="alexnet"
 limits=("4G")
 batch_size="256"
 n_workers="4"
@@ -30,14 +30,19 @@ for limit in ${limits[@]}; do
     echo "running training"
     cgexec -g memory:$group_name python main-measure-time-emulator.py --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
-    # check how much memory the dataset was actually using
+    # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
-    echo "checking memory usage..."
-    usage=$(vmtouch $data_path | grep "Resident Pages" | awk 'NF>1{print $NF}')
-    echo "... $usage cached\n"
+    echo "checking % of dataset cached"
+    cached=$(vmtouch $data_path | grep "Resident Pages" | awk 'NF>1{print $NF}')
+    echo "... $cached cached\n"
+
+    # check how much memory the entire cgroup was actually using
+    echo "checking bytes of memory used"
+    usage=$(cat /sys/fs/cgroup/$group_name/$group_name.usage_in_bytes)
+    echo "... $usage bytes\n"
 
     # save our output to a meaningful filename
-    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage.csv
+    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached.csv
     echo
 done
 
