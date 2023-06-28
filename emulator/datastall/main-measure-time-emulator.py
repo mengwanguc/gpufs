@@ -6,6 +6,9 @@ import random
 import shutil
 import time
 import warnings
+import minio
+from PIL import Image
+import io
 
 import torch
 import torch.nn as nn
@@ -39,9 +42,11 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-m', '--use-minio', default=False, type=bool,
+                    metavar='USE_MINIO', help='use MinIO cache')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
-                    help='minio cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
+                    help='MinIO cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
@@ -232,18 +237,43 @@ def main_worker(gpu, ngpus_per_node, args):
     # this max item size if minio starts giving copy errors.
     val_cache_size = args.cache_size // 11
     train_cache_size = (args.cache_size * 10) // 11
-    max_item_size = 128 * 1024 * 1024
+    max_item_size = 16 * 1024 * 1024
+
+    # Use this loader for ImageFolder "loader" param if minio enabled.
+    def minio_loader(path: str, cache: minio.PyCache) -> Image.Image:
+        data, _ = cache.read_file(path)
+        img = Image.open(io.BytesIO(data))
+        return img.convert('RGB')
+
+    # Use this loader for ImageFolder "loader" param if minio disabled. Copied
+    # from the original torchvision source.
+    def pil_loader(path: str, cache: minio.PyCache) -> Image.Image:
+        # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+        with open(path, 'rb') as f:
+            f = f.read()
+            f = io.BytesIO(f)
+            img = Image.open(f)
+            return img.convert('RGB')
+
+    train_cache = None
+    val_cache = None
+    loader = None
+    if args.use_minio:
+        train_cache = minio.PyCache(size=train_cache_size, max_file_size=max_item_size)
+        val_cache = minio.PyCache(size=val_cache_size, max_file_size=max_item_size)
+        loader = minio_loader
+    else:
+        loader = pil_loader
 
     train_dataset = datasets.ImageFolder(
-        train_cache_size,
-        max_item_size,
         traindir,
         transforms.Compose([
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
-        ]))
+        ]),
+        loader=loader)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -265,7 +295,8 @@ def main_worker(gpu, ngpus_per_node, args):
                                 transforms.CenterCrop(224),
                                 transforms.ToTensor(),
                                 normalize,
-                            ])),
+                            ]),
+                            loader=loader),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
