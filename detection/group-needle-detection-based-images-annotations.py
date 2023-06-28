@@ -114,7 +114,7 @@ def get_samples_from_annotations(ann_file, images_folder):
             
             #print("list_annotation -> ", list_annotation)
 
-        samples.append((image_path, list_annotation))    
+        samples.append((image_id, image_path, list_annotation))    
     return samples
 
 
@@ -182,13 +182,13 @@ with open(mytar_save_folder + "metadata.txt", 'w') as metadata_writer:
         metadata += '{},{}\n'.format(mytar_name,group_size)
         for j in range(group_size):
             idx = permutation[i*group_size + j]
-            img_path, list_annotation = instances[idx]
+            image_id, img_path, list_annotation = instances[idx]
             img_size = os.path.getsize(img_path)
             
             # print("stop")
             # quit()
             
-            metadata += '{},{},{}-{}\n'.format(j, offset, img_size, list_annotation)
+            metadata += '{},{},{},{}-{}\n'.format(j, image_id, offset, img_size, list_annotation)
             offset += img_size
             with open(img_path, 'rb') as reader:
                 img = reader.read()

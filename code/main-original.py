@@ -325,6 +325,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     end = time.time()
     temp = 0
     for i, (images, target) in enumerate(train_loader):
+        print("len(images) -> ", len(images), type(images))
+        print("len(target) -> ", len(target), type(images))
+
+        print("stop")
+        quit()
+
         # measure data loading time
         data_time.update(time.time() - end)
 
