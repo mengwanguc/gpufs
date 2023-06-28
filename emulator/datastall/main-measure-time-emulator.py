@@ -273,7 +273,8 @@ def main_worker(gpu, ngpus_per_node, args):
             transforms.ToTensor(),
             normalize,
         ]),
-        loader=loader)
+        loader=loader,
+        cache=train_cache)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -289,14 +290,16 @@ def main_worker(gpu, ngpus_per_node, args):
         emulator_version=args.emulator_version)
 
     val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(val_cache_size, max_item_size, valdir,
-                             transforms.Compose([
-                                transforms.Resize(256),
-                                transforms.CenterCrop(224),
-                                transforms.ToTensor(),
-                                normalize,
-                            ]),
-                            loader=loader),
+        datasets.ImageFolder(
+            valdir,
+            transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                normalize,
+            ]),
+            loader=loader,
+            cache=val_cache),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
