@@ -38,7 +38,7 @@ for limit in ${limits[@]}; do
 
     # check how much memory the entire cgroup was actually using
     echo "checking bytes of memory used"
-    usage=$(cat /sys/fs/cgroup/$group_name/$group_name.usage_in_bytes)
+    usage=$(cat /sys/fs/cgroup/memory/$group_name/memory.usage_in_bytes)
     echo "... $usage bytes\n"
 
     # save our output to a meaningful filename
