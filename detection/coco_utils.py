@@ -51,22 +51,22 @@ def convert_coco_poly_to_mask(segmentations, height, width):
 
 class ConvertCocoPolysToMask(object):
     def __call__(self, image, target):
-        print("image, target (conpolys)-> ", image, target)
-        print("image_id1 -> ", target["image_id"])
+        # print("image, target (conpolys)-> ", image, target)
+        # print("image_id1 -> ", target["image_id"])
         w, h = image.size
 
         image_id = target["image_id"]
-        print("image_id2 -> ", image_id)
+        # print("image_id2 -> ", image_id)
         image_id = torch.tensor([image_id])
 
-        print("target -> ", target.keys())
+        # print("target -> ", target.keys())
         anno = target["annotations"]
-        print("anno -> ", anno)
-        for obj in anno:
-            print("obj -> ", obj)
-            print("obj['iscrowd'] -> ", obj['iscrowd'])
-            if obj['iscrowd'] == 0:
-                print('icrowd == 0 ....')
+        # print("anno -> ", anno)
+        # for obj in anno:
+        #     print("obj -> ", obj)
+        #     print("obj['iscrowd'] -> ", obj['iscrowd'])
+        #     if obj['iscrowd'] == 0:
+        #         print('icrowd == 0 ....')
 
         anno = [obj for obj in anno if obj['iscrowd'] == 0]
 
@@ -157,7 +157,7 @@ def _coco_remove_images_without_annotations(dataset, cat_list=None):
 
     assert isinstance(dataset, torchvision.datasets.CocoDetection)
     ids = []
-    print("dataset.ids -> ", dataset.ids)
+    # print("dataset.ids -> ", dataset.ids)
     for ds_idx, img_id in enumerate(dataset.ids):
         ann_ids = dataset.coco.getAnnIds(imgIds=img_id, iscrowd=None)
         anno = dataset.coco.loadAnns(ann_ids)
@@ -334,7 +334,7 @@ def get_metadata_mytar(
 
                 annotations = json.loads(string_data)
                 data_dict = {'image_id': img_id, 'annotations': annotations}
-                print("data_dict -> ", data_dict)
+                # print("data_dict -> ", data_dict)
                 # quit()
                 # print("annotations (in coco_utils) -> ",type(annotations), annotations)
                 # print("index 0 -> ", annotations[0])
@@ -353,15 +353,16 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         self.is_mytar = is_mytar
         self._transforms = transforms
         if(is_mytar):
-            print("grouping using my own tar format!")
+            # print("grouping using my own tar format!")
+            # print("grouping using my own tar format!")
         if hasattr(self, 'is_mytar') and self.is_mytar:
             print("Using Mytar...")
             self.metadata = metadata = get_metadata_mytar(root, 2)
 
     def __getitem__(self, idx):
-        print("coco_utils -> ", self.is_mytar)
+        # print("coco_utils -> ", self.is_mytar)
         if self.is_mytar:
-            print("using mytar func from coco_utils.py...")
+            # print("using mytar func from coco_utils.py...")
             # metadata = get_metadata_mytar(root, 4)
             path = self.root + str(2) + '/' + self.metadata[idx]['groupname']
             group_metadata = self.metadata[idx]['metadata']
@@ -377,24 +378,24 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         # print("img, target=", img, target)
         # quit()
         image_id = self.ids[idx]
-        print("image_id=image_id, annotations=target -> ", type(image_id), image_id, type(target), target)
+        # print("image_id=image_id, annotations=target -> ", type(image_id), image_id, type(target), target)
 
         target = dict(image_id=image_id, annotations=target)
         # print("target -> ", target)
 
         if self._transforms is not None:
-            print("self.transforms -> ", self._transforms)
-            print("transforming..")
+            # print("self.transforms -> ", self._transforms)
+            # print("transforming..")
             img, target = self._transforms(img, target)
         return img, target
 
     def __len__(self) -> int:
         if self.is_mytar:
-            print("self.metada (in len) -> ", len(self.metadata), self.metadata)
+            # print("self.metada (in len) -> ", len(self.metadata), self.metadata)
             # quit()
             return len(self.metadata)
         else:
-            print("self.ids (in len1) -> ", len(self.ids), self.ids)
+            # print("self.ids (in len1) -> ", len(self.ids), self.ids)
             return len(self.ids)
 
 
@@ -414,11 +415,11 @@ def get_coco(root, image_set, transforms, is_mytar, mode='instances'):
     # print("TESTING")
     # print("->", image_set)
     img_folder, ann_file = PATHS[image_set]
-    print("img_folder, ann_file- >", img_folder, ann_file)
+    # print("img_folder, ann_file- >", img_folder, ann_file)
     # print("->", img_folder, ann_file)
     img_folder = os.path.join(root, img_folder)
     ann_file = os.path.join(root, ann_file)
-    print("img_folder, ann_file- >", img_folder, ann_file)
+    # print("img_folder, ann_file- >", img_folder, ann_file)
     # print("->", img_folder, ann_file)
     
     if image_set == "train" and is_mytar:

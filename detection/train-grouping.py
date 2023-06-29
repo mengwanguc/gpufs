@@ -173,7 +173,7 @@ if __name__ == "__main__":
         description=__doc__)
 
     parser.add_argument('--data-path', default='/home/cc/mini-coco-dataset/coco_minitrain_25k', help='dataset')
-    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations/',
+    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations-subset/',
                         help='path to training data, which should be grouped')
     parser.add_argument('--validate_data', default='/home/cc/mini-coco-dataset/coco_minitrain_25k',
                         help='path to validation data, which does NOT need to be grouped.')
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--start_epoch', default=0, type=int, help='start epoch')
     parser.add_argument('--aspect-ratio-group-factor', default=3, type=int)
-    parser.add_argument('--group-size', default=3, type=int)
+    parser.add_argument('--group-size', default=2, type=int)
     parser.add_argument(
         "--test-only",
         dest="test_only",

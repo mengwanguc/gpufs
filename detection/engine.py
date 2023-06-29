@@ -25,18 +25,18 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
-        print("images(in batching) -> ", images, len(images), type(images))
-        print("targets(in batching) -> ", targets, len(targets), type(targets))
+        # print("images(in batching) -> ", images, len(images), type(images))
+        # print("targets(in batching) -> ", targets, len(targets), type(targets))
         
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
         
         loss_dict = model(images, targets)
 
-        print("loss_dict -> ", loss_dict, type(loss_dict))
+        # print("loss_dict -> ", loss_dict, type(loss_dict))
 
         losses = sum(loss for loss in loss_dict.values())
-        print("losses -> ", losses)
+        # print("losses -> ", losses)
 
 
         # reduce losses over all GPUs for logging purposes
