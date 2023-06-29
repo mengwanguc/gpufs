@@ -173,7 +173,7 @@ if __name__ == "__main__":
         description=__doc__)
 
     parser.add_argument('--data-path', default='/home/cc/mini-coco-dataset/coco_minitrain_25k', help='dataset')
-    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations-subset/',
+    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations/',
                         help='path to training data, which should be grouped')
     parser.add_argument('--validate_data', default='/home/cc/mini-coco-dataset/coco_minitrain_25k',
                         help='path to validation data, which does NOT need to be grouped.')
