@@ -454,7 +454,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         # Release the balloons for this batch (release one of each type).
         for key in train_loader.balloons:
-            train_loader.balloons[key][0].set_used(False)
+            balloon = train_loader.balloons[key][0]
+            balloon.set_used(False)
+            print("releasing balloon of size {}".format(balloon.get_size()))
 
         # measure elapsed time
         batch_time.update(time.time() - end)
