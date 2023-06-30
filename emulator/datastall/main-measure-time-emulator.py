@@ -417,6 +417,14 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # print("App got data:\t{}".format(time.time()))
         data_wait_time = time.time() - end
 
+        # Release the balloons for the previous batch (release one of each type).
+        for key in train_loader.balloons:
+            for balloon in train_loader.balloons[key]:
+                if balloon.get_used():
+                    balloon.set_used(False)
+                    print("releasing balloon of size {}".format(balloon.get_size()))
+                    break
+
         cpu2gpu_start_time = time.time()
 
         # if args.gpu is not None:
@@ -447,14 +455,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         time.sleep(args.batch_gpu_compute_time/args.gpu_count)
 
         gpu_time = time.time() - gpu_start_time
-
-        # Release the balloons for this batch (release one of each type).
-        for key in train_loader.balloons:
-            for balloon in train_loader.balloons[key]:
-                if balloon.get_used():
-                    balloon.set_used(False)
-                    break
-            print("releasing balloon of size {}".format(balloon.get_size()))
 
         print("batch {} \t data_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
                 i, data_wait_time, cpu2gpu_time, gpu_time
