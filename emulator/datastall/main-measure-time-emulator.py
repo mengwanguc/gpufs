@@ -418,11 +418,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         data_wait_time = time.time() - end
 
         # Release the balloons for the previous batch (release one of each type).
-        for key in train_loader.balloons:
-            for balloon in train_loader.balloons[key]:
-                if balloon.get_used():
-                    balloon.set_used(False)
-                    break
+        if i > 0:
+            for size in train_loader.balloons:
+                for balloon in train_loader.balloons[size]:
+                    if balloon.get_used():
+                        balloon.set_used(False)
+                        break
 
         cpu2gpu_start_time = time.time()
 
