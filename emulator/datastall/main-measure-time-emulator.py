@@ -7,6 +7,7 @@ import shutil
 import time
 import warnings
 import minio
+import mlock
 from PIL import Image
 import io
 
@@ -282,13 +283,16 @@ def main_worker(gpu, ngpus_per_node, args):
         train_sampler = None
 
     estimated_pin_mem_time = 0.04
+    train_balloons = dict()
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler, 
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
-        emulator_version=args.emulator_version)
+        emulator_version=args.emulator_version,
+        balloons = train_balloons)
 
+    val_balloons = dict()
     val_loader = torch.utils.data.DataLoader(
         datasets.ImageFolder(
             valdir,
@@ -301,7 +305,8 @@ def main_worker(gpu, ngpus_per_node, args):
             loader=loader,
             cache=val_cache),
         batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True)
+        num_workers=args.workers, pin_memory=True,
+        balloons = val_balloons)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
@@ -446,6 +451,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         print("batch {} \t data_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
                 i, data_wait_time, cpu2gpu_time, gpu_time
         ))
+
+        # Release the balloons for this batch (release one of each type).
+        for key in train_loader.balloons:
+            train_loader.balloons[key][0].set_used(False)
 
         # measure elapsed time
         batch_time.update(time.time() - end)
