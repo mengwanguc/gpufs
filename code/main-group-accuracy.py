@@ -263,6 +263,8 @@ def main_worker(gpu, ngpus_per_node, args):
         is_mytar = True,
         group_size = img_per_tar)
 
+    print("train_dataset -> ", train_dataset)
+
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
     else:
@@ -292,6 +294,9 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # train for one epoch
         tt1, tt5 = train(train_loader, model, criterion, optimizer, epoch, args)
+
+        # print("stop in epoch func")
+        # quit()
 
         # evaluate on validation set
         vt1, vt5 = validate(val_loader, model, criterion, args)
@@ -360,6 +365,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     end = time.time()
     temp = 0
     for i, (images, target) in enumerate(train_loader):
+        print("len(images) -> ", len(images), type(images))
+        print("len(target) -> ", len(target), type(images))
+
+        print("stop")
+        quit()
+        
         # measure data loading time
         data_time.update(time.time() - end)
 
@@ -419,6 +430,7 @@ def validate(val_loader, model, criterion, args):
     with torch.no_grad():
         end = time.time()
         for i, (images, target) in enumerate(val_loader):
+            
             if args.gpu is not None:
                 images = images.cuda(args.gpu, non_blocking=True)
             if torch.cuda.is_available():

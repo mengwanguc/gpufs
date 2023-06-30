@@ -44,7 +44,7 @@ def get_dataset(name, image_set, transform, data_path):
     }
     p, ds_fn, num_classes = paths[name]
 
-    ds = ds_fn(p, image_set=image_set, transforms=transform)
+    ds = ds_fn(p, image_set=image_set, transforms=transform, is_mytar = False)
     return ds, num_classes
 
 
@@ -66,8 +66,10 @@ def main(args):
     print("Loading data")
 
     dataset, num_classes = get_dataset(args.dataset, "train", get_transform(train=True), args.data_path)
+    print("ds, num_classes -> ", dataset, num_classes)
     dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path)
-
+    print("ds_test -> ", dataset_test)
+    quit()
     print("Creating data loaders")
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
@@ -126,7 +128,7 @@ def main(args):
         # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
         #         f.write('\n'.join("Epoch "+ str(epoch)))
 
-        f = open("/home/cc/gpufs/detection/result.txt", "a")
+        f = open("/home/cc/gpufs/detection/resulttest-subset.txt", "a")
         f.write("\n")
         f.write("Epoch "+ str(epoch))
 
@@ -162,7 +164,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset', default='coco', help='dataset')
     parser.add_argument('--model', default='fasterrcnn_resnet50_fpn', help='model')
     parser.add_argument('--device', default='cuda', help='device')
-    parser.add_argument('-b', '--batch-size', default=2, type=int,
+    parser.add_argument('-b', '--batch-size', default=1, type=int,
                         help='images per gpu, the total batch size is $NGPU x batch_size')
     parser.add_argument('--epochs', default=26, type=int, metavar='N',
                         help='number of total epochs to run')

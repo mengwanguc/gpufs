@@ -504,3 +504,289 @@ Epoch 30
 =======
 Epoch 27
 >>>>>>> ccd9e125a8a21d87019f898b9b4ddd82252e3c74
+
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 0
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+Epoch 1
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.000
