@@ -474,6 +474,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if args.profile_batches != -1 and i >= args.profile_batches:
             break
 
+    # release all balloons at end of batch
+    for size in train_loader.balloons:
+        for balloon in train_loader.balloons[size]:
+            balloon.set_used(False)
+
     output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
     if not os.path.exists(args.gpu_type):
         os.makedirs(args.gpu_type)
@@ -498,6 +503,14 @@ def validate(val_loader, model, criterion, args):
     with torch.no_grad():
         end = time.time()
         for i, (images, target) in enumerate(val_loader):
+            # Release the balloons for the previous batch (release one of each type).
+            if i > 0:
+                for size in val_loader.balloons:
+                    for balloon in val_loader.balloons[size]:
+                        if balloon.get_used():
+                            balloon.set_used(False)
+                            break
+
             if args.gpu is not None:
                 images = images.cuda(args.gpu, non_blocking=True)
             if torch.cuda.is_available():
@@ -523,6 +536,11 @@ def validate(val_loader, model, criterion, args):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
+
+        # release all balloons at end of batch
+        for size in val_loader.balloons:
+            for balloon in val_loader.balloons[size]:
+                balloon.set_used(False)
 
     return top1.avg
 
