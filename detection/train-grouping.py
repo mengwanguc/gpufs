@@ -140,7 +140,7 @@ def main(args):
         # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
         #         f.write('\n'.join("Epoch "+ str(epoch)))
 
-        f = open("/home/cc/gpufs/detection/result.txt", "a")
+        f = open("/home/cc/gpufs/detection/result-subset-rand-grouping.txt", "a")
         f.write("\n")
         f.write("Epoch "+ str(epoch))
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         description=__doc__)
 
     parser.add_argument('--data-path', default='/home/cc/mini-coco-dataset/coco_minitrain_25k', help='dataset')
-    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations/',
+    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations-subset/',
                         help='path to training data, which should be grouped')
     parser.add_argument('--validate_data', default='/home/cc/mini-coco-dataset/coco_minitrain_25k',
                         help='path to validation data, which does NOT need to be grouped.')

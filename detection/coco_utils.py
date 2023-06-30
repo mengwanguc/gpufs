@@ -386,7 +386,7 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         # print("img, target=", img, target)
         # quit()
 
-        print("using original func from coco1.py...")
+        # print("using original func from coco1.py...")
         coco = self.coco
         # print("coco -> ", coco)
         img_id = self.ids[idx]
