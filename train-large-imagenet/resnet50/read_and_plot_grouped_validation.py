@@ -26,7 +26,7 @@ current_p = 'val_top1'
 current_title = 'Epoch related Validation top 1 Accuracy on Large Imagenet'
 process = '_validationtop1_'
 
-with open('resnet50_batch_256_epo_20_ ') as json_file:
+with open('resnet50_batch_256_epo_50_no-grouping') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
@@ -123,7 +123,7 @@ plt.show(block=True)
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = epochs+"epoch-result_" + model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +".png" 
+sample_file_name = "test"
 plt.savefig(results_dir + sample_file_name)
 
 """
