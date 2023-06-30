@@ -422,7 +422,6 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             for balloon in train_loader.balloons[key]:
                 if balloon.get_used():
                     balloon.set_used(False)
-                    print("releasing balloon of size {}".format(balloon.get_size()))
                     break
 
         cpu2gpu_start_time = time.time()
