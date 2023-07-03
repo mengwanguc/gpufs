@@ -5,6 +5,7 @@ gpu_type="p100"
 models=("shufflenet_v2_x0_5" "resnet18" "mobilenet_v2" "alexnet" "vgg11")
 batch_size="256"
 n_workers="12"
+limit="unlimited"
 data_path="/home/cc/data/test-utilization/imagenette2"
 
 # move to the the emulator/datastall/ folder
