@@ -2,7 +2,7 @@
 set -e
 
 gpu_type="p100"
-models=("vgg11")
+models=("alexnet" "mobilenet_v2" "resnet18" "shufflenet_v2_x0_5" "squeezenet1_0" "vgg11")
 limit="12G"
 batch_size="256"
 n_workers="12"
