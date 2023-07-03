@@ -2,22 +2,24 @@
 set -e
 
 gpu_type="p100"
-model="alexnet"
-limits=("4G")
+model="resnet18"
+limits=("6G" "8G" "10G" "12G" "14G" "16G")
 batch_size="256"
 n_workers="4"
 data_path="/home/cc/data/test-utilization/imagenette2"
 
 # set up control group
 group_name="gpufs"
-sudo cgcreate -g memory:$group_name
-sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
-# move the the emulator/datastall/ folder
+# move to the the emulator/datastall/ folder
 cd ..
 
 for limit in ${limits[@]}; do
     echo "Profiling model $model with $limit GB memory limit"
+
+    # set up control group
+    sudo cgcreate -g memory:$group_name
+    sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # place the limit
     sudo bash -c "echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
@@ -28,7 +30,7 @@ for limit in ${limits[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    cgexec -g memory:$group_name python main-measure-time-emulator.py --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
+    cgexec -g memory:$group_name python main-measure-time-emulator.py --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 8 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
     # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
@@ -44,8 +46,7 @@ for limit in ${limits[@]}; do
     # save our output to a meaningful filename
     mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached.csv
     echo
+
+    # tear down the control group
+    sudo cgdelete memory:$group_name
 done
-
-# tear down the control group
-sudo cgdelete memory:$group_name
-
