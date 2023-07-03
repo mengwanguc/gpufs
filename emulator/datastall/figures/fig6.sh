@@ -2,13 +2,19 @@
 set -e
 
 gpu_type="p100"
-models=("shufflenet_v2_x0_5" "squeezenet1_0" "resnet18" "mobilenet_v2" "alexnet" "vgg11")
+models=("shufflenet_v2_x0_5" "resnet18" "mobilenet_v2" "alexnet" "vgg11")
 batch_size="256"
 n_workers="12"
 data_path="/home/cc/data/test-utilization/imagenette2"
 
+# move to the the emulator/datastall/ folder
+cd ..
+
 for model in ${models[@]}; do
     echo "Profiling model $model with $limit GB memory limit"
+
+    sudo cgcreate -g memory:$group_name
+    sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # flush memory & caches
     echo "Flushing memory/cache"
@@ -16,16 +22,25 @@ for model in ${models[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    python main-measure-time.py --epoch 2 --workers $n_workers --gpu 0 --gpu-type $gpu_type -a $model --batch-size $batch_size $data_path --profile-batches -1
+    cgexec -g memory:$group_name python main-measure-time-emulator.py --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 8 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
-    # check how much memory the dataset was actually using
+    # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
-    echo "checking memory usage..."
-    usage=$(vmtouch $data_path | grep "Resident Pages" | awk 'NF>1{print $NF}')
-    echo "... $usage cached\n"
+    echo "checking % of dataset cached"
+    cached=$(vmtouch $data_path | grep "Resident Pages" | awk 'NF>1{print $NF}')
+    echo "... $cached cached\n"
+
+    # check how much memory the entire cgroup was actually using
+    echo "checking bytes of memory used"
+    usage=$(cat /sys/fs/cgroup/memory/$group_name/memory.max_usage_in_bytes)
+    echo "... $usage bytes\n"
 
     # save our output to a meaningful filename
-    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage.csv
+    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached.csv
     echo
+
+    # tear down the control group
+    sudo cgdelete memory:$group_name
+    
 done
 
