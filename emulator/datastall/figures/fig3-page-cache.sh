@@ -2,22 +2,18 @@
 set -e
 
 gpu_type="p100"
-model="resnet18"
-limits=("6G" "8G" "10G" "12G" "14G" "16G")
+models=("vgg11")
+limit="12G"
 batch_size="256"
-n_workers="4"
+n_workers="12"
 data_path="/home/cc/data/test-utilization/imagenette2"
 
 # set up control group
 group_name="gpufs"
 
-# move to the the emulator/datastall/ folder
-cd ..
-
-for limit in ${limits[@]}; do
+for model in ${models[@]}; do
     echo "Profiling model $model with $limit GB memory limit"
 
-    # set up control group
     sudo cgcreate -g memory:$group_name
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
@@ -49,5 +45,4 @@ for limit in ${limits[@]}; do
 
     # tear down the control group
     sudo cgdelete memory:$group_name
-    
 done

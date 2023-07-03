@@ -10,14 +10,16 @@ data_path="/home/cc/data/test-utilization/imagenette2"
 
 # set up control group
 group_name="gpufs"
-sudo cgcreate -g memory:$group_name
-sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
 # move the the emulator/datastall/ folder
 cd ..
 
 for limit in ${limits_gb[@]}; do
     echo "Profiling model $model with $limit GB memory limit"
+
+    # set up control group
+    sudo cgcreate -g memory:$group_name
+    sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # flush memory & caches
     echo "Flushing memory/cache"
@@ -38,11 +40,11 @@ for limit in ${limits_gb[@]}; do
     usage=$(cat /sys/fs/cgroup/memory/$group_name/memory.max_usage_in_bytes)
     echo "... $usage bytes\n"
 
-
     # save our output to a meaningful filename
     mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached.csv
     echo
-done
 
-# tear down the control group
-sudo cgdelete memory:$group_name
+    # tear down the control group
+    sudo cgdelete memory:$group_name
+
+done
