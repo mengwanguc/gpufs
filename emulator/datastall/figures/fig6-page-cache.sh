@@ -8,6 +8,9 @@ n_workers="12"
 limit="unlimited"
 data_path="/home/cc/data/test-utilization/imagenette2"
 
+# set up control group
+group_name="gpufs"
+
 # move to the the emulator/datastall/ folder
 cd ..
 
