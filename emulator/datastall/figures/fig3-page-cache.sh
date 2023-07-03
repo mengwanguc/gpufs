@@ -11,6 +11,9 @@ data_path="/home/cc/data/test-utilization/imagenette2"
 # set up control group
 group_name="gpufs"
 
+# move to the the emulator/datastall/ folder
+cd ..
+
 for model in ${models[@]}; do
     echo "Profiling model $model with $limit GB memory limit"
 
