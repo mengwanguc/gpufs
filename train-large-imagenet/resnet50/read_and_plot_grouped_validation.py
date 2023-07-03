@@ -39,13 +39,13 @@ with open('resnet50_batch_256_epo_50_no-grouping') as json_file:
             epochs = data[k]	
         elif k == 'args.batch_size':
             batch_size = data[k]
-# with open('resnet18_batch_256_epo_50_ ') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size2 = data[k]
-#             print(data[k])
-#             print(len(batch_top1_top5_size2))
+with open('resnet50_batch_256_gsize_64_epo_50grouping') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size2 = data[k]
+            print(data[k])
+            print(len(batch_top1_top5_size2))
 # with open('resnet18_batch_256_gsize_64_epo_90grouping') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -107,7 +107,7 @@ def helper(batches):
 epoch_range = range(1,epochs+1)
 print(epoch_range)
 plt.plot(epoch_range, batch_top1_top5, label = 'no_grouping', color="blue", linewidth=1)
-# plt.plot(epoch_range, batch_top1_top5_size8, '--', label = 'rand-perm-grouping_gsize64', color="green", linewidth=3)
+plt.plot(epoch_range, batch_top1_top5_size2, '--', label = 'rand-perm-grouping_gsize64', color="green", linewidth=3)
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'sequential-grouping_gsize64', color="red", linewidth=1)
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
 # plt.plot(epoch_range, batch_top1_top5_size16, label = 'groupsize_16')
@@ -122,8 +122,8 @@ plt.legend()
 plt.show(block=True) 
 ep = str(epochs)
 bat = str(batch_size)
-results_dir = ''
-sample_file_name = "test"
+results_dir = 'nogrouping_randgrouping_50epoch_'
+sample_file_name = "valtop1"
 plt.savefig(results_dir + sample_file_name)
 
 """
