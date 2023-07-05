@@ -135,10 +135,19 @@ def main():
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
 
-def get_largest_file_size(dir_path):
+def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
     dir_path += '/' # ensure can use as prefix
-    sizes = [os.path.getsize(dir_path + filename) for filename in os.listdir(dir_path)]
-    return max(sizes)
+    sizes = sorted([os.path.getsize(dir_path + filename) for filename in os.listdir(dir_path)])
+
+    max_size = 0
+    temp = cache_size
+    for size in sizes:
+        if temp - size < 0:
+            return size
+        temp -= size
+        max_size = size
+
+    return max_size
 
 
 def main_worker(gpu, ngpus_per_node, args):
@@ -268,12 +277,12 @@ def main_worker(gpu, ngpus_per_node, args):
         train_cache = minio.PyCache(
             size=train_cache_size,
             max_usable_file_size=max_item_size,
-            max_cacheable_file_size=get_largest_file_size(traindir)
+            max_cacheable_file_size=get_largest_cacheable_file_size(traindir, train_cache_size)
         )
         val_cache = minio.PyCache(
             size=val_cache_size,
             max_usable_file_size=max_item_size,
-            max_cacheable_file_size=get_largest_file_size(valdir)
+            max_cacheable_file_size=get_largest_cacheable_file_size(valdir, val_cache_size)
         )
         loader = minio_loader
     else:
