@@ -10,6 +10,7 @@ import minio
 import mlock
 from PIL import Image
 import io
+import glob
 
 import torch
 import torch.nn as nn
@@ -136,8 +137,8 @@ def main():
         main_worker(args.gpu, ngpus_per_node, args)
 
 def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
-    dir_path += '/' # ensure can use as prefix
-    sizes = sorted([os.path.getsize(dir_path + filename) for filename in os.listdir(dir_path)])
+    filepaths = glob.glob(dir_path + '/**/*.JPEG')
+    sizes = sorted([os.path.getsize(path) for path in filepaths])
 
     max_size = 0
     temp = cache_size
