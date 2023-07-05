@@ -143,9 +143,11 @@ def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
     temp = cache_size
     for size in sizes:
         if temp - size < 0:
-            return size
+            print("size {} NOT OK. Max = {}".format(size, max_size))
+            return max_size
         temp -= size
         max_size = size
+        print("size {} OK".format(size))
 
     return max_size
 
