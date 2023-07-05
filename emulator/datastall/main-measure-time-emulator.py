@@ -260,8 +260,8 @@ def main_worker(gpu, ngpus_per_node, args):
     val_cache = None
     loader = None
     if args.use_minio:
-        train_cache = minio.PyCache(size=train_cache_size, max_file_size=max_item_size)
-        val_cache = minio.PyCache(size=val_cache_size, max_file_size=max_item_size)
+        train_cache = minio.PyCache(size=train_cache_size, max_usable_item_size=max_item_size)
+        val_cache = minio.PyCache(size=val_cache_size, max_usable_item_size=max_item_size)
         loader = minio_loader
     else:
         loader = pil_loader
