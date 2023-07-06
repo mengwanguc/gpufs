@@ -69,7 +69,7 @@ def main(args):
     print("ds, num_classes -> ", dataset, num_classes)
     dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path)
     print("ds_test -> ", dataset_test)
-    quit()
+    # quit()
     print("Creating data loaders")
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(dataset)

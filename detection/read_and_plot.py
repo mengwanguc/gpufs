@@ -42,7 +42,7 @@ with open('result_ap_grouping_subset_30epochs') as json_file:
     
     batch_top1_top5 = data["AP"]
     batch_top1_top5 = [int(num * 100) for num in batch_top1_top5]
-with open('result_ap_no-grouping_30epochs') as json_file:
+with open('result_ap_no-grouping_subset_30epochs') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
@@ -50,11 +50,14 @@ with open('result_ap_no-grouping_30epochs') as json_file:
 
     batch_top1_top5_size2 = data["AP"]
     batch_top1_top5_size2 = [int(num * 100) for num in batch_top1_top5_size2]
-# with open('resnet18_batch_'+short_batch+'_gsize_4_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size4 = data[k]
+with open('result_ap_30epoch_nogrouping_barchsize16') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size4 = data[k]
+
+        batch_top1_top5_size4 = data["AP"]
+        batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
 # with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -101,6 +104,7 @@ print("epoch ->", epochs)
 epoch_range = range(1,epochs+1)
 print("epoch_range ->", epoch_range)
 plt.plot(epoch_range, batch_top1_top5_size2, label = 'no_grouping_bsize2', color="blue", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5_size4, label = 'no_grouping_bsize16', color="red", linewidth=1)
 plt.plot(epoch_range, batch_top1_top5, '--', label = 'rand-perm-grouping_bsize1_gsize2', color="green", linewidth=3)
 # plt.plot(epoch_range, batch_top1_top5_size2, label = 'groupsize_2')
 # plt.plot(epoch_range, batch_top1_top5_size4, label = 'groupsize_4')
@@ -119,7 +123,7 @@ plt.show(block=True)
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"_nogrouping_randgrouping"+".png" 
+sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"_nogrouping_randgrouping_bsize16"+".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """
