@@ -317,7 +317,7 @@ def main_worker(gpu, ngpus_per_node, args):
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
         emulator_version=args.emulator_version,
-        balloons = train_balloons
+        balloons = train_balloons,
         n_loader_threads = args.load_threads)
 
     val_balloons = dict()
