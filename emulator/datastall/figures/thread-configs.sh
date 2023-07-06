@@ -2,7 +2,7 @@
 set -e
 
 gpu_type="p100"
-model="resnet18"
+model="alexnet"
 batch_size="256"
 limit="unlimited"
 n_workers="4"
