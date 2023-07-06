@@ -1110,6 +1110,7 @@ Epoch 29
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.227
  Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.441
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.550
+<<<<<<< HEAD
  Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.007
  Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.019
  Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.003
@@ -3018,3 +3019,5 @@ Epoch 29
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.195
  Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.405
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.498
+=======
+>>>>>>> 0e58b011c4497f97a8839c25ac1a829238b9d011

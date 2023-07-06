@@ -328,6 +328,8 @@ def main_worker(gpu, ngpus_per_node, args):
             strs = "resnet18"
         elif args.arch.startswith('resnet101'):
             strs = "resnet101"
+        elif args.arch.startswith('resnet50'):
+            strs = "resnet50"
         model_data = {'train_top1': train_top1, 'train_top5': train_top5,
         'val_top1': val_top1, 'val_top5': val_top5, 'model':strs,
         'args.epochs': args.epochs, 'args.batch_size': args.batch_size, 

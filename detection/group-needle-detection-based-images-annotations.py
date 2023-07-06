@@ -5,6 +5,10 @@ from typing import Any, Callable, cast, Dict, List, Optional, Tuple
 from os.path import basename
 import tarfile
 import json
+import numpy as np
+import copy
+import bisect
+import random
 
 # def has_file_allowed_extension(filename: str, extensions: Tuple[str, ...]) -> bool:
 #     """Checks if a file is an allowed extension.
@@ -89,17 +93,118 @@ def load_categories(ann_file):
 
     return category_names, merged_dict
 
-def get_samples_from_annotations(ann_file, images_folder):
+def _quantize(x, bins):
+    bins = copy.deepcopy(bins)
+    bins = sorted(bins)
+    quantized = list(map(lambda y: bisect.bisect_right(bins, y), x))
+    return quantized
+
+def create_aspect_ratio_groups(annotations,group_size, k=3):
+    bins = (2 ** np.linspace(-1, 1, 2 * k + 1)).tolist() if k > 0 else [1.0]
+    print("bins ->", bins)
+    # Calculate the aspect ratio for each image
+    groups = []
+    for image in annotations['images']:
+        width = image['width']
+        height = image['height']
+        aspect_ratio = width / height
+        aspect_ratio_group = _quantize([aspect_ratio], bins)
+        image['aspect_ratio_group'] = aspect_ratio_group[0]
+        groups.append(aspect_ratio_group[0])
+    print("grouping to bins -> ", groups)
+    # ------------------
+    # wrapping img id and aspect ratio in a dict
+    imgid_aspect_ratio = {image['id']: image['aspect_ratio_group'] for image in annotations['images']}
+    print("imgid_aspect_ratio ->", imgid_aspect_ratio)
+
+    # group it based on aspect ratio in a dict 
+    grouped_dict = {}
+    for key, value in imgid_aspect_ratio.items():
+        if value not in grouped_dict:
+            grouped_dict[value] = {}
+        grouped_dict[value][key] = value
+    
+    grouped_dict = {k: v for k, v in sorted(grouped_dict.items())}
+    print("grouped_dict ->", grouped_dict)
+
+    # take img_id as group size in the grouped_dict
+    grouped_mytar = {}
+    group_num_aspect_ratio = 0
+    for key, value in grouped_dict.items():
+        # shuffle each grouped aspect ratio
+        print("data value ->", value)
+        keys = list(value.keys())
+        random.shuffle(keys)
+        shuffled_data = {key: value[key] for key in keys}
+        print("shuffled_data ->", shuffled_data)
+        
+        # make grouped data that contain same as group size
+        if len(value) >= group_size:
+            num_iter_to_stop = len(value)//group_size
+            print("num_iter_to_stop -> ", num_iter_to_stop)
+            values_in_group = 0
+            for x in value.copy():
+                if num_iter_to_stop>0:
+                    if group_num_aspect_ratio not in grouped_mytar:
+                        grouped_mytar[group_num_aspect_ratio] = {}
+                    grouped_mytar[group_num_aspect_ratio][x] = key
+                    del value[x]
+                    values_in_group +=1
+                    if values_in_group == group_size :
+                        values_in_group = 0
+                        num_iter_to_stop -= 1
+                        group_num_aspect_ratio += 1
+
+    print("rest of grouped_dict that cant be grouping ->", grouped_dict)
+    print("grouped_mytar -> ", grouped_mytar)
+    
+    values_in_group = 0
+    for key, value in grouped_dict.items():
+        for x in value:
+            if group_num_aspect_ratio not in grouped_mytar:
+                grouped_mytar[group_num_aspect_ratio] = {}
+            grouped_mytar[group_num_aspect_ratio][x] = key
+            values_in_group += 1
+            if values_in_group == group_size :
+                values_in_group = 0
+                # num_iter_to_stop -= 1
+                group_num_aspect_ratio += 1
+
+    print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
+    print("final grouped_mytar -> ", grouped_mytar)
+
+    list_imgid_sorted_by_aspect_ratio = []
+    for key, value in grouped_mytar.items():
+        for x in value:
+            list_imgid_sorted_by_aspect_ratio.append(x)
+    print("list_imgid_sorted_by_aspect_ratio -> ", list_imgid_sorted_by_aspect_ratio)
+
+    # change the order img id based on grouping aspect ratio
+    annotations['images'] = sorted(annotations['images'], key=lambda d: list_imgid_sorted_by_aspect_ratio.index(d['id']))   
+    for value in annotations['images']:
+        print(value)
+    # -------------------
+    # Sort the images based on aspect ratio
+    # annotations['images'] = sorted(annotations['images'], key=lambda x: x['aspect_ratio_group'])
+    # print("annotations['images'] -> ", annotations['images'] )
+    return annotations
+
+def get_samples_from_annotations(ann_file, images_folder, group_size):
     with open(ann_file, 'r') as f:
         annotations = json.load(f)
 
     categories = annotations['categories']
     category_mapping = {category['id']: category['name'] for category in categories}
     
+    annotations = create_aspect_ratio_groups(annotations,group_size, k=3)
+    # print("annotations -> ", annotations)
+
     samples = []
     for image in annotations['images']:
         list_annotation = []
         image_id = image['id']
+        aspect_ratio_group = image['aspect_ratio_group']
+        print("aspect_ratio_group -> ", aspect_ratio_group)
         image_path = images_folder + image['file_name']  # Replace with the actual path to the images
         for annotation in annotations['annotations']:
             image_annotation = []
@@ -114,8 +219,57 @@ def get_samples_from_annotations(ann_file, images_folder):
             
             #print("list_annotation -> ", list_annotation)
 
-        samples.append((image_id, image_path, list_annotation))    
+        samples.append((image_id, aspect_ratio_group, image_path, list_annotation))    
+        print("aspect_ratio_group -> ", aspect_ratio_group)
     return samples
+
+#-------------------
+
+# def _compute_aspect_ratios_coco_dataset(img_height, img_width, indices=None):
+#     # print("len(dataset) -> ", len(dataset))
+#     # print(dataset[0])
+#     # if indices is None:
+#     #     indices = range(len(dataset))
+#     # aspect_ratios = []
+#     # for i in indices:
+#     #     print(i, indices)
+#     #     img_info = dataset.coco.imgs[dataset.ids[i]]
+#     #     print("img_info -> ", img_info)
+#     #     aspect_ratio = float(img_info["width"]) / float(img_info["height"])
+#     #     aspect_ratios.append(aspect_ratio)
+
+#     img_info = dataset.coco.imgs[dataset.ids[i]]
+#     print("img_info -> ", img_info)
+#     aspect_ratio = float(img_width) / float(img_height)
+
+#     return aspect_ratios
+
+
+# def _quantize(x, bins):
+#     bins = copy.deepcopy(bins)
+#     bins = sorted(bins)
+#     quantized = list(map(lambda y: bisect.bisect_right(bins, y), x))
+#     return quantized
+
+# def create_aspect_ratio_groups(img_height, img_width, k=0):
+#     # print("dataset -> ", dataset)
+#     aspect_ratios = _compute_aspect_ratios_coco_dataset(img_height, img_width)
+#     print("aspect_ratio", aspect_ratios)
+#     #print("np.linspace(-1, 1, 2 * k + 1) ->", np.linspace(-1, 1, 2 * k + 1))
+#     bins = (2 ** np.linspace(-1, 1, 2 * k + 1)).tolist() if k > 0 else [1.0]
+#     print("bins ->", bins)
+#     quit()
+#     groups = _quantize(aspect_ratios, bins)
+#     # count number of elements per group
+#     counts = np.unique(groups, return_counts=True)[1]
+#     fbins = [0] + bins + [np.inf]
+#     print("Using {} as bins for aspect ratio quantization".format(fbins))
+#     print("Count of instances per bin: {}".format(counts))
+#     #print("sum ->", sum(counts))
+#     #print("Stop")
+#     print("groups aspect ratio -> ", groups)
+#     #quit()
+#     return groups
 
 
 
@@ -146,14 +300,14 @@ print(len(classes), len(class_to_idx))
 
 # classes, class_to_idx = find_classes(train_folder)
 # print(classes, class_to_idx)
-print("classes: \n {} \n class_to_idx: \n {}".format(classes, class_to_idx))
+# print("classes: \n {} \n class_to_idx: \n {}".format(classes, class_to_idx))
 
 # instances = make_dataset(images_folder, class_to_idx, IMG_EXTENSIONS, None)
 
 images_folder = train_folder + "/images/train2017/"
-instances = get_samples_from_annotations(ann_train_file, images_folder)
+instances = get_samples_from_annotations(ann_train_file, images_folder, group_size)
 print("number of images: {}".format(len(instances)))
-print(instances)
+# print(instances)
 
 generator = torch.Generator()
 
@@ -161,11 +315,12 @@ generator = torch.Generator()
 #     seed = int(f.read())
 #     f.close() j, class_id, offset, img_size, image_path, 
 
-generator.manual_seed(100)
-permutation = torch.randperm(len(instances), generator=generator).tolist()
+# generator.manual_seed(100)
+# permutation = torch.randperm(len(instances), generator=generator).tolist()
 
-it = iter(permutation)
-group_num = int(len(permutation) / group_size)
+# it = iter(permutation)
+# print("len(permutation) ->", len(permutation) )
+group_num = int(len(instances) / group_size)
 
 
 
@@ -175,20 +330,23 @@ with open(mytar_save_folder + "metadata.txt", 'w') as metadata_writer:
         metadata_writer.write('{}\n'.format(class_name))
 
     metadata = ''
+    idx = 0
     for i in range(group_num):
         mytar_name = 'filegroup-{}.mytar'.format(i)
         imgdata = b''
         offset = 0
         metadata += '{},{}\n'.format(mytar_name,group_size)
         for j in range(group_size):
-            idx = permutation[i*group_size + j]
-            image_id, img_path, list_annotation = instances[idx]
+            image_id, aspect_ratio_group, img_path, list_annotation = instances[idx]
+            idx += 1
             img_size = os.path.getsize(img_path)
+
+            # aspect_ratio_group = create_aspect_ratio_groups(img_height, img_width, k=3)
             
             # print("stop")
             # quit()
             
-            metadata += '{},{},{},{}-{}\n'.format(j, image_id, offset, img_size, list_annotation)
+            metadata += '{},{},{},{},{}-{}\n'.format(j, image_id, aspect_ratio_group, offset, img_size, list_annotation)
             offset += img_size
             with open(img_path, 'rb') as reader:
                 img = reader.read()

@@ -69,7 +69,6 @@ def main(args):
     print("ds, num_classes -> ", dataset, num_classes)
     dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path)
     print("ds_test -> ", dataset_test)
-    # quit()
     print("Creating data loaders")
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
@@ -84,6 +83,9 @@ def main(args):
     else:
         train_batch_sampler = torch.utils.data.BatchSampler(
             train_sampler, args.batch_size, drop_last=True)
+
+    print("stop in train.py")
+    quit()
 
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_sampler=train_batch_sampler, num_workers=args.workers,
