@@ -23,10 +23,10 @@ batch_top1_top5_size64 = {}
 
 short_batch = '256'
 current_p = 'AP'
-current_title = 'Epoch related Average Precision(AP) on Coco Dataset'
+current_title = 'Epoch related Average Precision(AP) on Subset of Coco Dataset'
 process = '_AP_'
 
-with open('result_ap_') as json_file:
+with open('result_ap_grouping_subset_30epochs') as json_file:
     data = json.load(json_file)
     print(data)
     print(type(data["AP"]))
@@ -42,11 +42,14 @@ with open('result_ap_') as json_file:
     
     batch_top1_top5 = data["AP"]
     batch_top1_top5 = [int(num * 100) for num in batch_top1_top5]
-# with open('resnet18_batch_'+short_batch+'_gsize_2_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size2 = data[k]
+with open('result_ap_no-grouping_30epochs') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size2 = data[k]
+
+    batch_top1_top5_size2 = data["AP"]
+    batch_top1_top5_size2 = [int(num * 100) for num in batch_top1_top5_size2]
 # with open('resnet18_batch_'+short_batch+'_gsize_4_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -92,12 +95,13 @@ def helper(batches):
 # x32, top1s32, top5s32 = helper(batch_top1_top5_size32)
 # x64, top1s64, top5s64 = helper(batch_top1_top5_size64)
 
-epochs = 13
+epochs = 30
 print("epoch ->", epochs)
 
 epoch_range = range(1,epochs+1)
 print("epoch_range ->", epoch_range)
-plt.plot(epoch_range, batch_top1_top5, label = 'no_grouping', color="blue", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5_size2, label = 'no_grouping_bsize2', color="blue", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5, '--', label = 'rand-perm-grouping_bsize1_gsize2', color="green", linewidth=3)
 # plt.plot(epoch_range, batch_top1_top5_size2, label = 'groupsize_2')
 # plt.plot(epoch_range, batch_top1_top5_size4, label = 'groupsize_4')
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
@@ -105,16 +109,17 @@ plt.plot(epoch_range, batch_top1_top5, label = 'no_grouping', color="blue", line
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'groupsize_32')
 # plt.plot(epoch_range, batch_top1_top5_size64, label = 'groupsize_64')
 plt.suptitle(current_title)
-plt.title("(Model:fasterrcnn_resnet50_fpn, Batch Size:2, Lr:0.0025)", fontsize=10)
+plt.title("(Model:fasterrcnn_resnet50_fpn, Lr:0.0025)", fontsize=10)
 plt.xlabel('Epochs')
 plt.ylabel('Average Precision(AP)')
+plt.xlim([0,33])
 plt.ylim([0,40])
 plt.legend()
 plt.show(block=True) 
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +".png" 
+sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"_nogrouping_randgrouping"+".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """
