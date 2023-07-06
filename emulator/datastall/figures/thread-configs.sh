@@ -22,6 +22,9 @@ for threads in ${n_threads[@]}; do
     sudo cgcreate -g memory:$group_name
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
+    # place the memory limit
+    sudo bash -c "echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
+
     # flush memory & caches
     echo "Flushing memory/cache"
     sudo ~/gpufs/exp/clear-cache.sh
