@@ -129,11 +129,15 @@ def _compute_aspect_ratios_custom_dataset(dataset, indices=None):
 
 
 def _compute_aspect_ratios_coco_dataset(dataset, indices=None):
+    print("len(dataset) -> ", len(dataset))
+    print(dataset[0])
     if indices is None:
         indices = range(len(dataset))
     aspect_ratios = []
     for i in indices:
+        print(i, indices)
         img_info = dataset.coco.imgs[dataset.ids[i]]
+        print("img_info -> ", img_info)
         aspect_ratio = float(img_info["width"]) / float(img_info["height"])
         aspect_ratios.append(aspect_ratio)
     return aspect_ratios
@@ -184,11 +188,12 @@ def _quantize(x, bins):
 
 
 def create_aspect_ratio_groups(dataset, k=0):
+    print("dataset -> ", dataset)
     aspect_ratios = compute_aspect_ratios(dataset)
-    #print("aspect_ratio", aspect_ratios)
+    print("aspect_ratio", aspect_ratios)
     #print("np.linspace(-1, 1, 2 * k + 1) ->", np.linspace(-1, 1, 2 * k + 1))
     bins = (2 ** np.linspace(-1, 1, 2 * k + 1)).tolist() if k > 0 else [1.0]
-    #print("bins ->", bins)
+    print("bins ->", bins)
     groups = _quantize(aspect_ratios, bins)
     # count number of elements per group
     counts = np.unique(groups, return_counts=True)[1]
@@ -197,5 +202,6 @@ def create_aspect_ratio_groups(dataset, k=0):
     print("Count of instances per bin: {}".format(counts))
     #print("sum ->", sum(counts))
     #print("Stop")
+    print("groups aspect ratio -> ", groups)
     #quit()
     return groups

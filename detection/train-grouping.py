@@ -37,7 +37,7 @@ import utils
 import transforms as T
 
 
-def get_dataset(name, image_set, transform, data_path, is_mytar):
+def get_dataset(name, image_set, transform, data_path, is_mytar, group_size):
     # paths = {
     #     "coco": (data_path, get_coco, 91),
     #     "coco_kp": (data_path, get_coco_kp, 2)
@@ -47,9 +47,9 @@ def get_dataset(name, image_set, transform, data_path, is_mytar):
     # ds = ds_fn(p, image_set=image_set, transforms=transform)
     num_classes = 91
     if image_set == "train":
-        ds = get_coco(data_path, image_set=image_set, is_mytar=True, transforms=transform)
+        ds = get_coco(data_path, image_set=image_set, is_mytar=True, transforms=transform,group_size=group_size)
     else:
-        ds = get_coco(data_path, image_set=image_set, is_mytar=False, transforms=transform)        
+        ds = get_coco(data_path, image_set=image_set, is_mytar=False, transforms=transform,group_size=group_size)        
     return ds, num_classes
 
 
@@ -70,11 +70,11 @@ def main(args):
     # Data loading code
     print("Loading data")
 
-    dataset, num_classes = get_dataset(args.train_data, "train", get_transform(train=True), args.train_data, is_mytar=True)
+    dataset, num_classes = get_dataset(args.train_data, "train", get_transform(train=True), args.train_data, is_mytar=True, group_size=args.group_size)
     print("ds, num_classes -> ", dataset, num_classes)
     
     
-    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, is_mytar=False)
+    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, is_mytar=False, group_size=args.group_size)
     print("ds_test -> ", dataset_test)
     # quit()
     
@@ -173,14 +173,14 @@ if __name__ == "__main__":
         description=__doc__)
 
     parser.add_argument('--data-path', default='/home/cc/mini-coco-dataset/coco_minitrain_25k', help='dataset')
-    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations-subset/',
+    parser.add_argument('--train_data', default='/home/cc/mini-coco-dataset/grouped-data-images-annotations/',
                         help='path to training data, which should be grouped')
     parser.add_argument('--validate_data', default='/home/cc/mini-coco-dataset/coco_minitrain_25k',
                         help='path to validation data, which does NOT need to be grouped.')
     parser.add_argument('--dataset', default='coco', help='dataset')
     parser.add_argument('--model', default='fasterrcnn_resnet50_fpn', help='model')
     parser.add_argument('--device', default='cuda', help='device')
-    parser.add_argument('-b', '--batch-size', default=4, type=int,
+    parser.add_argument('-b', '--batch-size', default=2, type=int,
                         help='images per gpu, the total batch size is $NGPU x batch_size')
     parser.add_argument('--epochs', default=26, type=int, metavar='N',
                         help='number of total epochs to run')
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--start_epoch', default=0, type=int, help='start epoch')
     parser.add_argument('--aspect-ratio-group-factor', default=3, type=int)
-    parser.add_argument('--group-size', default=2, type=int)
+    parser.add_argument('--group-size', default=4, type=int)
     parser.add_argument(
         "--test-only",
         dest="test_only",

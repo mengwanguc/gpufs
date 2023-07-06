@@ -593,3 +593,22 @@ Epoch 15
  Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.417
  Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.504
 Epoch 16
+Epoch 0
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
+Epoch 0
+Epoch 1
