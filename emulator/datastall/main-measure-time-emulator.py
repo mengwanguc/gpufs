@@ -318,7 +318,7 @@ def main_worker(gpu, ngpus_per_node, args):
         estimated_pin_mem_time = estimated_pin_mem_time,
         emulator_version=args.emulator_version,
         balloons = train_balloons
-        n_loader_threads = n_loader_threads)
+        n_loader_threads = args.load_threads)
 
     val_balloons = dict()
     val_loader = torch.utils.data.DataLoader(
@@ -335,7 +335,7 @@ def main_worker(gpu, ngpus_per_node, args):
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons,
-        n_loader_threads = n_loader_threads)
+        n_loader_threads = args.load_threads)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
