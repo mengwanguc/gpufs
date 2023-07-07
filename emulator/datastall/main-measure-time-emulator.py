@@ -467,6 +467,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_cpu2gpu_time += cpu2gpu_time
         total_gpu_time += gpu_time
         end = time.time()
+        
+        print(total_data_wait_time,total_cpu2gpu_time,total_gpu_time)
 
         if epoch != 0:
             measurements.append((data_wait_time, cpu2gpu_time, gpu_time))
