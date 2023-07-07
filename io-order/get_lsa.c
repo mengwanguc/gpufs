@@ -18,7 +18,7 @@
 #include <linux/fiemap.h>
 
 
-#define NUM_FILES 1281167
+#define NUM_FILES 466233
 #define NUM_READS 10000
 
 
@@ -28,7 +28,7 @@ typedef struct sample {
     __u64 start_physical;
 } Sample;
 
-char filepaths[NUM_FILES][100];
+char filepaths[NUM_FILES][150];
 Sample samples[NUM_READS];
 
 

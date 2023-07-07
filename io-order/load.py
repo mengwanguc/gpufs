@@ -1,6 +1,5 @@
 import sys
 import os
-import torch
 from typing import Any, Callable, cast, Dict, List, Optional, Tuple
 from os.path import basename
 import tarfile
@@ -103,4 +102,4 @@ instances = make_dataset(train_folder, class_to_idx, IMG_EXTENSIONS, None)
 with open(sys.argv[2], 'w') as f:
     for path, target_class in instances:
         file_size = os.path.getsize(path)
-        f.write('{} {}\n'.format(path, file_size))
+        f.write('{}\n'.format(path))

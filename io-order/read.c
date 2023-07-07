@@ -12,8 +12,8 @@
 #include <pthread.h>
 
 
-#define NUM_FILES 1281167
-// #define NUM_FILES 92117
+// #define NUM_FILES 1281167
+#define NUM_FILES 466233
 #define NUM_READS 10000
 
 
@@ -30,7 +30,7 @@ typedef struct sample {
 pthread_mutex_t count_mutex;
 int count;
 
-char filepaths[NUM_FILES][100];
+char filepaths[NUM_FILES][150];
 Sample samples[NUM_READS];
 
 int next_batch = 0;
@@ -81,7 +81,9 @@ void *thread_read(void *param)
         // printf("open time: %ld\n", time_spent);
 
         if(f == -1) {
+            printf("%s\n", filepaths[samples[cur].index]);
             perror("Error: File open failure.");
+            exit(1);
         }
         else {
             gettimeofday(&start_tv, NULL);
@@ -126,7 +128,7 @@ int main(int argc, char *argv[]) {
 
     if(argc <= 5) {
         printf("Please specify paths file\n./read [/imagenette_file_paths] [num_threads] [mode: 0 for unsort, 1 for partial sort, 2 for all sort,"
-                        "3 for sort by inode number] [0 for not pre-open. 1 for pre-open.] [batch_size]\n");
+                        "3 for sort by inode number, 4 for sort by LBA] [0 for not pre-open. 1 for pre-open.] [batch_size]\n");
         exit(1);
     }
 
