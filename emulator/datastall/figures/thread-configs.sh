@@ -4,7 +4,7 @@ set -e
 gpu_type="p100"
 model="alexnet"
 batch_size="256"
-limit="8G"
+limit="unlimited"
 n_workers="4"
 n_threads=(1 2 8 256)
 data_path="/home/cc/data/test-utilization/imagenette2"
@@ -23,7 +23,7 @@ for threads in ${n_threads[@]}; do
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # place the memory limit
-    sudo bash -c "echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
+    # sudo bash -c "echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
 
     # flush memory & caches
     echo "Flushing memory/cache"
