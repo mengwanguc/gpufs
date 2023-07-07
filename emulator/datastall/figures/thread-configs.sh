@@ -6,7 +6,7 @@ model="alexnet"
 batch_size="256"
 limit="8G"
 n_workers="4"
-n_threads=(1 2 4 6 8 10 12 14 16)
+n_threads=(1 2 8 256)
 data_path="/home/cc/data/test-utilization/imagenette2"
 
 # set up control group
@@ -31,7 +31,7 @@ for threads in ${n_threads[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    cgexec -g memory:$group_name python main-measure-time-emulator.py --load-threads $threads --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 8 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
+    cgexec -g memory:$group_name python main-measure-time-emulator.py --load-threads $threads --emulator-version=1 -j 4 --epoch 1 --skip-epochs 0 --workers $n_workers --gpu-count 8 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
     # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 

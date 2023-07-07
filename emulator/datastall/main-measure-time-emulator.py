@@ -73,6 +73,8 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
                     help='evaluate model on validation set')
+parser.add_argument('-s', '--profile-batches', default=10, type=int,
+                    help='How many batches to run in order to profile the performance data')
 parser.add_argument('--pretrained', dest='pretrained', action='store_true',
                     help='use pre-trained model')
 parser.add_argument('--world-size', default=-1, type=int,
@@ -91,8 +93,8 @@ parser.add_argument('--gpu-type', default='unknown', type=str,
                     help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
 parser.add_argument('--gpu-count', default=1, type=int,
                     help='number of GPUs to use.')
-parser.add_argument('--profile-batches', default=10, type=int,
-                    help='How many batches to run in order to profile the performance data')
+parser.add_argument('--skip-epochs', default=1, type=int,
+                    help='Drop the first N epochs from the data')
 parser.add_argument('--multiprocessing-distributed', action='store_true',
                     help='Use multi-processing distributed training to launch '
                          'N processes per node, which has N GPUs. This is the '
@@ -497,7 +499,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_gpu_time += gpu_time
         end = time.time()
 
-        if epoch != 0:
+        if epoch >= args.skip_epochs:
             measurements.append((data_wait_time, cpu2gpu_time, gpu_time))
         
         if args.profile_batches != -1 and i >= args.profile_batches:
