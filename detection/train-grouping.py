@@ -140,7 +140,7 @@ def main(args):
         # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
         #         f.write('\n'.join("Epoch "+ str(epoch)))
 
-        f = open("/home/cc/gpufs/detection/result-subset-rand-grouping.txt", "a")
+        f = open("/home/cc/gpufs/detection/result-subset-rand-grouping-aspect-ratio.txt", "a")
         f.write("\n")
         f.write("Epoch "+ str(epoch))
 

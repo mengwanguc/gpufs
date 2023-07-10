@@ -101,7 +101,7 @@ def _quantize(x, bins):
 
 def create_aspect_ratio_groups(annotations,group_size, k=3):
     bins = (2 ** np.linspace(-1, 1, 2 * k + 1)).tolist() if k > 0 else [1.0]
-    print("bins ->", bins)
+    # print("bins ->", bins)
     # Calculate the aspect ratio for each image
     groups = []
     for image in annotations['images']:
@@ -111,11 +111,11 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
         aspect_ratio_group = _quantize([aspect_ratio], bins)
         image['aspect_ratio_group'] = aspect_ratio_group[0]
         groups.append(aspect_ratio_group[0])
-    print("grouping to bins -> ", groups)
+    # print("grouping to bins -> ", groups)
     # ------------------
     # wrapping img id and aspect ratio in a dict
     imgid_aspect_ratio = {image['id']: image['aspect_ratio_group'] for image in annotations['images']}
-    print("imgid_aspect_ratio ->", imgid_aspect_ratio)
+    # print("imgid_aspect_ratio ->", imgid_aspect_ratio)
 
     # group it based on aspect ratio in a dict 
     grouped_dict = {}
@@ -125,23 +125,23 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
         grouped_dict[value][key] = value
     
     grouped_dict = {k: v for k, v in sorted(grouped_dict.items())}
-    print("grouped_dict ->", grouped_dict)
+    # print("grouped_dict ->", grouped_dict)
 
     # take img_id as group size in the grouped_dict
     grouped_mytar = {}
     group_num_aspect_ratio = 0
     for key, value in grouped_dict.items():
         # shuffle each grouped aspect ratio
-        print("data value ->", value)
+        # print("data value ->", value)
         keys = list(value.keys())
         random.shuffle(keys)
         shuffled_data = {key: value[key] for key in keys}
-        print("shuffled_data ->", shuffled_data)
+        # print("shuffled_data ->", shuffled_data)
         
         # make grouped data that contain same as group size
         if len(value) >= group_size:
             num_iter_to_stop = len(value)//group_size
-            print("num_iter_to_stop -> ", num_iter_to_stop)
+            # print("num_iter_to_stop -> ", num_iter_to_stop)
             values_in_group = 0
             for x in value.copy():
                 if num_iter_to_stop>0:
@@ -155,8 +155,8 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
                         num_iter_to_stop -= 1
                         group_num_aspect_ratio += 1
 
-    print("rest of grouped_dict that cant be grouping ->", grouped_dict)
-    print("grouped_mytar -> ", grouped_mytar)
+    # print("rest of grouped_dict that cant be grouping ->", grouped_dict)
+    # print("grouped_mytar -> ", grouped_mytar)
     
     values_in_group = 0
     for key, value in grouped_dict.items():
@@ -170,19 +170,19 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
                 # num_iter_to_stop -= 1
                 group_num_aspect_ratio += 1
 
-    print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
-    print("final grouped_mytar -> ", grouped_mytar)
+    # print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
+    # print("final grouped_mytar -> ", grouped_mytar)
 
     list_imgid_sorted_by_aspect_ratio = []
     for key, value in grouped_mytar.items():
         for x in value:
             list_imgid_sorted_by_aspect_ratio.append(x)
-    print("list_imgid_sorted_by_aspect_ratio -> ", list_imgid_sorted_by_aspect_ratio)
+    # print("list_imgid_sorted_by_aspect_ratio -> ", list_imgid_sorted_by_aspect_ratio)
 
     # change the order img id based on grouping aspect ratio
     annotations['images'] = sorted(annotations['images'], key=lambda d: list_imgid_sorted_by_aspect_ratio.index(d['id']))   
-    for value in annotations['images']:
-        print(value)
+    # for value in annotations['images']:
+    #     print(value)
     # -------------------
     # Sort the images based on aspect ratio
     # annotations['images'] = sorted(annotations['images'], key=lambda x: x['aspect_ratio_group'])
@@ -204,7 +204,7 @@ def get_samples_from_annotations(ann_file, images_folder, group_size):
         list_annotation = []
         image_id = image['id']
         aspect_ratio_group = image['aspect_ratio_group']
-        print("aspect_ratio_group -> ", aspect_ratio_group)
+        # print("aspect_ratio_group -> ", aspect_ratio_group)
         image_path = images_folder + image['file_name']  # Replace with the actual path to the images
         for annotation in annotations['annotations']:
             image_annotation = []
@@ -220,7 +220,7 @@ def get_samples_from_annotations(ann_file, images_folder, group_size):
             #print("list_annotation -> ", list_annotation)
 
         samples.append((image_id, aspect_ratio_group, image_path, list_annotation))    
-        print("aspect_ratio_group -> ", aspect_ratio_group)
+        # print("aspect_ratio_group -> ", aspect_ratio_group)
     return samples
 
 #-------------------
