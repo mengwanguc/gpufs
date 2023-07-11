@@ -37,7 +37,7 @@ import utils
 import transforms as T
 
 
-def get_dataset(name, image_set, transform, data_path, is_mytar, group_size):
+def get_dataset(name, image_set, transform, data_path, is_mytar, batch_size, group_size):
     # paths = {
     #     "coco": (data_path, get_coco, 91),
     #     "coco_kp": (data_path, get_coco_kp, 2)
@@ -47,9 +47,9 @@ def get_dataset(name, image_set, transform, data_path, is_mytar, group_size):
     # ds = ds_fn(p, image_set=image_set, transforms=transform)
     num_classes = 91
     if image_set == "train":
-        ds = get_coco(data_path, image_set=image_set, is_mytar=True, transforms=transform,group_size=group_size)
+        ds = get_coco(data_path, image_set=image_set, is_mytar=True, transforms=transform, batch_size=batch_size ,group_size=group_size)
     else:
-        ds = get_coco(data_path, image_set=image_set, is_mytar=False, transforms=transform,group_size=group_size)        
+        ds = get_coco(data_path, image_set=image_set, is_mytar=False, transforms=transform, batch_size=batch_size,group_size=group_size)        
     return ds, num_classes
 
 
@@ -70,11 +70,11 @@ def main(args):
     # Data loading code
     print("Loading data")
 
-    dataset, num_classes = get_dataset(args.train_data, "train", get_transform(train=True), args.train_data, is_mytar=True, group_size=args.group_size)
+    dataset, num_classes = get_dataset(args.train_data, "train", get_transform(train=True), args.train_data, is_mytar=True, batch_size=args.batch_size, group_size=args.group_size)
     print("ds, num_classes -> ", dataset, num_classes)
     
     
-    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, is_mytar=False, group_size=args.group_size)
+    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, is_mytar=False, batch_size=args.batch_size, group_size=args.group_size)
     print("ds_test -> ", dataset_test)
     # quit()
     

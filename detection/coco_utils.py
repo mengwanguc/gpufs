@@ -287,12 +287,15 @@ def mytar_img_id_annotations(path: str, group_metadata, _transforms):
 # meng: get metadata so we know the classes and index of images.
 def get_metadata_mytar(
     directory: str,
-    group_size: int
+    group_size: int,
+    batch_size: int
 ):
     directory = os.path.expanduser(directory)
     metadata_path = os.path.join(directory, str(group_size)+ "/metadata.txt")
     metadata = []
     classes = []
+    subgroup = 0
+    print("batch-size ->", batch_size)
     with open(metadata_path, 'r') as reader:
         # first get all classes
         class_count = int(reader.readline().strip())
@@ -308,6 +311,7 @@ def get_metadata_mytar(
             if(groupname == ''):
                 break
             group = []
+            idx_batch = 0
             for i in range(group_size):
                 # print("reader -> ", reader.readline())
                 tar_info, img_anns = reader.readline().strip().split('-')
@@ -341,18 +345,24 @@ def get_metadata_mytar(
                 # print("index 0 0 -> ", type(annotations[0]['image_id']), annotations[0]['image_id'])
                 
                 group.append({'idx':idx, 'img_id':img_id, 'start':start, 'img_size':img_size, 'annotations': data_dict})
-            metadata.append({'groupname':groupname, 'metadata':group})
+                idx_batch += 1
+                if idx_batch == batch_size:
+                    idx_batch = 0
+                    metadata.append({'groupname':groupname, 'subgroup':subgroup, 'metadata':group})
+                    subgroup += 1
+        
+            # metadata.append({'groupname':groupname, 'metadata':group})
     # print(class_to_idx)
     # print(metadata)
     return metadata
 
-
 class CocoDetection(torchvision.datasets.CocoDetection):
-    def __init__(self, root, img_folder, ann_file, transforms, is_mytar, group_size):
+    def __init__(self, root, img_folder, ann_file, transforms, is_mytar, group_size, batch_size):
         # super(CocoDetection, self).__init__(root, img_folder, ann_file, is_mytar)
         self.ann_file =ann_file
         self.is_mytar = is_mytar
         self.group_size = group_size
+        self.batch_size = batch_size
         self._transforms = transforms
         self.root = root
         self.img_folder = img_folder
@@ -361,7 +371,7 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         #     print("grouping using my own tar format!")
         if hasattr(self, 'is_mytar') and self.is_mytar:
             print("Using Mytar...")
-            self.metadata = metadata = get_metadata_mytar(root, self.group_size)
+            self.metadata = get_metadata_mytar(root, self.group_size, self.batch_size)
         else:
             from pycocotools.coco import COCO
             print("ann-file -> ", self.ann_file)
@@ -371,11 +381,14 @@ class CocoDetection(torchvision.datasets.CocoDetection):
     def __getitem__(self, idx):
         # print("coco_utils -> ", self.is_mytar)
         if self.is_mytar:
+            # print("idx getitem ->", idx, odd)
             # print("using mytar func from coco_utils.py...")
             # metadata = get_metadata_mytar(root, 4)
             path = self.root + str(self.group_size) + '/' + self.metadata[idx]['groupname']
-            group_metadata = self.metadata[idx]['metadata']
-            samples, targets = mytar_img_id_annotations(path, group_metadata, self._transforms)
+            subgroup_metadata = self.metadata[idx]['metadata']
+            print("subgroup_metadata ->", self.metadata[idx]['subgroup'])
+            # print("group_metadata ->", group_metadata)
+            samples, targets = mytar_img_id_annotations(path, subgroup_metadata, self._transforms)
             # samples, targets = mytar_loader(path, group_metadata)
             # print("self.transforms -> ", self.transforms)
             # if self._transforms is not None:
@@ -421,13 +434,14 @@ class CocoDetection(torchvision.datasets.CocoDetection):
         if self.is_mytar:
             # print("self.metada (in len) -> ", len(self.metadata), self.metadata)
             # quit()
+            # return len(self.metadata)
             return len(self.metadata)
         else:
             # print("self.ids (in len1) -> ", len(self.ids), self.ids)
             return len(self.ids)
 
 
-def get_coco(root, image_set, transforms, is_mytar, group_size=None, mode='instances'):
+def get_coco(root, image_set, transforms, is_mytar, batch_size, group_size=None, mode='instances'):
     print("group_size -> ", group_size)
     anno_file_template = "{}_{}2017.json"
     PATHS = {
@@ -453,11 +467,11 @@ def get_coco(root, image_set, transforms, is_mytar, group_size=None, mode='insta
     
     if image_set == "train" and is_mytar:
         print("tar")
-        dataset = CocoDetection(root, img_folder, ann_file, transforms=transforms, is_mytar=True, group_size = group_size)
+        dataset = CocoDetection(root, img_folder, ann_file, transforms=transforms, is_mytar=True, group_size = group_size, batch_size = batch_size)
     else:
         print("val")
         # print(ann_file)
-        dataset = CocoDetection(root ,img_folder, ann_file, transforms=transforms, is_mytar=False, group_size = group_size)
+        dataset = CocoDetection(root ,img_folder, ann_file, transforms=transforms, is_mytar=False, group_size = group_size, batch_size = batch_size)
     # print('dataset=', dataset)
     # if image_set == "train":
     #     print("enter remove annotaions...")
