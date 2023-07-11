@@ -104,6 +104,7 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
     # print("bins ->", bins)
     # Calculate the aspect ratio for each image
     groups = []
+    num_groups = len(annotations['images'])//group_size
     for image in annotations['images']:
         width = image['width']
         height = image['height']
@@ -155,24 +156,51 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
                         num_iter_to_stop -= 1
                         group_num_aspect_ratio += 1
 
-    # print("rest of grouped_dict that cant be grouping ->", grouped_dict)
-    # print("grouped_mytar -> ", grouped_mytar)
-    
-    values_in_group = 0
+    print("rest of grouped_dict that cant be grouping ->", grouped_dict)
+    print("grouped_mytar -> ", grouped_mytar)
+    grouped_mytar = {k: list(v) for k, v in grouped_mytar.items()}
+    print("grouped_mytar -> ", grouped_mytar)
+    grouped_dict = dict(sorted(grouped_dict.items(), key=lambda item: len(item[1]), reverse=True))
+
     for key, value in grouped_dict.items():
-        for x in value:
-            if group_num_aspect_ratio not in grouped_mytar:
-                grouped_mytar[group_num_aspect_ratio] = {}
-            grouped_mytar[group_num_aspect_ratio][x] = key
-            values_in_group += 1
-            if values_in_group == group_size :
-                values_in_group = 0
-                # num_iter_to_stop -= 1
-                group_num_aspect_ratio += 1
+        print(key, value)
+        if len(grouped_mytar)<num_groups:
+            for x in value:
+                if group_num_aspect_ratio not in grouped_mytar:
+                    grouped_mytar[group_num_aspect_ratio] = []
+                grouped_mytar[group_num_aspect_ratio].append(x)
+            
+            print("->",len(grouped_mytar[group_num_aspect_ratio]))
 
-    # print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
-    # print("final grouped_mytar -> ", grouped_mytar)
+            while len(grouped_mytar[group_num_aspect_ratio]) < group_size:
+                for image in annotations['images']:
+                    if image['aspect_ratio_group'] == key:
+                        found_id = image['id']
+                        print("found_id -> ", found_id)
+                        break
+                grouped_mytar[group_num_aspect_ratio].append(found_id)
+                print("len ->", len(grouped_mytar[group_num_aspect_ratio]))
+                print(grouped_mytar)
 
+            group_num_aspect_ratio += 1
+            
+                
+
+    # values_in_group = 0
+    # for key, value in grouped_dict.items():
+    #     for x in value:
+    #         if group_num_aspect_ratio not in grouped_mytar:
+    #             grouped_mytar[group_num_aspect_ratio] = {}
+    #         grouped_mytar[group_num_aspect_ratio][x] = key
+    #         values_in_group += 1
+    #         if values_in_group == group_size :
+    #             values_in_group = 0
+    #             # num_iter_to_stop -= 1
+    #             group_num_aspect_ratio += 1
+
+    print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
+    print("final grouped_mytar -> ", grouped_mytar, len(grouped_mytar))
+    quit()
     list_imgid_sorted_by_aspect_ratio = []
     for key, value in grouped_mytar.items():
         for x in value:

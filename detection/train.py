@@ -37,14 +37,14 @@ import utils
 import transforms as T
 
 
-def get_dataset(name, image_set, transform, data_path):
+def get_dataset(name, image_set, transform, data_path, batch_size):
     paths = {
         "coco": (data_path, get_coco, 91),
         "coco_kp": (data_path, get_coco_kp, 2)
     }
     p, ds_fn, num_classes = paths[name]
 
-    ds = ds_fn(p, image_set=image_set, transforms=transform, is_mytar = False)
+    ds = ds_fn(p, image_set=image_set, transforms=transform, batch_size=batch_size, is_mytar = False)
     return ds, num_classes
 
 
@@ -65,9 +65,9 @@ def main(args):
     # Data loading code
     print("Loading data")
 
-    dataset, num_classes = get_dataset(args.dataset, "train", get_transform(train=True), args.data_path)
+    dataset, num_classes = get_dataset(args.dataset, "train", get_transform(train=True), args.data_path, args.batch_size)
     print("ds, num_classes -> ", dataset, num_classes)
-    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path)
+    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, args.batch_size)
     print("ds_test -> ", dataset_test)
     print("Creating data loaders")
     if args.distributed:
@@ -84,8 +84,8 @@ def main(args):
         train_batch_sampler = torch.utils.data.BatchSampler(
             train_sampler, args.batch_size, drop_last=True)
 
-    print("stop in train.py")
-    quit()
+    # print("stop in train.py")
+    # quit()
 
     data_loader = torch.utils.data.DataLoader(
         dataset, batch_sampler=train_batch_sampler, num_workers=args.workers,

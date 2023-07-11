@@ -47,12 +47,15 @@ class GroupedBatchSampler(BatchSampler):
     def __iter__(self):
         buffer_per_group = defaultdict(list)
         samples_per_group = defaultdict(list)
-
+        print("buffer_per_group -> ", buffer_per_group)
+        print("samples_per_group -> ", samples_per_group)
         num_batches = 0
         for idx in self.sampler:
             group_id = self.group_ids[idx]
             buffer_per_group[group_id].append(idx)
             samples_per_group[group_id].append(idx)
+            print("buffer_per_group -> ", buffer_per_group)
+            print("samples_per_group -> ", samples_per_group)
             if len(buffer_per_group[group_id]) == self.batch_size:
                 yield buffer_per_group[group_id]
                 num_batches += 1
@@ -64,6 +67,7 @@ class GroupedBatchSampler(BatchSampler):
         # elements so that the size of the sampler is
         # deterministic
         expected_num_batches = len(self)
+        print("expected_num_batches -> ", expected_num_batches)
         num_remaining = expected_num_batches - num_batches
         if num_remaining > 0:
             # for the remaining batches, take first the buffers with largest number
@@ -74,6 +78,8 @@ class GroupedBatchSampler(BatchSampler):
                 samples_from_group_id = _repeat_to_at_least(samples_per_group[group_id], remaining)
                 buffer_per_group[group_id].extend(samples_from_group_id[:remaining])
                 assert len(buffer_per_group[group_id]) == self.batch_size
+                print("buffer_per_group -> ", buffer_per_group)
+                print("samples_per_group -> ", samples_per_group)
                 yield buffer_per_group[group_id]
                 num_remaining -= 1
                 if num_remaining == 0:
