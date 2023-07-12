@@ -183,6 +183,9 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
                 print(grouped_mytar)
 
             group_num_aspect_ratio += 1
+        # else:
+
+    print(grouped_dict)
             
                 
 
@@ -200,22 +203,25 @@ def create_aspect_ratio_groups(annotations,group_size, k=3):
 
     print("sort rest of grouped_dict that cant be grouping->", grouped_dict)
     print("final grouped_mytar -> ", grouped_mytar, len(grouped_mytar))
-    quit()
-    list_imgid_sorted_by_aspect_ratio = []
-    for key, value in grouped_mytar.items():
-        for x in value:
-            list_imgid_sorted_by_aspect_ratio.append(x)
+    # quit()
+    # list_imgid_sorted_by_aspect_ratio = []
+    # for key, value in grouped_mytar.items():
+    #     for x in value:
+    #         list_imgid_sorted_by_aspect_ratio.append(x)
     # print("list_imgid_sorted_by_aspect_ratio -> ", list_imgid_sorted_by_aspect_ratio)
 
+    # Concatenate the values of the dictionary into a single list
+    list_imgid_sorted_by_aspect_ratio = [value for sublist in grouped_mytar.values() for value in sublist]
+    print(list_imgid_sorted_by_aspect_ratio)
     # change the order img id based on grouping aspect ratio
-    annotations['images'] = sorted(annotations['images'], key=lambda d: list_imgid_sorted_by_aspect_ratio.index(d['id']))   
+    # annotations['images'] = sorted(annotations['images'], key=lambda d: list_imgid_sorted_by_aspect_ratio.index(d['id']))   
     # for value in annotations['images']:
     #     print(value)
     # -------------------
     # Sort the images based on aspect ratio
     # annotations['images'] = sorted(annotations['images'], key=lambda x: x['aspect_ratio_group'])
     # print("annotations['images'] -> ", annotations['images'] )
-    return annotations
+    return list_imgid_sorted_by_aspect_ratio
 
 def get_samples_from_annotations(ann_file, images_folder, group_size):
     with open(ann_file, 'r') as f:
@@ -224,31 +230,38 @@ def get_samples_from_annotations(ann_file, images_folder, group_size):
     categories = annotations['categories']
     category_mapping = {category['id']: category['name'] for category in categories}
     
-    annotations = create_aspect_ratio_groups(annotations,group_size, k=3)
-    # print("annotations -> ", annotations)
+    list_imgid_sorted_by_aspect_ratio = create_aspect_ratio_groups(annotations,group_size, k=3)
+    print("list_imgid_sorted_by_aspect_ratio -> ", list_imgid_sorted_by_aspect_ratio)
 
     samples = []
-    for image in annotations['images']:
-        list_annotation = []
-        image_id = image['id']
-        aspect_ratio_group = image['aspect_ratio_group']
-        # print("aspect_ratio_group -> ", aspect_ratio_group)
-        image_path = images_folder + image['file_name']  # Replace with the actual path to the images
-        for annotation in annotations['annotations']:
-            image_annotation = []
-            if annotation['image_id'] == image_id:
-                # category_id = annotation['category_id']
-                # bbox = annotation['bbox']
-                # area = annotation['area']
-                # iscrowd = annotation['iscrowd']
-                
-                # image_annotation.extend([image_id, category_id, bbox, area, iscrowd])
-                list_annotation.append(annotation)
-            
-            #print("list_annotation -> ", list_annotation)
+    for imgid_aspect_ratio in list_imgid_sorted_by_aspect_ratio:
+        for image in annotations['images']:
+            list_annotation = []
+            image_id = image['id']
+            if imgid_aspect_ratio == image_id:
+                aspect_ratio_group = image['aspect_ratio_group']
+                # print("aspect_ratio_group -> ", aspect_ratio_group)
+                image_path = images_folder + image['file_name']  # Replace with the actual path to the images
+                for annotation in annotations['annotations']:
+                    image_annotation = []
+                    if annotation['image_id'] == image_id:
+                        # category_id = annotation['category_id']
+                        # bbox = annotation['bbox']
+                        # area = annotation['area']
+                        # iscrowd = annotation['iscrowd']
+                        
+                        # image_annotation.extend([image_id, category_id, bbox, area, iscrowd])
+                        list_annotation.append(annotation)
+                    
+                    #print("list_annotation -> ", list_annotation)
 
-        samples.append((image_id, aspect_ratio_group, image_path, list_annotation))    
-        # print("aspect_ratio_group -> ", aspect_ratio_group)
+                samples.append((image_id, aspect_ratio_group, image_path, list_annotation))    
+            # print("aspect_ratio_group -> ", aspect_ratio_group)
+
+    # for i in samples:
+    #     print(i[0])
+    # # print("samples ->", samples)
+    # quit()
     return samples
 
 #-------------------
