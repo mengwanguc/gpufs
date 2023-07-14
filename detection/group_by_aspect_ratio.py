@@ -47,15 +47,15 @@ class GroupedBatchSampler(BatchSampler):
     def __iter__(self):
         buffer_per_group = defaultdict(list)
         samples_per_group = defaultdict(list)
-        print("buffer_per_group -> ", buffer_per_group)
-        print("samples_per_group -> ", samples_per_group)
+        # print("buffer_per_group -> ", buffer_per_group)
+        # print("samples_per_group -> ", samples_per_group)
         num_batches = 0
         for idx in self.sampler:
             group_id = self.group_ids[idx]
             buffer_per_group[group_id].append(idx)
             samples_per_group[group_id].append(idx)
-            print("buffer_per_group -> ", buffer_per_group)
-            print("samples_per_group -> ", samples_per_group)
+            # print("buffer_per_group -> ", buffer_per_group)
+            # print("samples_per_group -> ", samples_per_group)
             if len(buffer_per_group[group_id]) == self.batch_size:
                 yield buffer_per_group[group_id]
                 num_batches += 1
@@ -67,7 +67,7 @@ class GroupedBatchSampler(BatchSampler):
         # elements so that the size of the sampler is
         # deterministic
         expected_num_batches = len(self)
-        print("expected_num_batches -> ", expected_num_batches)
+        # print("expected_num_batches -> ", expected_num_batches)
         num_remaining = expected_num_batches - num_batches
         if num_remaining > 0:
             # for the remaining batches, take first the buffers with largest number
@@ -78,8 +78,8 @@ class GroupedBatchSampler(BatchSampler):
                 samples_from_group_id = _repeat_to_at_least(samples_per_group[group_id], remaining)
                 buffer_per_group[group_id].extend(samples_from_group_id[:remaining])
                 assert len(buffer_per_group[group_id]) == self.batch_size
-                print("buffer_per_group -> ", buffer_per_group)
-                print("samples_per_group -> ", samples_per_group)
+                # print("buffer_per_group -> ", buffer_per_group)
+                # print("samples_per_group -> ", samples_per_group)
                 yield buffer_per_group[group_id]
                 num_remaining -= 1
                 if num_remaining == 0:
@@ -135,15 +135,15 @@ def _compute_aspect_ratios_custom_dataset(dataset, indices=None):
 
 
 def _compute_aspect_ratios_coco_dataset(dataset, indices=None):
-    print("len(dataset) -> ", len(dataset))
-    print(dataset[0])
+    # print("len(dataset) -> ", len(dataset))
+    # print(dataset[0])
     if indices is None:
         indices = range(len(dataset))
     aspect_ratios = []
     for i in indices:
-        print(i, indices)
+        # print(i, indices)
         img_info = dataset.coco.imgs[dataset.ids[i]]
-        print("img_info -> ", img_info)
+        # print("img_info -> ", img_info)
         aspect_ratio = float(img_info["width"]) / float(img_info["height"])
         aspect_ratios.append(aspect_ratio)
     return aspect_ratios
@@ -194,12 +194,12 @@ def _quantize(x, bins):
 
 
 def create_aspect_ratio_groups(dataset, k=0):
-    print("dataset -> ", dataset)
+    # print("dataset -> ", dataset)
     aspect_ratios = compute_aspect_ratios(dataset)
-    print("aspect_ratio", aspect_ratios)
+    # print("aspect_ratio", aspect_ratios)
     #print("np.linspace(-1, 1, 2 * k + 1) ->", np.linspace(-1, 1, 2 * k + 1))
     bins = (2 ** np.linspace(-1, 1, 2 * k + 1)).tolist() if k > 0 else [1.0]
-    print("bins ->", bins)
+    # print("bins ->", bins)
     groups = _quantize(aspect_ratios, bins)
     # count number of elements per group
     counts = np.unique(groups, return_counts=True)[1]
@@ -208,6 +208,6 @@ def create_aspect_ratio_groups(dataset, k=0):
     print("Count of instances per bin: {}".format(counts))
     #print("sum ->", sum(counts))
     #print("Stop")
-    print("groups aspect ratio -> ", groups)
+    # print("groups aspect ratio -> ", groups)
     #quit()
     return groups
