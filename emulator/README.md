@@ -50,7 +50,24 @@ conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake 
 ```
 
 
-6. Download our custom pytorch and build it (Note that we use "export USE_CUDA=0" to not install any cuda/GPU-related things.)
+6. Download and build mlock (which can allocate page-locked memory)
+
+cd ~
+git clone git@github.com:gustrain/mlock.git
+cd mlock
+python setup.py install
+
+7. Download and build minio
+
+cd ~
+git clone git@github.com:gustrain/minio.git
+cd minio
+python setup.py install
+
+
+
+
+8. Download our custom pytorch and build it (Note that we use "export USE_CUDA=0" to not install any cuda/GPU-related things.)
 
 ```
 cd ~
@@ -63,7 +80,7 @@ export USE_CUDA=0
 python setup.py install
 ```
 
-7. Download our custom torchvision and build it
+9. Download our custom torchvision and build it
 
 ```
 conda install -y aiofiles
@@ -73,3 +90,26 @@ git clone git@github.com:mengwanguc/torchvision-meng.git
 cd torchvision-meng/
 python setup.py install
 ```
+
+10. Update `/etc/security/limits.conf`
+
+```
+sudo nano /etc/security/limits.conf
+```
+
+Add the following text to the end of the file:
+
+```
+*   soft    memlock     unlimited
+*   hard    memlock     unlimited
+```
+
+11. Reboot the machine
+
+```
+sudo reboot
+```
+
+
+
+
