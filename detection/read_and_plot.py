@@ -56,13 +56,17 @@ with open('result_ap_30epoch_nogrouping_barchsize16') as json_file:
         if k == current_p:
             batch_top1_top5_size4 = data[k]
 
-        batch_top1_top5_size4 = data["AP"]
-        batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
-# with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size8 = data[k]
+    batch_top1_top5_size4 = data["AP"]
+    batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
+with open('result_ap_30epoch_grouping_aspectratio') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size8 = data[k]
+        
+    batch_top1_top5_size8 = data["AP"]
+    batch_top1_top5_size8 = [int(num * 100) for num in batch_top1_top5_size8]
+
 # with open('resnet18_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -105,7 +109,8 @@ epoch_range = range(1,epochs+1)
 print("epoch_range ->", epoch_range)
 plt.plot(epoch_range, batch_top1_top5_size2, label = 'no_grouping_bsize2', color="blue", linewidth=1)
 plt.plot(epoch_range, batch_top1_top5_size4, label = 'no_grouping_bsize16', color="red", linewidth=1)
-plt.plot(epoch_range, batch_top1_top5, '--', label = 'rand-perm-grouping_bsize1_gsize2', color="green", linewidth=3)
+plt.plot(epoch_range, batch_top1_top5, '--', label = 'grouping_bsize1_gsize4', color="green", linewidth=3)
+plt.plot(epoch_range, batch_top1_top5_size8, '--', label = 'grouping_aspectratio_bsize1_gsize4', color="black", linewidth=3)
 # plt.plot(epoch_range, batch_top1_top5_size2, label = 'groupsize_2')
 # plt.plot(epoch_range, batch_top1_top5_size4, label = 'groupsize_4')
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')

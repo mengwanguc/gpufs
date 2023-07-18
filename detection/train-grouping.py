@@ -94,7 +94,7 @@ def main(args):
         train_batch_sampler = GroupedBatchSampler(train_sampler, group_ids, args.batch_size)
     else:
         train_batch_sampler = torch.utils.data.BatchSampler(
-            train_sampler, args.batch_size, drop_last=True)
+            train_sampler, 1, drop_last=True)
 
     # quit()
 

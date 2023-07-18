@@ -347,11 +347,11 @@ def get_metadata_mytar(
                 # print("index 0 0 -> ", type(annotations[0]['image_id']), annotations[0]['image_id'])
                 
                 group.append({'idx':idx, 'img_id':img_id, 'start':start, 'img_size':img_size, 'annotations': data_dict})
-                # idx_batch += 1
-                # if idx_batch == batch_size:
-                #     idx_batch = 0
-                metadata.append({'groupname':groupname, 'subgroup':subgroup, 'metadata':group})
-                subgroup += 1
+                idx_batch += 1
+                if idx_batch == batch_size:
+                    idx_batch = 0
+                    metadata.append({'groupname':groupname, 'subgroup':subgroup, 'metadata':group})
+                    subgroup += 1
         
             # metadata.append({'groupname':groupname, 'metadata':group})
             # metadata.append({'groupname':groupname, 'subgroup':subgroup, 'metadata':group})
