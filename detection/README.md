@@ -73,6 +73,24 @@
                 [--print-freq PRINT_FREQ] [--output-dir OUTPUT_DIR] [--resume RESUME] [--start_epoch START_EPOCH]
                 [--aspect-ratio-group-factor ASPECT_RATIO_GROUP_FACTOR] [--test-only] [--pretrained] [--world-size WORLD_SIZE] [--dist-url DIST_URL]
    ```
+## Using Grouping Method
+
+1. Grouping dataset using group-needle code
+
+   param: python group-needle-detection.py <train_folder> <groupsize> <mytar_save_folder> 
+   ```
+   cd ~/gpufs/detection
+   python group-needle-detection-based-images-annotations.py ~/mini-coco-dataset/coco_minitrain_25k 4 ~/mini-coco-dataset/grouped-data-images-annotations
+   ```
+2. Training the grouped data
+   
+   param: python train-grouping.py <grouped_data>
+   
+   note: --aspect-ratio-group-factor should be -1 because we already using it in group-needle. --workers should 0 to prevent segmentation fault error. --lr depends on how many gpu we are using (0.02/8*$NGPU).
+   ```
+   cd ~/gpufs/detection
+   python train-grouping.py --train_data "/home/cc/mini-coco-dataset/grouped-data-images-annotations-v2-subset/" --epoch 2 --lr 0.0025 --workers 0 --aspect-ratio-group-factor -1 --batch-size 4 --group-size 4
+   ```
 
 ## Original Readme
 
