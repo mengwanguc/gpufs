@@ -98,12 +98,21 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'multi node data parallel training')
 parser.add_argument('--emulator-version', default=0, type=int,
                     help='Version of the emulator')
+parser.add_argument('--img_per_tar', default=1, type=int,
+                    help='img per tar')
+parser.add_argument('--use-file-group', default=False, type=bool,
+                    help='use file grouping')
+
+
 
 best_acc1 = 0
 
 
 def main():
     args = parser.parse_args()
+
+    if not args.use_file_group:
+        args.img_per_tar = 1
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -289,6 +298,8 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         loader = pil_loader
 
+    if args.use_file_group:
+        traindir = "/home/cc/data/test-grouping/imagenette2/mytar/train/" + str(args.img_per_tar)
     train_dataset = datasets.ImageFolder(
         traindir,
         transforms.Compose([
@@ -298,7 +309,10 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]),
         loader=loader,
-        cache=train_cache)
+        cache=train_cache,
+        use_file_group = args.use_file_group,
+        group_size = args.img_per_tar
+        )
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -308,7 +322,9 @@ def main_worker(gpu, ngpus_per_node, args):
     estimated_pin_mem_time = 0.04
     train_balloons = dict()
     train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
+        train_dataset,
+        batch_size=args.batch_size // args.img_per_tar,
+        shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler, 
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
@@ -337,8 +353,8 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if not os.path.exists(args.gpu_type):
         os.makedirs(args.gpu_type)
-    with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
-        f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
+    # with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
+    #     f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -506,8 +522,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     if not os.path.exists(args.gpu_type):
         os.makedirs(args.gpu_type)
     with open(output_filename, 'a') as f:
-        for data_wait_time, cpu2cpu_time, gpu_time in measurements:
-            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
+        # for data_wait_time, cpu2cpu_time, gpu_time in measurements:
+        #     f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
+        f.write("{}\t{}\t{}\t{}\t{}\n".format(
+                "use-file-group" if args.use_file_group else "no-grouping", 
+                args.img_per_tar,
+                total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
