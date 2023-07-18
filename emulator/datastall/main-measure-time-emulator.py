@@ -6,6 +6,11 @@ import random
 import shutil
 import time
 import warnings
+import minio
+import mlock
+from PIL import Image
+import io
+import glob
 
 import torch
 import torch.nn as nn
@@ -39,6 +44,11 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-m', '--use-minio', default=False, type=bool,
+                    metavar='USE_MINIO', help='use MinIO cache')
+parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
+                    type=int, metavar='CACHESIZE',
+                    help='MinIO cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
@@ -125,6 +135,20 @@ def main():
     else:
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
+
+def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
+    filepaths = glob.glob(dir_path + '/**/*.JPEG')
+    sizes = sorted([os.path.getsize(path) for path in filepaths])
+
+    max_size = 0
+    temp = cache_size
+    for size in sizes:
+        if temp - size < 0:
+            return max_size
+        temp -= size
+        max_size = size
+
+    return max_size
 
 
 def main_worker(gpu, ngpus_per_node, args):
@@ -225,6 +249,46 @@ def main_worker(gpu, ngpus_per_node, args):
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
 
+    # 10:1 train:validation split, and an expected 128 MB max item size. Change
+    # this max item size if minio starts giving copy errors.
+    val_cache_size = args.cache_size // 11
+    train_cache_size = (args.cache_size * 10) // 11
+    max_item_size = 16 * 1024 * 1024
+
+    # Use this loader for ImageFolder "loader" param if minio enabled.
+    def minio_loader(path: str, cache: minio.PyCache) -> Image.Image:
+        data, _ = cache.read_file(path)
+        img = Image.open(io.BytesIO(data))
+        return img.convert('RGB')
+
+    # Use this loader for ImageFolder "loader" param if minio disabled. Copied
+    # from the original torchvision source.
+    def pil_loader(path: str, cache: minio.PyCache) -> Image.Image:
+        # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+        with open(path, 'rb') as f:
+            f = f.read()
+            f = io.BytesIO(f)
+            img = Image.open(f)
+            return img.convert('RGB')
+
+    train_cache = None
+    val_cache = None
+    loader = None
+    if args.use_minio:
+        train_cache = minio.PyCache(
+            size=train_cache_size,
+            max_usable_file_size=max_item_size,
+            max_cacheable_file_size=get_largest_cacheable_file_size(traindir, train_cache_size)
+        )
+        val_cache = minio.PyCache(
+            size=val_cache_size,
+            max_usable_file_size=max_item_size,
+            max_cacheable_file_size=get_largest_cacheable_file_size(valdir, val_cache_size)
+        )
+        loader = minio_loader
+    else:
+        loader = pil_loader
+
     train_dataset = datasets.ImageFolder(
         traindir,
         transforms.Compose([
@@ -232,7 +296,9 @@ def main_worker(gpu, ngpus_per_node, args):
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
-        ]))
+        ]),
+        loader=loader,
+        cache=train_cache)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -240,26 +306,39 @@ def main_worker(gpu, ngpus_per_node, args):
         train_sampler = None
 
     estimated_pin_mem_time = 0.04
+    train_balloons = dict()
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler, 
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
-        emulator_version=args.emulator_version)
+        emulator_version=args.emulator_version,
+        balloons = train_balloons)
 
+    val_balloons = dict()
     val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(valdir, transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize,
-        ])),
+        datasets.ImageFolder(
+            valdir,
+            transforms.Compose([
+                transforms.Resize(256),
+                transforms.CenterCrop(224),
+                transforms.ToTensor(),
+                normalize,
+            ]),
+            loader=loader,
+            cache=val_cache),
         batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True)
+        num_workers=args.workers, pin_memory=True,
+        balloons = val_balloons)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
         return
+
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
+        f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -353,12 +432,21 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     total_cpu2gpu_time = 0
     total_gpu_time = 0
 
+    measurements = []
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         # data_time.update(time.time() - end)
         # print("App got data:\t{}".format(time.time()))
         data_wait_time = time.time() - end
+
+        # Release the balloons for the previous batch (release one of each type).
+        if i > 0:
+            for size in train_loader.balloons:
+                for balloon in train_loader.balloons[size]:
+                    if balloon.get_used():
+                        balloon.set_used(False)
+                        break
 
         cpu2gpu_start_time = time.time()
 
@@ -402,19 +490,24 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         total_cpu2gpu_time += cpu2gpu_time
         total_gpu_time += gpu_time
         end = time.time()
-        # print("end:\t{}".format(end))
 
-        # if i >= args.profile_batches:
-        #     break
+        if epoch != 0:
+            measurements.append((data_wait_time, cpu2gpu_time, gpu_time))
+        
+        if args.profile_batches != -1 and i >= args.profile_batches:
+            break
 
-        # if i % args.print_freq == 0:
-        #     progress.display(i)
-    # output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
-    # if not os.path.exists(args.gpu_type):
-    #     os.makedirs(args.gpu_type)
-    # with open(output_filename, 'a') as f:
-    #     f.write("{}\t{}\t{}\n".format("total_data_wait_time", "total_cpu2gpu_time", "total_gpu_time"))
-    #     f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(total_data_wait_time, total_cpu2gpu_time, total_gpu_time))
+    # release all balloons at end of batch
+    for size in train_loader.balloons:
+        for balloon in train_loader.balloons[size]:
+            balloon.set_used(False)
+
+    output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
+    if not os.path.exists(args.gpu_type):
+        os.makedirs(args.gpu_type)
+    with open(output_filename, 'a') as f:
+        for data_wait_time, cpu2cpu_time, gpu_time in measurements:
+            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
 
 
 def validate(val_loader, model, criterion, args):
@@ -433,6 +526,14 @@ def validate(val_loader, model, criterion, args):
     with torch.no_grad():
         end = time.time()
         for i, (images, target) in enumerate(val_loader):
+            # Release the balloons for the previous batch (release one of each type).
+            if i > 0:
+                for size in val_loader.balloons:
+                    for balloon in val_loader.balloons[size]:
+                        if balloon.get_used():
+                            balloon.set_used(False)
+                            break
+
             if args.gpu is not None:
                 images = images.cuda(args.gpu, non_blocking=True)
             if torch.cuda.is_available():
@@ -458,6 +559,11 @@ def validate(val_loader, model, criterion, args):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
+
+        # release all balloons at end of batch
+        for size in val_loader.balloons:
+            for balloon in val_loader.balloons[size]:
+                balloon.set_used(False)
 
     return top1.avg
 
