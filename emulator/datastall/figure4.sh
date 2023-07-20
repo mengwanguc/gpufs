@@ -1,12 +1,12 @@
 #!/bin/bash
 set -e
 
-gpu_type="p100"
+gpu_type="v100"
 model="resnet18"
 # Saved cache size: "2g" "4g" "6g" "8g" "10g" "12g" "14g"
-limits=("12g" "14g")
+limits=("6g" "8g" "10g" "12g" "14g" "16g")
 batch_size="256"
-n_workers="4"
+n_workers="8"
 data_path="~/data/imagenette2"
 gpu_count="8"
 
@@ -33,6 +33,7 @@ for limit in ${limits[@]}; do
     # check how much memory the dataset was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
     echo "checking memory usage..."
+    vmtouch ~/data/imagenette2/train/
     vmtouch ~/data/imagenette2/train/ &> outputsfig4/cache_result$limit.txt
     echo
 done
