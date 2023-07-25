@@ -298,6 +298,7 @@ def main_worker(gpu, ngpus_per_node, args):
     val_async_loader = None
     train_async_loader = None
     if args.use_async:
+        # Create the loaders.
         val_async_loader = al.Loader(queue_depth=args.batch_size,
                                      max_file_size=max_item_size,
                                      n_workers=args.workers,
@@ -306,6 +307,12 @@ def main_worker(gpu, ngpus_per_node, args):
                                        max_file_size=max_item_size,
                                        n_workers=args.workers,
                                        min_dispatch_n=32) # mdn not yet implemented.
+
+        # Spawn the loader processes.
+        print("Spawning validation and training async loaders...")
+        val_async_loader.spawn_loader()
+        train_async_loader.spawn_loader()
+        print("Loaders spawned.")
 
         
 
