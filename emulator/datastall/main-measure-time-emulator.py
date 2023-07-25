@@ -299,8 +299,7 @@ def main_worker(gpu, ngpus_per_node, args):
         loader = pil_loader
 
     # AsyncLoader setup, if enabled
-    val_async_loader = None
-    train_async_loader = None
+    async_loader = None
     if args.use_async:
         # Create the loaders.
         max_file_size = 1 << (max(get_largest_file_size(traindir), get_largest_file_size(valdir)) - 1).bit_length()
@@ -314,6 +313,8 @@ def main_worker(gpu, ngpus_per_node, args):
         print("Spawning the async loader process...")
         async_loader.spawn_loader()
         print("Loaders spawned.")
+    else:
+        print("NOT using AsyncLoader")
 
         
 
