@@ -141,6 +141,10 @@ def main():
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
 
+def get_largest_file_size(dir_path: str):
+    filepaths = glob.glob(dir_path + '/**/*.JPEG')
+    return max([os.path.getsize(path) for path in filepaths])
+
 def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
     filepaths = glob.glob(dir_path + '/**/*.JPEG')
     sizes = sorted([os.path.getsize(path) for path in filepaths])
@@ -299,19 +303,15 @@ def main_worker(gpu, ngpus_per_node, args):
     train_async_loader = None
     if args.use_async:
         # Create the loaders.
-        val_async_loader = al.Loader(queue_depth=args.batch_size,
-                                     max_file_size=max_item_size,
+        max_file_size = max(get_largest_file_size(traindir), get_largest_file_size(valdir))
+        async_loader = al.Loader(queue_depth=args.batch_size,
+                                     max_file_size=max_file_size,
                                      n_workers=args.workers,
                                      min_dispatch_n=32) # mdn not yet implemented.
-        train_async_loader = al.Loader(queue_depth=args.batch_size,
-                                       max_file_size=max_item_size,
-                                       n_workers=args.workers,
-                                       min_dispatch_n=32) # mdn not yet implemented.
 
         # Spawn the loader processes.
-        print("Spawning validation and training async loaders...")
-        val_async_loader.spawn_loader()
-        train_async_loader.spawn_loader()
+        print("Spawning the async loader process...")
+        async_loader.spawn_loader()
         print("Loaders spawned.")
 
         
@@ -326,7 +326,7 @@ def main_worker(gpu, ngpus_per_node, args):
         ]),
         loader=loader,
         cache=train_cache,
-        async_loader=train_async_loader)
+        async_loader=async_loader)
 
     if args.distributed:
         ##
@@ -357,7 +357,7 @@ def main_worker(gpu, ngpus_per_node, args):
             ]),
             loader=loader,
             cache=val_cache,
-            async_loader=val_async_loader),
+            async_loader=async_loader),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons)
