@@ -304,6 +304,7 @@ def main_worker(gpu, ngpus_per_node, args):
     if args.use_async:
         # Create the loaders.
         max_file_size = max(get_largest_file_size(traindir), get_largest_file_size(valdir))
+        print("Max file size: {} bytes".format(max_file_size))
         async_loader = al.Loader(queue_depth=args.batch_size,
                                      max_file_size=max_file_size,
                                      n_workers=args.workers,
