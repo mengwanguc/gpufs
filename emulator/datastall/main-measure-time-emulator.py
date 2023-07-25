@@ -52,8 +52,6 @@ parser.add_argument('-m', '--use-minio', default=False, type=bool,
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
                     help='MinIO cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
-parser.add_argument('-l', '--load-threads', default=1, type=int,
-                    metavar='LOADERS', help='Number of loader threads per worker process')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
@@ -338,8 +336,7 @@ def main_worker(gpu, ngpus_per_node, args):
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
         emulator_version=args.emulator_version,
-        balloons = train_balloons,
-        n_loader_threads = args.load_threads)
+        balloons = train_balloons)
 
     val_balloons = dict()
     val_loader = torch.utils.data.DataLoader(
@@ -356,8 +353,7 @@ def main_worker(gpu, ngpus_per_node, args):
             async_loader=val_async_loader),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
-        balloons = val_balloons,
-        n_loader_threads = args.load_threads)
+        balloons = val_balloons)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
