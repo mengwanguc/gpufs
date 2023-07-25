@@ -7,6 +7,7 @@ import shutil
 import time
 import warnings
 import minio
+import AsyncLoader as al
 import mlock
 from PIL import Image
 import io
@@ -44,6 +45,8 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-A', '--use-async', default=False, type=bool, metavar='ASYNC',
+                    help='use AsyncLoader for file loading')
 parser.add_argument('-m', '--use-minio', default=False, type=bool,
                     metavar='USE_MINIO', help='use MinIO cache')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
@@ -293,6 +296,21 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         loader = pil_loader
 
+    # AsyncLoader setup, if enabled
+    val_async_loader = None
+    train_async_loader = None
+    if args.use_async:
+        val_async_loader = al.Loader(queue_depth=args.batch_size,
+                                     max_file_size=max_item_size,
+                                     n_workers=args.workers,
+                                     min_dispatch_n=32) # mdn not yet implemented.
+        train_async_loader = al.Loader(queue_depth=args.batch_size,
+                                       max_file_size=max_item_size,
+                                       n_workers=args.workers,
+                                       min_dispatch_n=32) # mdn not yet implemented.
+
+        
+
     train_dataset = datasets.ImageFolder(
         traindir,
         transforms.Compose([
@@ -302,7 +320,8 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]),
         loader=loader,
-        cache=train_cache)
+        cache=train_cache,
+        async_loader=train_async_loader)
 
     if args.distributed:
         ##
@@ -333,7 +352,8 @@ def main_worker(gpu, ngpus_per_node, args):
                 normalize,
             ]),
             loader=loader,
-            cache=val_cache),
+            cache=val_cache,
+            async_loader=val_async_loader),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons,
