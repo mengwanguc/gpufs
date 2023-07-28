@@ -37,7 +37,7 @@ import inspect
 def A():
     # Who I'm calling
     file_path = inspect.getsourcefile(functionB)
-    source_lines, starting_line_number = inspect.findsource(self._next_data)
+    source_lines, starting_line_number = inspect.findsource(functionB)
     print("functionB is implemented in file: {}  starting_line_number: {}".format(file_path, starting_line_number))
     functionB()
 ```
