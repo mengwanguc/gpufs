@@ -11,6 +11,7 @@ from torchaudio.datasets.utils import _extract_tar, _load_waveform
 import io
 import soundfile as sf
 from pydub import AudioSegment
+import random
 
 FOLDER_IN_ARCHIVE = "SpeechCommands"
 URL = "speech_commands_v0.02"
@@ -76,6 +77,7 @@ def get_metadata_mytar(
         class_to_idx = {cls_name: i for i, cls_name in enumerate(classes)}
         print(class_to_idx)
         # then get all groups metadata
+        num_groups = 0
         while reader:
             groupname = reader.readline().strip().split(',')[0]
             if(groupname == ''):
@@ -91,11 +93,25 @@ def get_metadata_mytar(
                 audio_class_idx = class_to_idx[audio_class]
                 # group.append({'idx':idx, 'audio_class':audio_class, 'audio_class_idx':audio_class_idx, 'start':start, 'audio_size':audio_size, 'audio_path':audio_path})
                 group = {'idx':idx, 'audio_class':audio_class, 'audio_class_idx':audio_class_idx, 'start':start, 'audio_size':audio_size, 'audio_path':audio_path}
-                metadata.append({'groupname':groupname, 'subgroup':subgroup, 'metadata':group})
+                metadata.append({'groupname':groupname, 'num_groups':num_groups, 'subgroup':subgroup, 'metadata':group})
                 subgroup += 1            
             # metadata.append({'groupname':groupname, 'metadata':group})
-    print(class_to_idx)
-    return metadata
+            num_groups += 1
+
+    random_integers = random.sample(range(num_groups+1), num_groups)
+    # Create a dictionary to map the group value to its position in the list x
+    group_order = {group: order for order, group in enumerate(random_integers)}
+
+    # Define the custom key function for sorting
+    def custom_sort_key(item):
+        return group_order.get(item['num_groups'], float('inf'))
+
+    # Sort the list based on the custom key function
+    sorted_data = sorted(metadata, key=custom_sort_key)
+    # print(class_to_idx)
+    # print(sorted_data[:300])
+    # quit()
+    return sorted_data
 
 def mytar_loader(path: str, group_metadata):
     waveforms = []

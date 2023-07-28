@@ -80,36 +80,55 @@ standard training, validation, testing subsets.
 """
 
 # from torchaudio.datasets import SPEECHCOMMANDS
-from data_utils import SPEECHCOMMANDS
+# from data_utils import SPEECHCOMMANDS
+from data_utils_sequential import SPEECHCOMMANDS
 import os
 
+group_size = 64
+grouped_data_path = "/home/cc/gpufs/audio/grouped-data-audio-sequential-large/" + str(group_size)
 
 class SubsetSC(SPEECHCOMMANDS):
-    def __init__(self, subset: str = None):
-        super().__init__("./", download=True)
-        self.is_mytar=False
-        def load_list(filename):
-            filepath = os.path.join(self._path, filename)
-            with open(filepath) as fileobj:
-                return [os.path.normpath(os.path.join(self._path, line.strip())) for line in fileobj]
+    def __init__(self, subset: str = None, root: str = None, 
+            is_mytar: bool = False, group_size: int = None):
 
-        if subset == "validation":
-            self._walker = load_list("validation_list.txt")
-        elif subset == "testing":
-            self._walker = load_list("testing_list.txt")
-        elif subset == "training":
-            excludes = load_list("validation_list.txt") + load_list("testing_list.txt")
-            excludes = set(excludes)
-            self._walker = [w for w in self._walker if w not in excludes]
+        self.train_path = root
+        self.is_mytar = is_mytar
+        self.group_size = group_size
+        # print("root, is_mytar, group_size ->",root, is_mytar, group_size)
+
+        super().__init__("./", download=True)
+        if is_mytar:
+            print("mytar")
+        else:
+            def load_list(filename):
+                filepath = os.path.join(self._path, filename)
+                with open(filepath) as fileobj:
+                    return [os.path.normpath(os.path.join(self._path, line.strip())) for line in fileobj]
+
+            if subset == "validation":
+                self._walker = load_list("validation_list.txt")
+            elif subset == "testing":
+                self._walker = load_list("testing_list.txt")
+            elif subset == "training":
+                excludes = load_list("validation_list.txt") + load_list("testing_list.txt")
+                excludes = set(excludes)
+                self._walker = [w for w in self._walker if w not in excludes]
 
 
 # Create training and testing split of the data. We do not use validation in this tutorial.
-train_set = SubsetSC("training")
-test_set = SubsetSC("testing")
+train_set = SubsetSC("training", grouped_data_path, True, group_size)
+test_set = SubsetSC("testing", None,False, group_size)
+# quit()
 
 waveform, sample_rate, label, speaker_id, utterance_number = train_set[0]
 print("waveform, sample_rate, label, speaker_id, utterance_number ->", waveform, sample_rate, label, speaker_id, utterance_number)
 
+# waveform = waveform[0] 
+# sample_rate = sample_rate[0] 
+# label = label[0]
+# speaker_id = speaker_id[0]
+# utterance_number = utterance_number[0]
+# print("waveform, sample_rate, label, speaker_id, utterance_number ->", waveform, sample_rate, label, speaker_id, utterance_number)
 
 """A data point in the SPEECHCOMMANDS dataset is a tuple made of a waveform
 (the audio signal), the sample rate, the utterance (label), the ID of
@@ -121,8 +140,8 @@ the speaker, the number of the utterance.
 
 print("Shape of waveform: {}".format(waveform.size()))
 print("Sample rate of waveform: {}".format(sample_rate))
-
-plt.plot(waveform.t().numpy());
+# quit()
+# plt.plot(waveform.t().numpy());
 
 """Let’s find the list of labels available in the dataset.
 
@@ -131,7 +150,8 @@ plt.plot(waveform.t().numpy());
 """
 
 labels = sorted(list(set(datapoint[2] for datapoint in train_set)))
-labels
+print(labels)
+# quit()
 
 """The 35 audio labels are commands that are said by users. The first few
 files are people saying “marvin”.
@@ -143,8 +163,8 @@ files are people saying “marvin”.
 waveform_first, *_ = train_set[0]
 ipd.Audio(waveform_first.numpy(), rate=sample_rate)
 
-waveform_second, *_ = train_set[1]
-ipd.Audio(waveform_second.numpy(), rate=sample_rate)
+# waveform_second, *_ = train_set[1]
+# ipd.Audio(waveform_second.numpy(), rate=sample_rate)
 
 """The last file is someone saying “visual”.
 
@@ -152,8 +172,8 @@ ipd.Audio(waveform_second.numpy(), rate=sample_rate)
 
 """
 
-waveform_last, *_ = train_set[-1]
-ipd.Audio(waveform_last.numpy(), rate=sample_rate)
+# waveform_last, *_ = train_set[-1]
+# ipd.Audio(waveform_last.numpy(), rate=sample_rate)
 
 """## Formatting the Data
 
@@ -216,8 +236,19 @@ encoding.
 
 def pad_sequence(batch):
     # Make all tensor in a batch the same length by padding with zeros
+    # print("batch ->", len(batch), type(batch))
+    # for i in batch:
+    #     print(i.size())
     batch = [item.t() for item in batch]
     batch = torch.nn.utils.rnn.pad_sequence(batch, batch_first=True, padding_value=0.)
+    # print("batch1 ->", len(batch), type(batch))
+    # for i in batch:
+    #     print(i.size())
+    # batch = batch.permute(0, 2, 1)
+    # print("batch.permute(0, 2, 1) ->", batch, len(batch), type(batch))
+    # for i in batch:
+    #     print(i.size())
+    # quit()
     return batch.permute(0, 2, 1)
 
 
@@ -252,7 +283,7 @@ else:
 train_loader = torch.utils.data.DataLoader(
     train_set,
     batch_size=batch_size,
-    shuffle=True,
+    shuffle=False,
     collate_fn=collate_fn,
     num_workers=num_workers,
     pin_memory=pin_memory,
@@ -406,6 +437,7 @@ def get_likely_index(tensor):
 
 
 def test(model, epoch):
+    list_acc = []
     model.eval()
     correct = 0
     for data, target in test_loader:
@@ -424,7 +456,7 @@ def test(model, epoch):
         pbar.update(pbar_update)
 
     acc = correct / len(test_loader.dataset)
-    print("Acc -> ", acc)   
+    print("Acc -> ", acc)
     print(f"\nTest Epoch: {epoch}\tAccuracy: {correct}/{len(test_loader.dataset)} ({100. * correct / len(test_loader.dataset):.0f}%)\n")
     return acc
 
@@ -438,7 +470,7 @@ varies during the training.
 """
 
 log_interval = 20
-n_epoch = 50
+n_epoch = 28
 
 pbar_update = 1 / (len(train_loader) + len(test_loader))
 losses = []
@@ -459,7 +491,7 @@ with tqdm(total=n_epoch) as pbar:
 data_dict = {"Accuracy": list_acc}
 
 # Write the dictionary to a new txt file
-with open("output_50epochs_M5_nogrouping_largedata_2ndtry_randseed.txt", "w") as f:
+with open("output_28epochs_M5_sequentialgrouping_largedata_gsize64_shuffle-off.txt", "w") as f:
     f.write(str(data_dict))
 
 # Let's plot the training loss versus the number of iteration.
