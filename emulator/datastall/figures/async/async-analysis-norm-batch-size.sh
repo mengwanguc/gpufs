@@ -6,7 +6,7 @@ echo "beginning test"
 gpu_type="p100"
 model="alexnet"
 n_workers=4
-batch_size=(128 256 512 1024 2048)
+batch_sizes=(128 256 512 1024 2048)
 data_path="/home/cc/data/test-utilization/imagenette2"
 
 # set up control group
