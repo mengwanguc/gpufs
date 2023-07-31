@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "beginning test"
+
 gpu_type="p100"
 model="alexnet"
 n_workers=4
