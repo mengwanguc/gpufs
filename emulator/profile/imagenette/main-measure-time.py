@@ -39,7 +39,7 @@ parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
-                    help='minio cache size, training gets 10/11, validation gets 1/11 (default=16GB)'))
+                    help='minio cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
