@@ -78,6 +78,8 @@ parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
 parser.add_argument('--gpu-type', default='unknown', type=str,
                     help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
+parser.add_argument('--skip-epochs', default=1, type=int,
+                    help='Drop the first N epochs from the data')
 parser.add_argument('--profile-batches', default=10, type=int,
                     help='How many batches to run in order to profile the performance data')
 parser.add_argument('--multiprocessing-distributed', action='store_true',
@@ -352,8 +354,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # measure elapsed time
         batch_time.update(time.time() - end)
 
-        if epoch != 0:
+        if epoch >= args.skip_epochs:
             measurements.append((io_wait_time, cpu2gpu_time, gpu_time))
+
         end = time.time()
 
         if args.profile_batches != -1 and i >= args.profile_batches:
