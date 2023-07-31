@@ -28,7 +28,7 @@ for batch_size in ${batch_sizes[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    cgexec -g memory:$group_name python main-measure-time.py --skip-epochs 0 -j 4 --epoch 1 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
+    cgexec -g memory:$group_name python main-measure-time.py --skip-epochs 0 -j 4 --epoch 1 --workers $n_workers --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
     # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
