@@ -4,3 +4,4 @@ temp.txt*
 *.pth.tar
 *.pth
 *.pyc
+audio/SpeechCommands/

@@ -11,7 +11,7 @@ train_top1_size32 = []
 train_top1_size64 = []
 epochs = 0
 batch_size = 0
-model = ""
+model = "M5"
 batch_top1_top5 = {}
 batch_top1_top5_size2 = {}
 batch_top1_top5_size4 = {}
@@ -23,13 +23,13 @@ batch_top1_top5_size64 = {}
 
 short_batch = '256'
 current_p = 'AP'
-current_title = 'Epoch related Average Precision(AP) on Subset of Coco Dataset'
+current_title = 'Epoch related Accuracy Testing on Speech Command Dataset'
 process = '_AP_'
 
-with open('result_ap_nogrouping_largecoco_24epoch_bsize2') as json_file:
+with open('output_50epochs_M5_grouping_largedata_gsize64_nodataleakage.txt') as json_file:
     data = json.load(json_file)
-    print(data)
-    print(type(data["AP"]))
+    print(data, len(data))
+    # print(type(data["AP"]))
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5 = data["AP"]
@@ -40,29 +40,33 @@ with open('result_ap_nogrouping_largecoco_24epoch_bsize2') as json_file:
         elif k == 'args.batch_size':
             batch_size = 2
     
-    batch_top1_top5 = data["AP"]
+    batch_top1_top5 = data["Accuracy"]
     batch_top1_top5 = [int(num * 100) for num in batch_top1_top5]
-with open('result_ap_groupingv3_largecoco_24epoch_bsize2_gsize2') as json_file:
+with open('output_50epochs_M5_nogrouping_largedata_2ndtry.txt') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
             batch_top1_top5_size2 = data[k]
 
-    batch_top1_top5_size2 = data["AP"]
+    batch_top1_top5_size2 = data["Accuracy"]
     batch_top1_top5_size2 = [int(num * 100) for num in batch_top1_top5_size2]
-# with open('result_ap_30epoch_nogrouping_barchsize16') as json_file:
-#     data = json.load(json_file)
-#     for k,v in data.items():
-#         if k == current_p:
-#             batch_top1_top5_size4 = data[k]
+with open('output_50epochs_M5_sequentialgrouping_largedata_gsize64_nodataleakage.txt') as json_file:
+    data = json.load(json_file)
+    for k,v in data.items():
+        if k == current_p:
+            batch_top1_top5_size4 = data[k]
 
-#         batch_top1_top5_size4 = data["AP"]
-#         batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
-# with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
+    batch_top1_top5_size4 = data["Accuracy"]
+    batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
+# with open('output_50epochs_M5_sequentialgrouping_largedata_gsize64_shuffle-off.txt') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
 #         if k == current_p:
 #             batch_top1_top5_size8 = data[k]
+        
+#     batch_top1_top5_size8 = data["Accuracy"]
+#     batch_top1_top5_size8 = [int(num * 100) for num in batch_top1_top5_size8]
+
 # with open('resnet18_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -98,15 +102,15 @@ def helper(batches):
 # x32, top1s32, top5s32 = helper(batch_top1_top5_size32)
 # x64, top1s64, top5s64 = helper(batch_top1_top5_size64)
 
-epochs = 24
+epochs = 50
 print("epoch ->", epochs)
 
 epoch_range = range(1,epochs+1)
 print("epoch_range ->", epoch_range)
-plt.plot(epoch_range, batch_top1_top5_size2, label = 'no_grouping_bsize2', color="blue", linewidth=1)
-plt.plot(epoch_range, batch_top1_top5_size4, label = 'no_grouping_bsize16', color="red", linewidth=1)
-plt.plot(epoch_range, batch_top1_top5, '--', label = 'grouping_bsize1_gsize4', color="green", linewidth=3)
-plt.plot(epoch_range, batch_top1_top5_size8, '--', label = 'grouping_aspectratio_bsize1_gsize4', color="black", linewidth=3)
+plt.plot(epoch_range, batch_top1_top5_size2, label = 'no_grouping_bsize256', color="blue", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5_size4, label = 'randgrouping_bsize256_gsize64', color="green", linewidth=1)
+plt.plot(epoch_range, batch_top1_top5, '--', label = 'randgrouping_bsize256_gsize64', color="green", linewidth=3)
+# plt.plot(epoch_range, batch_top1_top5_size8, '--', label = 'sequentialgrouping_bsize256_gsize64', color="red", linewidth=3)
 # plt.plot(epoch_range, batch_top1_top5_size2, label = 'groupsize_2')
 # plt.plot(epoch_range, batch_top1_top5_size4, label = 'groupsize_4')
 # plt.plot(epoch_range, batch_top1_top5_size8, label = 'groupsize_8')
@@ -114,17 +118,17 @@ plt.plot(epoch_range, batch_top1_top5_size8, '--', label = 'grouping_aspectratio
 # plt.plot(epoch_range, batch_top1_top5_size32, label = 'groupsize_32')
 # plt.plot(epoch_range, batch_top1_top5_size64, label = 'groupsize_64')
 plt.suptitle(current_title)
-plt.title("(Model:fasterrcnn_resnet50_fpn, Lr:0.0025)", fontsize=10)
+plt.title("(Model:M5, Lr:0.01)", fontsize=10)
 plt.xlabel('Epochs')
-plt.ylabel('Average Precision(AP)')
+plt.ylabel('Accuracy')
 plt.xlim([0,epochs])
-plt.ylim([0,40])
+plt.ylim([0,100])
 plt.legend()
 plt.show(block=True) 
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"largecoco-new"+".png" 
+sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"_nogrouping_randgrouping_sequential_bsize256_new"+".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """

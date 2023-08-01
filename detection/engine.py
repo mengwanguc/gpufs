@@ -24,6 +24,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
+    stop = 0
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
         # print("images(in batching) -> ", images, len(images), type(images))
         # print("targets(in batching) -> ", targets, len(targets), type(targets))
@@ -59,12 +60,13 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
-        # print("test ->", test)
-        # if test == 25:
-        #     print("stop in engine")
+        # print("stop in engine")
+        # quit()
+        # print("stop -> ",stop)
+        # stop+=1
+        # if stop == 100:
+        #     print("quit in engine")
         #     quit()
-        # test +=1
-
     return metric_logger
 
 

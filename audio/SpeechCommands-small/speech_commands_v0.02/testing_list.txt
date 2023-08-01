@@ -1,0 +1,15 @@
+backward/0a2b400e_nohash_0.wav
+backward/0a2b400e_nohash_1.wav
+backward/0a2b400e_nohash_2.wav
+backward/0a2b400e_nohash_3.wav
+backward/0a2b400e_nohash_4.wav
+bed/0a7c2a8d_nohash_0.wav
+bed/0a196374_nohash_0.wav
+bed/0b7ee1a0_nohash_0.wav
+bed/0b09edd3_nohash_0.wav
+bed/0b56bcfe_nohash_0.wav
+bird/0a7c2a8d_nohash_0.wav
+bird/0a7c2a8d_nohash_1.wav
+bird/0a9f9af7_nohash_0.wav
+bird/0a9f9af7_nohash_1.wav
+bird/0a9f9af7_nohash_2.wav
