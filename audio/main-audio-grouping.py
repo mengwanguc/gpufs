@@ -85,7 +85,7 @@ from data_utils_sequential import SPEECHCOMMANDS
 import os
 
 group_size = 64
-grouped_data_path = "/home/cc/gpufs/audio/grouped-data-audio-sequential-large/" + str(group_size)
+grouped_data_path = "/home/cc/gpufs/audio/grouped-data-audio-large-sequential-new/" + str(group_size)
 
 class SubsetSC(SPEECHCOMMANDS):
     def __init__(self, subset: str = None, root: str = None, 
@@ -470,7 +470,7 @@ varies during the training.
 """
 
 log_interval = 20
-n_epoch = 28
+n_epoch = 50
 
 pbar_update = 1 / (len(train_loader) + len(test_loader))
 losses = []
@@ -491,7 +491,7 @@ with tqdm(total=n_epoch) as pbar:
 data_dict = {"Accuracy": list_acc}
 
 # Write the dictionary to a new txt file
-with open("output_28epochs_M5_sequentialgrouping_largedata_gsize64_shuffle-off.txt", "w") as f:
+with open("output_50epochs_M5_sequentialgrouping_largedata_gsize64_nodataleakage.txt", "w") as f:
     f.write(str(data_dict))
 
 # Let's plot the training loss versus the number of iteration.
