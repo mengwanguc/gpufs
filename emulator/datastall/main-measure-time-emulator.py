@@ -335,10 +335,12 @@ def main_worker(gpu, ngpus_per_node, args):
             async_worker.request(path)
         
         # Wait for all of the images to be loaded.
-        for _ in indices:
+        for i, _ in enumerate(indices):
+            print("Getting {}".format(i))
             entry = async_worker.wait_get()
             data.append(process_raw(entry.get_data(), targets[entry.get_filepath()]))
             entry.release()
+            print("Released {}".format(i))
         
         return data
 
