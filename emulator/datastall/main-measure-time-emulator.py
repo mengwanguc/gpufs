@@ -321,7 +321,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     # Wrapper to create "load_indices_minio" variant for the given cache.
     def load_indices_minio_wrapper(cache):
-        return partial(load_indices_minio, cache=cache)
+        return partial(load_indices_minio, cache)
 
     # Dataset "load_indices" method that uses only AsyncLoader
     def load_indices_async(async_worker, dataset, indices):
@@ -375,7 +375,7 @@ def main_worker(gpu, ngpus_per_node, args):
     
     # Wrapper to create "load_indices_async_minio" variant for the given cache.
     def load_indices_async_minio_wrapper(cache):
-        return partial(load_indices_async_minio, cache=cache)
+        return partial(load_indices_async_minio, cache)
 
     # Choose which "load_indices" implementation to use...
     load_indices_train = None
