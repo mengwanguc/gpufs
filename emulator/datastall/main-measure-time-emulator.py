@@ -315,7 +315,7 @@ def main_worker(gpu, ngpus_per_node, args):
         data = []
         for index in indices:
             path, target = dataset.samples[index]
-            data.append(process_raw(dataset, cache.read(path), target))
+            data.append(process_raw(dataset, cache.read(path)[0], target))
         
         return data
 
@@ -363,7 +363,7 @@ def main_worker(gpu, ngpus_per_node, args):
         
         # Load all of the cached images while we wait on non-cached IO.
         for path in cached:
-            data.append(process_raw(cache.load(path), cached[path]))
+            data.append(process_raw(cache.load(path)[0], cached[path]))
 
         # Get loaded images.
         for _ in not_cached:
