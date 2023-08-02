@@ -342,7 +342,7 @@ def main_worker(gpu, ngpus_per_node, args):
             print("Getting {}".format(i))
             entry = async_worker.wait_get()
             print("Got {}".format(entry.get_filepath()))
-            data.append(process_raw(entry.get_data(), targets[entry.get_filepath()]))
+            data.append(process_raw(entry.get_data(), targets[entry.get_filepath().decode()]))
             entry.release()
             print("Released {}".format(i))
         print("Done with batch")
