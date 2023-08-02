@@ -267,7 +267,6 @@ def main_worker(gpu, ngpus_per_node, args):
 
     train_cache = None
     val_cache = None
-    loader = None
     if args.use_minio:
         train_cache = minio.PyCache(
             size=train_cache_size,
@@ -279,9 +278,6 @@ def main_worker(gpu, ngpus_per_node, args):
             max_usable_file_size=max_item_size,
             max_cacheable_file_size=get_largest_cacheable_file_size(valdir, val_cache_size)
         )
-        loader = minio_loader
-    else:
-        loader = pil_loader
 
     # AsyncLoader setup, if enabled
     async_loader = None
@@ -379,6 +375,18 @@ def main_worker(gpu, ngpus_per_node, args):
     def load_indices_async_minio_wrapper(cache):
         return partial(load_indices_async_minio, cache=cache)
 
+    # Choose which "load_indices" implementation to use...
+    load_indices_train = None
+    load_indices_val = None
+    if (args.use_minio and args.use_async):
+        load_indices_train = load_indices_async_minio_wrapper(train_cache)
+        load_indices_val = load_indices_async_minio_wrapper(val_cache)
+    elif (args.use_minio):
+        load_indices_train = load_indices_minio_wrapper(train_cache)
+        load_indices_val = load_indices_minio_wrapper(val_cache)
+    elif (args.use_async):
+        load_indices_train = load_indices_async
+        load_indices_val = load_indices_async
 
     train_dataset = datasets.ImageFolder(
         traindir,
@@ -388,8 +396,9 @@ def main_worker(gpu, ngpus_per_node, args):
             transforms.ToTensor(),
             normalize,
         ]),
-        loader=loader,
-        )
+        async_loader=async_loader,
+        load_indices=load_indices_train
+    )
 
     if args.distributed:
         ##
@@ -418,9 +427,8 @@ def main_worker(gpu, ngpus_per_node, args):
                 transforms.ToTensor(),
                 normalize,
             ]),
-            loader=loader,
-            cache=val_cache,
-            async_loader=async_loader),
+            async_loader=async_loader,
+            load_indices=load_indices_val),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons)
