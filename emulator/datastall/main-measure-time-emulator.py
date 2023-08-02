@@ -342,7 +342,7 @@ def main_worker(gpu, ngpus_per_node, args):
             print("Getting {}".format(i))
             entry = async_worker.wait_get()
             print("Got {}".format(entry.get_filepath()))
-            data.append(process_raw(entry.get_data(), targets[entry.get_filepath().decode()]))
+            data.append(process_raw(dataset, entry.get_data(), targets[entry.get_filepath().decode()]))
             entry.release()
             print("Released {}".format(i))
         print("Done with batch")
@@ -375,7 +375,7 @@ def main_worker(gpu, ngpus_per_node, args):
         # Get loaded images.
         for _ in not_cached:
             entry = async_worker.wait_get()
-            data.append(process_raw(entry.get_data(), not_cached[entry.get_filepath()]))
+            data.append(process_raw(dataset, entry.get_data(), not_cached[entry.get_filepath().decode()]))
             entry.release()
         
         return data
