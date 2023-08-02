@@ -379,14 +379,19 @@ def main_worker(gpu, ngpus_per_node, args):
     load_indices_train = None
     load_indices_val = None
     if (args.use_minio and args.use_async):
+        print("Using the COMBINED AsyncLoader and MinIO load_indices method")
         load_indices_train = load_indices_async_minio_wrapper(train_cache)
         load_indices_val = load_indices_async_minio_wrapper(val_cache)
     elif (args.use_minio):
+        print("Using the MinIO load_indices method")
         load_indices_train = load_indices_minio_wrapper(train_cache)
         load_indices_val = load_indices_minio_wrapper(val_cache)
     elif (args.use_async):
+        print("Using the AsyncLoader load_indices method")
         load_indices_train = load_indices_async
         load_indices_val = load_indices_async
+    else:
+        print("Using the DEFAULT loader.")
 
     train_dataset = datasets.ImageFolder(
         traindir,
