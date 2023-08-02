@@ -76,7 +76,7 @@ def main(args):
     print("ds, num_classes -> ", dataset, num_classes)
     
     
-    dataset_test, _ = get_dataset(args.dataset, "val", get_transform(train=False), args.data_path, is_mytar=False, batch_size=args.batch_size, group_size=args.group_size)
+    dataset_test, _ = get_dataset(args.validate_data, "val", get_transform(train=False), args.validate_data, is_mytar=False, batch_size=args.batch_size, group_size=args.group_size)
     print("ds_test -> ", dataset_test)
     # quit()
     
@@ -143,7 +143,7 @@ def main(args):
         # with open('/home/cc/gpufs/detection/result.txt', 'a') as f:
         #         f.write('\n'.join("Epoch "+ str(epoch)))
 
-        f = open("/home/cc/gpufs/detection/result-subset-rand-grouping-aspect-ratio.txt", "a")
+        f = open("/home/cc/gpufs/detection/result-subset-groupingv3-bsize2-gsize2.txt", "a")
         f.write("\n")
         f.write("Epoch "+ str(epoch))
 

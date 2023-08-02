@@ -26,7 +26,7 @@ current_p = 'AP'
 current_title = 'Epoch related Average Precision(AP) on Subset of Coco Dataset'
 process = '_AP_'
 
-with open('result_ap_grouping_subset_30epochs') as json_file:
+with open('result_ap_nogrouping_largecoco_24epoch_bsize2') as json_file:
     data = json.load(json_file)
     print(data)
     print(type(data["AP"]))
@@ -42,7 +42,7 @@ with open('result_ap_grouping_subset_30epochs') as json_file:
     
     batch_top1_top5 = data["AP"]
     batch_top1_top5 = [int(num * 100) for num in batch_top1_top5]
-with open('result_ap_no-grouping_subset_30epochs') as json_file:
+with open('result_ap_groupingv3_largecoco_24epoch_bsize2_gsize2') as json_file:
     data = json.load(json_file)
     for k,v in data.items():
         if k == current_p:
@@ -50,23 +50,19 @@ with open('result_ap_no-grouping_subset_30epochs') as json_file:
 
     batch_top1_top5_size2 = data["AP"]
     batch_top1_top5_size2 = [int(num * 100) for num in batch_top1_top5_size2]
-with open('result_ap_30epoch_nogrouping_barchsize16') as json_file:
-    data = json.load(json_file)
-    for k,v in data.items():
-        if k == current_p:
-            batch_top1_top5_size4 = data[k]
+# with open('result_ap_30epoch_nogrouping_barchsize16') as json_file:
+#     data = json.load(json_file)
+#     for k,v in data.items():
+#         if k == current_p:
+#             batch_top1_top5_size4 = data[k]
 
-    batch_top1_top5_size4 = data["AP"]
-    batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
-with open('result_ap_30epoch_grouping_aspectratio') as json_file:
-    data = json.load(json_file)
-    for k,v in data.items():
-        if k == current_p:
-            batch_top1_top5_size8 = data[k]
-        
-    batch_top1_top5_size8 = data["AP"]
-    batch_top1_top5_size8 = [int(num * 100) for num in batch_top1_top5_size8]
-
+#         batch_top1_top5_size4 = data["AP"]
+#         batch_top1_top5_size4 = [int(num * 100) for num in batch_top1_top5_size4]
+# with open('resnet18_batch_'+short_batch+'_gsize_8_epo_50') as json_file:
+#     data = json.load(json_file)
+#     for k,v in data.items():
+#         if k == current_p:
+#             batch_top1_top5_size8 = data[k]
 # with open('resnet18_batch_'+short_batch+'_gsize_16_epo_50') as json_file:
 #     data = json.load(json_file)
 #     for k,v in data.items():
@@ -102,7 +98,7 @@ def helper(batches):
 # x32, top1s32, top5s32 = helper(batch_top1_top5_size32)
 # x64, top1s64, top5s64 = helper(batch_top1_top5_size64)
 
-epochs = 30
+epochs = 24
 print("epoch ->", epochs)
 
 epoch_range = range(1,epochs+1)
@@ -121,14 +117,14 @@ plt.suptitle(current_title)
 plt.title("(Model:fasterrcnn_resnet50_fpn, Lr:0.0025)", fontsize=10)
 plt.xlabel('Epochs')
 plt.ylabel('Average Precision(AP)')
-plt.xlim([0,33])
+plt.xlim([0,epochs])
 plt.ylim([0,40])
 plt.legend()
 plt.show(block=True) 
 ep = str(epochs)
 bat = str(batch_size)
 results_dir = ''
-sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"_nogrouping_randgrouping_bsize16"+".png" 
+sample_file_name = model+"_"+current_p + "_batch_" + bat +"_epo_"+ ep +"largecoco-new"+".png" 
 plt.savefig(results_dir + sample_file_name)
 
 """

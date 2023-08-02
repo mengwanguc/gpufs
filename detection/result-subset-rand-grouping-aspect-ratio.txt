@@ -1269,6 +1269,8 @@ Epoch 0
 Epoch 0
 Epoch 0
 Epoch 0
+<<<<<<< HEAD
+=======
 Epoch 0
 Epoch 0
 Epoch 1
@@ -1288,4 +1290,5 @@ Epoch 0
 Epoch 0
 Epoch 0
 Epoch 0
+>>>>>>> 92740197b65e36fe187fed41bc687698f33a6627
 Epoch 0

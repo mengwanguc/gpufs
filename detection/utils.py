@@ -225,6 +225,12 @@ class MetricLogger(object):
                         meters=str(self),
                         time=str(iter_time), data=str(data_time)))
             i += 1
+            # test = 0
+            # print("test ->", test)
+            # if test == 2:
+            #     print("stop in utils.py")
+            #     quit()  
+            # test +=1
             end = time.time()
         total_time = time.time() - start_time
         total_time_str = str(datetime.timedelta(seconds=int(total_time)))
