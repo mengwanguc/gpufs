@@ -288,12 +288,13 @@ def main_worker(gpu, ngpus_per_node, args):
         async_loader = al.Loader(queue_depth=args.batch_size,
                                  n_workers=args.workers,
                                  min_dispatch_n=args.batch_size * args.workers,
-                                 max_idle_iters=1024,
-                                 direct=args.use_minio) # max_idle_iters arbitrary value that seems to work well.
+                                 max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
+                                 direct=args.use_minio)
 
         # Spawn the loader processes.
         print("Spawning the async loader process...")
         async_loader.spawn_loader()
+        time.sleep(1)
         print("Loaders spawned.")
     else:
         print("NOT using AsyncLoader")
@@ -330,8 +331,8 @@ def main_worker(gpu, ngpus_per_node, args):
         targets = {}
         for index in indices:
             path, target = dataset.samples[index]
-            async_worker.request(path)
             targets[path] = target
+            async_worker.request(path)
         
         # Wait for all of the images to be loaded.
         for _ in indices:
