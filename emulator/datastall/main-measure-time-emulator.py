@@ -12,6 +12,7 @@ import mlock
 from PIL import Image
 import io
 import glob
+from functools import partial
 
 import torch
 import torch.nn as nn
@@ -264,22 +265,6 @@ def main_worker(gpu, ngpus_per_node, args):
     train_cache_size = (args.cache_size * 10) // 11
     max_item_size = 16 * 1024 * 1024
 
-    # Use this loader for ImageFolder "loader" param if minio enabled.
-    def minio_loader(path: str, cache: minio.PyCache) -> Image.Image:
-        data, _ = cache.read_file(path)
-        img = Image.open(io.BytesIO(data))
-        return img.convert('RGB')
-
-    # Use this loader for ImageFolder "loader" param if minio disabled. Copied
-    # from the original torchvision source.
-    def pil_loader(path: str, cache: minio.PyCache) -> Image.Image:
-        # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
-        with open(path, 'rb') as f:
-            f = f.read()
-            f = io.BytesIO(f)
-            img = Image.open(f)
-            return img.convert('RGB')
-
     train_cache = None
     val_cache = None
     loader = None
@@ -316,7 +301,84 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         print("NOT using AsyncLoader")
 
+    # Convert from raw bytearray and target to usable data
+    def process_raw(dataset, raw, target):
+        sample = Image.open(io.BytesIO(raw)).convert('RGB')
+
+        if dataset.transform is not None:
+            sample = dataset.transform(sample)
+        if dataset.target_transform is not None:
+            target = dataset.target_transform(target)
+
+        return sample, target
+
+    # Dataset "load_indices" method that uses only MinIO
+    def load_indices_minio(cache, async_worker, dataset, indices):
+        data = []
+        for index in indices:
+            path, target = dataset.samples[index]
+            data.append(process_raw(dataset, cache.read(path), target))
         
+        return data
+
+    # Wrapper to create "load_indices_minio" variant for the given cache.
+    def load_indices_minio_wrapper(cache):
+        return partial(load_indices_minio, cache=cache)
+
+    # Dataset "load_indices" method that uses only AsyncLoader
+    def load_indices_async(async_worker, dataset, indices):
+        data = []
+
+        # Request all of the images
+        targets = {}
+        for index in indices:
+            path, target = dataset.samples[index]
+            async_worker.request(path)
+            targets[path] = target
+        
+        # Wait for all of the images to be loaded.
+        for _ in indices:
+            entry = async_worker.wait_get()
+            data.append(process_raw(entry.get_data(), targets[entry.get_filepath()]))
+            entry.release()
+        
+        return data
+
+
+    # Dataset "load_indices" method that uses both MinIO and AsyncLoader
+    def load_indices_async_minio(cache, async_worker, dataset, indices):
+        data = []
+
+        # Sort images by whether they're cached or not.
+        not_cached = {}
+        cached = {}
+        for index in indices:
+            path, target = dataset.samples[index]
+            if cache.contains(path):
+                cached[path] = target
+            else:
+                not_cached[path] = target
+        
+        # Request all the not-cached images be loaded.
+        for path in not_cached:
+            async_worker.request(path)
+        
+        # Load all of the cached images while we wait on non-cached IO.
+        for path in cached:
+            data.append(process_raw(cache.load(path), cached[path]))
+
+        # Get loaded images.
+        for _ in not_cached:
+            entry = async_worker.wait_get()
+            data.append(process_raw(entry.get_data(), not_cached[entry.get_filepath()]))
+            entry.release()
+        
+        return data
+    
+    # Wrapper to create "load_indices_async_minio" variant for the given cache.
+    def load_indices_async_minio_wrapper(cache):
+        return partial(load_indices_async_minio, cache=cache)
+
 
     train_dataset = datasets.ImageFolder(
         traindir,
@@ -327,8 +389,7 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]),
         loader=loader,
-        cache=train_cache,
-        async_loader=async_loader)
+        )
 
     if args.distributed:
         ##
