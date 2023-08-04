@@ -293,11 +293,17 @@ def main_worker(gpu, ngpus_per_node, args):
         # Create the loaders.
         max_file_size = 1 << (max(get_largest_file_size(traindir), get_largest_file_size(valdir)) - 1).bit_length()
         print("Max file size: {} bytes".format(max_file_size))
+        print("""Args:
+              queue_depth    = {}
+              n_workers      = {}
+              min_dispatch_n = {}
+              max_idle_iters = {}
+              direct         = {}""".format(args.batch_size, args.workers, args.batch_size * args.workers, 1024, args.use_minio))
         async_loader = al.Loader(queue_depth=args.batch_size,
                                  n_workers=args.workers,
                                  min_dispatch_n=args.batch_size * args.workers,
                                  max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
-                                 direct=args.use_minio == True)
+                                 direct=args.use_minio)
 
         # Spawn the loader processes.
         print("Spawning the async loader process...")
