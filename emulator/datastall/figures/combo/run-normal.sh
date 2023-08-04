@@ -6,7 +6,6 @@ model="alexnet"
 workers=(1 2 4 8)
 batch_size="256"
 data_path="/home/cc/data/test-utilization/imagenette2"
-
 limit="12GB"
 
 # set up control group
