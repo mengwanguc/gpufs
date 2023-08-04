@@ -273,11 +273,13 @@ def main_worker(gpu, ngpus_per_node, args):
             max_usable_file_size=max_item_size,
             max_cacheable_file_size=get_largest_cacheable_file_size(traindir, train_cache_size)
         )
+        print("Created train cache of {} MB".format(train_cache_size))
         val_cache = minio.PyCache(
             size=val_cache_size,
             max_usable_file_size=max_item_size,
             max_cacheable_file_size=get_largest_cacheable_file_size(valdir, val_cache_size)
         )
+        print("Created val cache of {} MB".format(val_cache_size))
 
     # AsyncLoader setup, if enabled
     async_loader = None
