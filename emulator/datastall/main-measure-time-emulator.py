@@ -297,7 +297,7 @@ def main_worker(gpu, ngpus_per_node, args):
                                  n_workers=args.workers,
                                  min_dispatch_n=args.batch_size * args.workers,
                                  max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
-                                 direct=args.use_minio)
+                                 direct=args.use_minio == True)
 
         # Spawn the loader processes.
         print("Spawning the async loader process...")
