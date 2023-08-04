@@ -62,6 +62,12 @@ parser.add_argument('-b', '--batch-size', default=256, type=int,
                     help='mini-batch size (default: 256), this is the total '
                          'batch size of all GPUs on the current node when '
                          'using Data Parallel or Distributed Data Parallel')
+parser.add_argument('--prefetch-factor', default=2, type=int, metavar='PREFETCH',
+                    help='Number of batches that should be prefetched.')
+parser.add_argument('--super-batch', default=1, type=int, metavar='SUPERBATCH',
+                    help='super batch size (default: 1). This is the number of'
+                          'batches which the loader will be allowed to load'
+                          'simultaneously.')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
                     metavar='LR', help='initial learning rate', dest='lr')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
@@ -343,6 +349,9 @@ def main_worker(gpu, ngpus_per_node, args):
             entry.release()
         
         return data
+    
+    def load_meta_indices_async(async_worker, dataset, meta_indices):
+        return [load_indices_async(async_worker, dataset, indices) for indices in meta_indices]
 
 
     # Dataset "load_indices" method that uses both MinIO and AsyncLoader
@@ -392,8 +401,11 @@ def main_worker(gpu, ngpus_per_node, args):
         load_indices_val = load_indices_minio_wrapper(val_cache)
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
-        load_indices_train = load_indices_async
-        load_indices_val = load_indices_async
+        # load_indices_train = load_indices_async
+        # load_indices_val = load_indices_async
+
+        load_indices_train = load_meta_indices_async
+        load_indices_val = load_meta_indices_async
     else:
         print("Using the DEFAULT loader.")
 
@@ -422,6 +434,8 @@ def main_worker(gpu, ngpus_per_node, args):
         train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
         num_workers=args.workers, pin_memory=True, sampler=train_sampler, 
         is_emulator = True,
+        prefetch_factor = args.prefetch_factor,
+        super_batch = args.super_batch,
         estimated_pin_mem_time = estimated_pin_mem_time,
         emulator_version=args.emulator_version,
         balloons = train_balloons)
@@ -438,6 +452,8 @@ def main_worker(gpu, ngpus_per_node, args):
             ]),
             async_loader=async_loader,
             load_indices=load_indices_val),
+        prefetch_factor = args.prefetch_factor,
+        super_batch = args.super_batch,
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons)
