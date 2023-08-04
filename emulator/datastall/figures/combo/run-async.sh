@@ -23,7 +23,7 @@ for n_workers in ${workers[@]}; do
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # place the limit
-    sudo bash -c "echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
+    sudo bash -c "/usr/bin/echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
 
     # flush memory & caches
     echo "Flushing memory/cache"
