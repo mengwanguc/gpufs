@@ -6,7 +6,7 @@ model="alexnet"
 workers=(1 2 4 8)
 batch_size="256"
 data_path="/home/cc/data/test-utilization/imagenette2"
-limit="12GB"
+limit="12G"
 
 # set up control group
 group_name="gpufs"
@@ -22,11 +22,12 @@ for n_workers in ${workers[@]}; do
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # place the limit
-    echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes
+    sudo bash -c "/usr/bin/echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
 
     # flush memory & caches
     echo "Flushing memory/cache"
-    sudo ~/gpufs/exp/clear-cache.sh
+    sync
+    sudo bash -c "/usr/bin/echo 3 > /proc/sys/vm/drop_caches"
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
