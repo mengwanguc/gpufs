@@ -298,7 +298,7 @@ def main_worker(gpu, ngpus_per_node, args):
               n_workers      = {}
               min_dispatch_n = {}
               max_idle_iters = {}
-              direct         = {}""".format(args.batch_size, args.workers, args.batch_size * args.workers, 1024, args.use_minio))
+              direct         = {}""".format(args.batch_size, args.workers, args.batch_size * args.super_batch * args.workers, 1024, args.use_minio))
         async_loader = al.Loader(queue_depth=args.batch_size,
                                  n_workers=args.workers,
                                  min_dispatch_n=args.batch_size * args.workers,
