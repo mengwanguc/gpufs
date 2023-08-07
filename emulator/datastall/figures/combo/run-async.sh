@@ -31,7 +31,7 @@ for n_workers in ${workers[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    sudo /home/cc/anaconda3/bin/python main-measure-time-emulator.py --cgroup memory:$group_name --use-async True --skip-epochs 1 --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
+    sudo /home/cc/anaconda3/bin/python main-measure-time-emulator.py --cgroup memory/$group_name --use-async True --skip-epochs 1 --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
     # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
