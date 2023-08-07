@@ -10,9 +10,11 @@ import minio
 import AsyncLoader as al
 import mlock
 from PIL import Image
+from cgroups import Cgroup
 import io
 import glob
 from functools import partial
+from multiprocessing import Process
 
 import torch
 import torch.nn as nn
@@ -50,6 +52,8 @@ parser.add_argument('-A', '--use-async', default=False, type=bool, metavar='ASYN
                     help='use AsyncLoader for file loading')
 parser.add_argument('-m', '--use-minio', default=False, type=bool,
                     metavar='USE_MINIO', help='use MinIO cache')
+parser.add_argument('-g', '--cgroup', default=None, type=str,
+                    metavar='CGROUP', help='cgroup name to use for loader')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
                     help='MinIO cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
@@ -307,9 +311,14 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # Spawn the loader processes.
         print("Spawning the async loader process...")
-        async_loader.spawn_loader()
-        time.sleep(1)
+        loader_proc = Process(target=async_loader.become_loader)
+        loader_proc.start()
         print("Loaders spawned.")
+
+        if args.cgroup:
+            cg = Cgroup(args.cgroup)
+            cg.add(loader_proc.pid)
+            print("PID {} added to cgroup \"{}\"".format(loader_proc.pid, args.cgroup))
     else:
         print("NOT using AsyncLoader")
 
