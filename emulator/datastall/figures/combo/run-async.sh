@@ -6,7 +6,7 @@ model="alexnet"
 workers=(1 2 4 8)
 batch_size="256"
 data_path="/home/cc/data/test-utilization/imagenette2"
-limit="9G"
+limit="5G"
 
 # set up control group
 group_name="gpufs"
@@ -31,7 +31,9 @@ for n_workers in ${workers[@]}; do
 
     # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
     echo "running training"
-    cgexec -g memory:$group_name python main-measure-time-emulator.py --use-async True --skip-epochs 1 --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
+    py=$((which python))
+    echo "using python=\"$py\""
+    sudo $py main-measure-time-emulator.py --cgroup $group_name --use-async True --skip-epochs 1 --emulator-version=1 -j 4 --epoch 2 --workers $n_workers --gpu-count 1 --gpu-type $gpu_type -a $model --batch-size $batch_size --profile-batches -1 $data_path
 	
     # check how much memory the DATASET was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
