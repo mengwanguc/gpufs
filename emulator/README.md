@@ -52,18 +52,21 @@ conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake 
 
 6. Download and build mlock (which can allocate page-locked memory)
 
+```
 cd ~
 git clone git@github.com:gustrain/mlock.git
 cd mlock
 python setup.py install
+```
 
 7. Download and build minio
 
+```
 cd ~
 git clone git@github.com:gustrain/minio.git
 cd minio
 python setup.py install
-
+```
 
 
 
