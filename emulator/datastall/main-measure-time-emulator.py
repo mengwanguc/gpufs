@@ -342,12 +342,8 @@ def main_worker(gpu, ngpus_per_node, args):
         
         return data
 
-    # Wrapper to create "load_indices_minio" variant for the given cache.
-    def load_indices_minio_wrapper(cache):
-        return partial(load_indices_minio, cache)
-
     # Dataset "load_indices" method that uses only AsyncLoader
-    def load_indices_async(async_worker, dataset, indices):
+    def load_indices_async(cache, async_worker, dataset, indices):
         data = []
 
         # Request all of the images
@@ -365,10 +361,6 @@ def main_worker(gpu, ngpus_per_node, args):
         
         return data
     
-    def load_meta_indices_async(async_worker, dataset, meta_indices):
-        return [load_indices_async(async_worker, dataset, indices) for indices in meta_indices]
-
-
     # Dataset "load_indices" method that uses both MinIO and AsyncLoader
     def load_indices_async_minio(cache, async_worker, dataset, indices):
         data = []
@@ -399,30 +391,42 @@ def main_worker(gpu, ngpus_per_node, args):
         
         return data
     
+    def load_meta_indices(load_indices, cache, async_worker, dataset, meta_indices):
+        loaded = []
+        try:
+            for indices in meta_indices:
+                loaded.append(load_indices(cache, async_worker, dataset, indices))
+        except Exception as e:
+            return loaded, e
+        
+        return loaded, None
+    
     # Wrapper to create "load_indices_async_minio" variant for the given cache.
-    def load_indices_async_minio_wrapper(cache):
-        return partial(load_indices_async_minio, cache)
+    def load_meta_indices_wrapper(load_indices, cache):
+        return partial(load_meta_indices, load_indices, cache)
 
     # Choose which "load_indices" implementation to use...
     load_indices_train = None
     load_indices_val = None
     if (args.use_minio and args.use_async):
         print("Using the COMBINED AsyncLoader and MinIO load_indices method")
-        load_indices_train = load_indices_async_minio_wrapper(train_cache)
-        load_indices_val = load_indices_async_minio_wrapper(val_cache)
+        load_indices_train = load_meta_indices(load_indices_async_minio, train_cache)
+        load_indices_val = load_meta_indices(load_indices_async_minio, val_cache)
+
+
     elif (args.use_minio):
         print("Using the MinIO load_indices method")
-        load_indices_train = load_indices_minio_wrapper(train_cache)
-        load_indices_val = load_indices_minio_wrapper(val_cache)
+        load_indices_train = load_meta_indices(load_indices_minio, train_cache)
+        load_indices_val = load_meta_indices(load_indices_minio, val_cache)
+
+
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
-        # load_indices_train = load_indices_async
-        # load_indices_val = load_indices_async
-
-        load_indices_train = load_meta_indices_async
-        load_indices_val = load_meta_indices_async
+        load_indices_train = load_meta_indices(load_indices_async, None)
+        load_indices_val = load_meta_indices(load_indices_async, None)
     else:
-        print("Using the DEFAULT loader.")
+        print("Using the DEFAULT loader (unimplemented for meta indices).")
+        assert False
 
     train_dataset = datasets.ImageFolder(
         traindir,
