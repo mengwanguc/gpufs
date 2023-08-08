@@ -410,20 +410,20 @@ def main_worker(gpu, ngpus_per_node, args):
     load_indices_val = None
     if (args.use_minio and args.use_async):
         print("Using the COMBINED AsyncLoader and MinIO load_indices method")
-        load_indices_train = load_meta_indices(load_indices_async_minio, train_cache)
-        load_indices_val = load_meta_indices(load_indices_async_minio, val_cache)
+        load_indices_train = load_meta_indices_wrapper(load_indices_async_minio, train_cache)
+        load_indices_val = load_meta_indices_wrapper(load_indices_async_minio, val_cache)
 
 
     elif (args.use_minio):
         print("Using the MinIO load_indices method")
-        load_indices_train = load_meta_indices(load_indices_minio, train_cache)
-        load_indices_val = load_meta_indices(load_indices_minio, val_cache)
+        load_indices_train = load_meta_indices_wrapper(load_indices_minio, train_cache)
+        load_indices_val = load_meta_indices_wrapper(load_indices_minio, val_cache)
 
 
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
-        load_indices_train = load_meta_indices(load_indices_async, None)
-        load_indices_val = load_meta_indices(load_indices_async, None)
+        load_indices_train = load_meta_indices_wrapper(load_indices_async, None)
+        load_indices_val = load_meta_indices_wrapper(load_indices_async, None)
     else:
         print("Using the DEFAULT loader (unimplemented for meta indices).")
         assert False
