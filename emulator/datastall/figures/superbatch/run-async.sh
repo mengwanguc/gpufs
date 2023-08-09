@@ -3,7 +3,7 @@ set -e
 
 gpu_type="p100"
 model="alexnet"
-workers=4
+n_workers=4
 batch_size=256
 data_path="/home/cc/data/test-utilization/imagenette2"
 limit="9G"
