@@ -62,6 +62,10 @@ parser.add_argument('-b', '--batch-size', default=256, type=int,
                     help='mini-batch size (default: 256), this is the total '
                          'batch size of all GPUs on the current node when '
                          'using Data Parallel or Distributed Data Parallel')
+parser.add_argument('--super-batch-size', default=1, type=int,
+                    help='number of batches to be loaded at the same time.')
+parser.add_argument('--prefetch-factor', default=2, type=int,
+                    help='number batches to be pinned in pin_memory_loop.')
 parser.add_argument('--lr', '--learning-rate', default=0.1, type=float,
                     metavar='LR', help='initial learning rate', dest='lr')
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',
@@ -287,9 +291,9 @@ def main_worker(gpu, ngpus_per_node, args):
         # Create the loaders.
         max_file_size = 1 << (max(get_largest_file_size(traindir), get_largest_file_size(valdir)) - 1).bit_length()
         print("Max file size: {} bytes".format(max_file_size))
-        async_loader = al.Loader(queue_depth=args.batch_size,
+        async_loader = al.Loader(queue_depth=args.super_batch_size * args.batch_size,
                                  n_workers=args.workers,
-                                 min_dispatch_n=args.batch_size * args.workers,
+                                 dispatch_n=args.super_batch_size * args.batch_size * args.workers,
                                  max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
                                  direct=args.use_minio)
 
@@ -424,7 +428,8 @@ def main_worker(gpu, ngpus_per_node, args):
         is_emulator = True,
         estimated_pin_mem_time = estimated_pin_mem_time,
         emulator_version=args.emulator_version,
-        balloons = train_balloons)
+        balloons = train_balloons,
+        super_batch_size=args.super_batch_size)
 
     val_balloons = dict()
     val_loader = torch.utils.data.DataLoader(
@@ -440,7 +445,8 @@ def main_worker(gpu, ngpus_per_node, args):
             load_indices=load_indices_val),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
-        balloons = val_balloons)
+        balloons = val_balloons,
+        super_batch_size=args.super_batch_size)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
