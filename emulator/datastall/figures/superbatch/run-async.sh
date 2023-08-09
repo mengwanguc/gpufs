@@ -47,7 +47,7 @@ for superbatch in ${superbatch_configs[@]}; do
     echo "... $usage bytes\n"
 
     # save our output to a meaningful filename
-    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached-async.csv
+    mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$superbatch-superbatch-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached-async.csv
     echo
 
     # tear down the control group
