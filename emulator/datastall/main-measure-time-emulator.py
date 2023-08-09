@@ -346,7 +346,7 @@ def main_worker(gpu, ngpus_per_node, args):
                 async_worker.request(path)
 
         # Create empty lists for each batch
-        for _ in range(i):
+        for _ in range(len(batched_indices)):
             data.append([])
         
         # Wait for all of the images to be loaded.
@@ -381,7 +381,7 @@ def main_worker(gpu, ngpus_per_node, args):
                     not_cached.append(path)
 
         # Create empty lists for each batch
-        for _ in range(i):
+        for _ in range(len(batched_indices)):
             data.append([])
 
         # First, request everything that's not cached.
