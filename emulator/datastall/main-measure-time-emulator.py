@@ -351,7 +351,6 @@ def main_worker(gpu, ngpus_per_node, args):
         
         # Wait for all of the images to be loaded.
         for i, indices in enumerate(batched_indices):
-            data.append([])
             for _ in indices:
                 entry = async_worker.wait_get()
                 filepath = entry.get_filepath().decode()
