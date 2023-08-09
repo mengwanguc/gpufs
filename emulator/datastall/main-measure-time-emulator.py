@@ -317,11 +317,13 @@ def main_worker(gpu, ngpus_per_node, args):
         return sample, target
 
     # Dataset "load_indices" method that uses only MinIO
-    def load_indices_minio(cache, async_worker, dataset, indices):
+    def load_indices_minio(cache, async_worker, dataset, batched_indices):
         data = []
-        for index in indices:
-            path, target = dataset.samples[index]
-            data.append(process_raw(dataset, cache.read(path)[0], target))
+        for i, indices in enumerate(batched_indices):
+            data.append([])
+            for index in indices:
+                path, target = dataset.samples[index]
+                data[i].append(process_raw(dataset, cache.read(path)[0], target))
         
         return data
 
@@ -335,50 +337,69 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # Request all of the images
         targets = {}
-        for indices in batched_indices:
+        path_to_batch = {}
+        for i, indices in enumerate(batched_indices):
             for index in indices:
                 path, target = dataset.samples[index]
+                path_to_batch[path] = i
                 targets[path] = target
                 async_worker.request(path)
+
+        # Create empty lists for each batch
+        for _ in range(i):
+            data.append([])
         
         # Wait for all of the images to be loaded.
         for i, indices in enumerate(batched_indices):
             data.append([])
             for _ in indices:
                 entry = async_worker.wait_get()
-                data[i].append(process_raw(dataset, entry.get_data(), targets[entry.get_filepath().decode()]))
+                filepath = entry.get_filepath().decode()
+                data[path_to_batch[filepath]].append(process_raw(dataset, entry.get_data(), targets[filepath]))
                 entry.release()
         
         return data
 
 
     # Dataset "load_indices" method that uses both MinIO and AsyncLoader
-    def load_indices_async_minio(cache, async_worker, dataset, indices):
+    def load_indices_async_minio(cache, async_worker, dataset, batched_indices):
         data = []
 
-        # Sort images by whether they're cached or not.
-        not_cached = {}
-        cached = {}
-        for index in indices:
-            path, target = dataset.samples[index]
-            if cache.contains(path):
-                cached[path] = target
-            else:
-                not_cached[path] = target
-        
-        # Request all the not-cached images be loaded.
+        cached = []
+        not_cached = []
+
+        # Request all of the images
+        targets = {}
+        path_to_batch = {}
+        for i, indices in enumerate(batched_indices):
+            for index in indices:
+                path, target = dataset.samples[index]
+                path_to_batch[path] = i
+                targets[path] = target
+                if cache.contains(path):
+                    cached.append(path)
+                else:
+                    not_cached.append(path)
+
+        # Create empty lists for each batch
+        for _ in range(i):
+            data.append([])
+
+        # First, request everything that's not cached.
         for path in not_cached:
             async_worker.request(path)
-        
-        # Load all of the cached images while we wait on non-cached IO.
-        for path in cached:
-            data.append(process_raw(cache.load(path)[0], cached[path]))
 
-        # Get loaded images.
-        for _ in not_cached:
-            entry = async_worker.wait_get()
-            data.append(process_raw(dataset, entry.get_data(), not_cached[entry.get_filepath().decode()]))
-            entry.release()
+        # In the meantime, load the cached data.
+        for path in cached:
+            data[path_to_batch[path]].append(process_raw(cache.load(path)[0], targets[path]))
+        
+        # Wait for all of the images to be loaded.
+        for i, indices in enumerate(batched_indices):
+            for _ in indices:
+                entry = async_worker.wait_get()
+                filepath = entry.get_filepath().decode()
+                data[path_to_batch[filepath]].append(process_raw(dataset, entry.get_data(), targets[filepath]))
+                entry.release()
         
         return data
     
