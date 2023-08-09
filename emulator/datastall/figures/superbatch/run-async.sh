@@ -6,7 +6,7 @@ model="alexnet"
 n_workers=4
 batch_size=256
 data_path="/home/cc/data/test-utilization/imagenette2"
-limit="9G"
+# limit="9G"
 superbatch_configs=(1 2 4 8 16)
 prefetch_factor=2
 
@@ -24,7 +24,7 @@ for superbatch in ${superbatch_configs[@]}; do
     sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
     # place the limit
-    sudo bash -c "/usr/bin/echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
+    # sudo bash -c "/usr/bin/echo $limit > /sys/fs/cgroup/memory/$group_name/memory.limit_in_bytes"
 
     # flush memory & caches
     echo "Flushing memory/cache"
