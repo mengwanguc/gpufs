@@ -330,21 +330,24 @@ def main_worker(gpu, ngpus_per_node, args):
         return partial(load_indices_minio, cache)
 
     # Dataset "load_indices" method that uses only AsyncLoader
-    def load_indices_async(async_worker, dataset, indices):
+    def load_indices_async(async_worker, dataset, batched_indices):
         data = []
 
         # Request all of the images
         targets = {}
-        for index in indices:
-            path, target = dataset.samples[index]
-            targets[path] = target
-            async_worker.request(path)
+        for indices in batched_indices:
+            for index in indices:
+                path, target = dataset.samples[index]
+                targets[path] = target
+                async_worker.request(path)
         
         # Wait for all of the images to be loaded.
-        for i, _ in enumerate(indices):
-            entry = async_worker.wait_get()
-            data.append(process_raw(dataset, entry.get_data(), targets[entry.get_filepath().decode()]))
-            entry.release()
+        for i, indices in enumerate(batched_indices):
+            data.append([])
+            for _ in indices:
+                entry = async_worker.wait_get()
+                data[i].append(process_raw(dataset, entry.get_data(), targets[entry.get_filepath().decode()]))
+                entry.release()
         
         return data
 
