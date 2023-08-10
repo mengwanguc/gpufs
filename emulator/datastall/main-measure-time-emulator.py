@@ -323,7 +323,7 @@ def main_worker(gpu, ngpus_per_node, args):
             data.append([])
             for index in indices:
                 path, target = dataset.samples[index]
-                data[i].append(process_raw(dataset, cache.read(path)[0], target))
+                data[i].append((target, cache.read(path)[0]))
         
         return data
 
@@ -354,7 +354,7 @@ def main_worker(gpu, ngpus_per_node, args):
             for _ in indices:
                 entry = async_worker.wait_get()
                 filepath = entry.get_filepath().decode()
-                data[path_to_batch[filepath]].append(process_raw(dataset, entry.get_data(), targets[filepath]))
+                data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
                 entry.release()
         
         return data
@@ -390,14 +390,14 @@ def main_worker(gpu, ngpus_per_node, args):
 
         # In the meantime, load the cached data.
         for path in cached:
-            data[path_to_batch[path]].append(process_raw(cache.load(path)[0], targets[path]))
+            data[path_to_batch[path]].append((targets[path], cache.load(path)[0]))
         
         # Wait for all of the images to be loaded.
         for i, indices in enumerate(batched_indices):
             for _ in indices:
                 entry = async_worker.wait_get()
                 filepath = entry.get_filepath().decode()
-                data[path_to_batch[filepath]].append(process_raw(dataset, entry.get_data(), targets[filepath]))
+                data[path_to_batch[filepath]].append(process_raw(targets[filepath], entry.get_data()))
                 entry.release()
         
         return data
