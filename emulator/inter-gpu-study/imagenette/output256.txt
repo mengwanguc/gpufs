@@ -1,0 +1,1892 @@
+=> creating model 'resnet18'
+DataParallel will divide and allocate batch_size to all available GPUs
+DataParallel will divide and allocate batch_size to all available GPUs
+torch/nn/parallel/data_parallel.py: device_ids: [0, 1]
+Time in DataParallel is 0.01692652702331543.
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000155
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000066
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000012
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000177
+Time taken by ready_queue is : 0.000005
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000003
+Time taken by thread_main is : 0.506929
+Time taken by execute_with_graph_task is : 0.507140
+Time taken by sec3 is : 0.507227
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.507458 sec
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0072138309478759766
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 1.7033677101135254
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.2666788101196289
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.5456235408782959
+Time spent in bn1 is: 0.005303621292114258
+Time spent in relu is: 0.001739501953125
+Time spent in maxpool is: 0.0033507347106933594
+Time spent in A is: 0.5560173988342285
+Time spent in B is: 0.24549341201782227
+Time spent in C is: 0.0007503032684326172
+Time spent in _forward_impl was  0.8024661540985107
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.8139269351959229
+Time spent in bn1 is: 0.004637241363525391
+Time spent in relu is: 0.0015749931335449219
+Time spent in maxpool is: 0.0029981136322021484
+Time spent in A is: 0.8231372833251953
+Time spent in B is: 0.24065661430358887
+Time spent in C is: 0.0002586841583251953
+Time spent in _forward_impl was  1.0641670227050781
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 1.0660834312438965
+[tensor([[-0.2161,  0.7402, -0.3476,  ...,  0.1052, -0.1169, -0.0539],
+        [-0.1960,  0.6044, -0.2320,  ..., -0.1822, -0.1402, -0.2533],
+        [-0.2179,  0.6825, -0.0053,  ..., -0.0194, -0.2240, -0.2986],
+        ...,
+        [-0.0513,  0.2467, -0.3142,  ..., -0.0590,  0.1548,  0.0446],
+        [-0.3324,  0.6207, -0.1777,  ..., -0.0328, -0.3058, -0.0806],
+        [-0.2039,  0.8006, -0.3147,  ..., -0.0539, -0.1933, -0.1889]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[-2.5676e-01,  8.0569e-01, -1.3415e-01,  ...,  2.8016e-02,
+         -2.9993e-01, -1.1463e-01],
+        [-3.7815e-02,  6.0824e-01, -5.7155e-02,  ..., -5.9886e-04,
+         -2.9856e-01, -1.9102e-01],
+        [-9.2188e-02,  1.4712e+00, -7.4642e-01,  ..., -3.1671e-01,
+         -6.8232e-01,  5.7952e-01],
+        ...,
+        [-3.1624e-01,  8.0378e-01, -4.3678e-01,  ..., -1.6560e-01,
+         -2.1207e-01,  7.5431e-02],
+        [-2.1856e-01,  4.5676e-01, -1.9808e-01,  ..., -1.0355e-01,
+          5.5344e-02, -3.4082e-01],
+        [-2.1192e-01,  6.9792e-01, -8.6294e-02,  ..., -1.2024e-01,
+         -1.9322e-01, -1.0529e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.013367176055908203
+The time took extra here for 2 GPUs is: 1.3461294174194336
+Time spent in model is 3.051443576812744
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 6.874546527862549
+Time spent in criterion is 0.0006315708160400391
+Before going into the rest
+The time took for accuracy is: 0.0006995201110839844
+The time took for three update functions is: 0.00021147727966308594
+The time took for zero_grad(): 0.00022912025451660156
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0002791881561279297
+Time spent in _forward_cls.backward: 0.002197742462158203
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.0056536197662353516
+The time spent right after Variable._execution_engine.run_backward is: 0.5075385570526123
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5076427459716797
+The time took for backward(): 0.5079021453857422
+The time took for step(): 0.0059087276458740234
+Time spent in the rest is 0.5149509906768799
+Batch 0
+Data wait time is 3.087362051010132.
+Transfer time is 0.0003769397735595703.
+Compute time is 3.567155122756958.
+Total data wait time is: 3.087362051010132
+Total compute time is: 3.567155122756958
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006364583969116211
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.00665593147277832
+After scatter
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000003
+Time taken by sec2 is : 0.000210
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000127
+Time taken by two streams is : 0.000004
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000012
+Time taken by thread_main is : 0.502156
+Time taken by execute_with_graph_task is : 0.502200
+Time taken by sec3 is : 0.502340
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.502573 sec
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.005590915679931641
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.01404881477355957
+Time spent in bn1 is: 0.004153251647949219
+Time spent in relu is: 0.0016269683837890625
+Time spent in maxpool is: 0.0021698474884033203
+Time spent in A is: 0.021998882293701172
+Time spent in B is: 0.23354458808898926
+Time spent in C is: 0.0002789497375488281
+Time spent in _forward_impl was  0.25597429275512695
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013340473175048828
+Time spent in bn1 is: 0.004119157791137695
+Time spent in relu is: 0.0019588470458984375
+Time spent in maxpool is: 0.002235889434814453
+Time spent in A is: 0.021654367446899414
+Time spent in B is: 0.2339317798614502
+Time spent in C is: 0.0003662109375
+Time spent in _forward_impl was  0.25612354278564453
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2574443817138672
+[tensor([[ 3.3152,  3.4634,  2.9389,  ..., -0.1099, -0.0442, -0.1630],
+        [ 3.1137,  3.4451,  3.0058,  ..., -0.2209,  0.0085, -0.2293],
+        [ 3.0350,  3.5590,  3.5725,  ..., -0.1728, -0.0687, -0.1433],
+        ...,
+        [ 3.2786,  3.7590,  3.5271,  ...,  0.0617, -0.3945, -0.2155],
+        [ 3.3629,  4.0154,  3.6313,  ..., -0.0781, -0.2679, -0.0638],
+        [ 3.0957,  3.5131,  3.1924,  ..., -0.2096, -0.0491, -0.2985]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[ 3.8114e+00,  4.2138e+00,  3.9880e+00,  ..., -2.6616e-01,
+         -2.3887e-01, -4.3321e-02],
+        [ 3.1303e+00,  3.5459e+00,  3.4577e+00,  ..., -3.0091e-02,
+          2.0927e-02, -1.7209e-01],
+        [ 3.3745e+00,  3.9654e+00,  3.4481e+00,  ...,  1.2215e-02,
+         -3.6730e-01,  1.7687e-01],
+        ...,
+        [ 3.0602e+00,  3.4138e+00,  3.3171e+00,  ..., -3.6549e-01,
+          1.7074e-01, -3.0399e-01],
+        [ 3.5713e+00,  4.3609e+00,  4.1188e+00,  ..., -2.9989e-02,
+         -2.0867e-01, -4.6548e-02],
+        [ 3.1929e+00,  3.6240e+00,  3.1084e+00,  ..., -4.2011e-03,
+         -2.2359e-01, -1.0385e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.00841212272644043
+The time took extra here for 2 GPUs is: 0.27144742012023926
+Time spent in model is 0.2792842388153076
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 3.775193929672241
+Time spent in criterion is 0.0005314350128173828
+Before going into the rest
+The time took for accuracy is: 0.0005843639373779297
+The time took for three update functions is: 0.0003249645233154297
+The time took for zero_grad(): 0.0013327598571777344
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00026607513427734375
+Time spent in _forward_cls.backward: 0.0008385181427001953
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.006491184234619141
+The time spent right after Variable._execution_engine.run_backward is: 0.5026869773864746
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5027804374694824
+The time took for backward(): 0.5030117034912109
+The time took for step(): 0.0054094791412353516
+Time spent in the rest is 0.5106632709503174
+Batch 1
+Data wait time is 0.0002644062042236328.
+Transfer time is 0.0002758502960205078.
+Compute time is 0.7906286716461182.
+Total data wait time is: 3.0876264572143555
+Total compute time is: 4.357783794403076
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006360530853271484
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.006756782531738281
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.00614166259765625
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.01268625259399414
+Time spent in bn1 is: 0.004117012023925781
+Time spent in relu is: 0.0016417503356933594
+Time spent in maxpool is: 0.002208232879638672
+Time spent in A is: 0.020653247833251953
+Time spent in B is: 0.23343586921691895
+Time spent in C is: 0.00032448768615722656
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000171
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000109
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000008
+Time taken by thread_main is : 0.502781
+Time taken by execute_with_graph_task is : 0.502827
+Time taken by sec3 is : 0.502948
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.503142 sec
+Time spent in _forward_impl was  0.25453734397888184
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013344049453735352
+Time spent in bn1 is: 0.004132986068725586
+Time spent in relu is: 0.0016605854034423828
+Time spent in maxpool is: 0.0022039413452148438
+Time spent in A is: 0.021341562271118164
+Time spent in B is: 0.2339770793914795
+Time spent in C is: 0.00038242340087890625
+Time spent in _forward_impl was  0.2558434009552002
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2565491199493408
+[tensor([[ 8.9913,  7.9831,  9.7446,  ..., -0.0931, -0.2872, -0.0414],
+        [ 8.7602,  7.6091,  9.5548,  ..., -0.1588, -0.1293, -0.3874],
+        [10.9041,  9.3152, 12.6301,  ..., -0.2908, -0.4162, -0.1843],
+        ...,
+        [ 8.8332,  8.0015,  9.8172,  ...,  0.0280, -0.4236, -0.0990],
+        [ 9.4225,  8.2168,  9.9561,  ..., -0.2302, -0.2444, -0.3104],
+        [ 9.5600,  8.1835, 10.9551,  ..., -0.1520, -0.3462, -0.1635]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[ 1.0415e+01,  8.8142e+00,  1.1922e+01,  ...,  8.2868e-02,
+         -5.6569e-01, -2.9344e-01],
+        [ 9.2025e+00,  7.9715e+00,  1.0087e+01,  ..., -1.2740e-01,
+         -3.2289e-01, -1.5309e-01],
+        [ 9.1536e+00,  7.8207e+00,  9.9315e+00,  ..., -1.9664e-01,
+         -1.4229e-02, -2.2757e-01],
+        ...,
+        [ 8.8344e+00,  7.5951e+00,  1.0092e+01,  ..., -4.0433e-03,
+         -3.1834e-04, -3.2064e-01],
+        [ 9.4024e+00,  8.2137e+00,  1.0643e+01,  ..., -9.4157e-02,
+         -1.5990e-01, -2.1063e-01],
+        [ 9.3329e+00,  7.9894e+00,  1.0101e+01,  ..., -7.2327e-02,
+         -4.2057e-01, -3.0770e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.007582902908325195
+The time took extra here for 2 GPUs is: 0.27027368545532227
+Time spent in model is 0.27825403213500977
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 2.6543686389923096
+Time spent in criterion is 0.0004429817199707031
+Before going into the rest
+The time took for accuracy is: 0.0004899501800537109
+The time took for three update functions is: 0.0003120899200439453
+The time took for zero_grad(): 0.0010986328125
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00025391578674316406
+Time spent in _forward_cls.backward: 0.0008530616760253906
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.005988597869873047
+The time spent right after Variable._execution_engine.run_backward is: 0.5032501220703125
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.503382682800293
+The time took for backward(): 0.5035967826843262
+The time took for step(): 0.005507707595825195
+Time spent in the rest is 0.511005163192749
+Batch 2
+Data wait time is 0.0004029273986816406.
+Transfer time is 0.0003161430358886719.
+Compute time is 0.7898461818695068.
+Total data wait time is: 3.088029384613037
+Total compute time is: 5.147629976272583
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0066149234771728516
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.007139921188354492
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.006126880645751953
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013389348983764648
+Time spent in bn1 is: 0.004006862640380859
+Time spent in relu is: 0.0016012191772460938
+Time spent in maxpool is: 0.0021331310272216797
+Time spent in A is: 0.02113056182861328
+Time spent in B is: 0.23302435874938965
+Time spent in C is: 0.0003402233123779297
+Time spent in _forward_impl was  0.25463390350341797
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012748003005981445
+Time spent in bn1 is: 0.00588679313659668
+Time spent in relu is: 0.0021517276763916016
+Time spent in maxpool is: 0.002197742462158203
+Time spent in A is: 0.02298426628112793
+Time spent in B is: 0.23265886306762695
+Time spent in C is: 0.0004134178161621094
+Time spent in _forward_impl was  0.25624847412109375
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.25751328468322754
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000003
+Time taken by sec2 is : 0.000224
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000117
+Time taken by two streams is : 0.000005
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000005
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000010
+Time taken by thread_main is : 0.533380
+Time taken by execute_with_graph_task is : 0.533450
+Time taken by sec3 is : 0.533586
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000005
+After engine.execute. 
+Time taken by engine.execute is : 0.533841 sec
+[tensor([[13.6885, 12.7641,  7.4264,  ..., -0.2537, -0.3910, -0.2563],
+        [13.9858, 13.0268,  7.6803,  ..., -0.2561, -0.2288, -0.3065],
+        [13.7455, 12.9597,  8.1409,  ..., -0.0203, -0.3646, -0.5500],
+        ...,
+        [14.0018, 12.9221,  7.7803,  ..., -0.0539, -0.6672, -0.4688],
+        [13.8532, 12.8666,  7.5051,  ..., -0.0800, -0.2595, -0.2780],
+        [13.4513, 12.6301,  7.4921,  ..., -0.1159, -0.2516, -0.2826]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[13.2875, 12.4988,  7.2444,  ..., -0.0776, -0.0619, -0.2804],
+        [13.7832, 12.6077,  7.0956,  ..., -0.3148, -0.2260, -0.2648],
+        [14.3664, 13.1319,  7.9631,  ..., -0.2477, -0.2179, -0.3856],
+        ...,
+        [13.9643, 13.1704,  8.0704,  ..., -0.1257, -0.3165, -0.3928],
+        [13.9875, 12.7546,  7.6448,  ..., -0.2127, -0.0364, -0.4833],
+        [13.3683, 12.3885,  7.0595,  ..., -0.1692, -0.0571, -0.2294]],
+       device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008256912231445312
+The time took extra here for 2 GPUs is: 0.2718970775604248
+Time spent in model is 0.2807629108428955
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 4.020234107971191
+Time spent in criterion is 0.0006265640258789062
+Before going into the rest
+The time took for accuracy is: 0.0006563663482666016
+The time took for three update functions is: 0.0003848075866699219
+The time took for zero_grad(): 0.0014879703521728516
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.000270843505859375
+Time spent in _forward_cls.backward: 0.0008881092071533203
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.035509586334228516
+The time spent right after Variable._execution_engine.run_backward is: 0.5339782238006592
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5341038703918457
+The time took for backward(): 0.5343475341796875
+The time took for step(): 0.005452632904052734
+Time spent in the rest is 0.5423293113708496
+Batch 3
+Data wait time is 0.00039649009704589844.
+Transfer time is 0.00038552284240722656.
+Compute time is 0.8238804340362549.
+Total data wait time is: 3.088425874710083
+Total compute time is: 5.971510410308838
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006852388381958008
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.007318258285522461
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.006203413009643555
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013005256652832031
+Time spent in bn1 is: 0.004151344299316406
+Time spent in relu is: 0.0016503334045410156
+Time spent in maxpool is: 0.0022945404052734375
+Time spent in A is: 0.02110147476196289
+Time spent in B is: 0.23336529731750488
+Time spent in C is: 0.0003056526184082031
+Time spent in _forward_impl was  0.25491809844970703
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013458251953125
+Time spent in bn1 is: 0.00413823127746582
+Time spent in relu is: 0.0016825199127197266
+Time spent in maxpool is: 0.002213716506958008
+Time spent in A is: 0.021492719650268555
+Time spent in B is: 0.23421454429626465
+Time spent in C is: 0.00041484832763671875
+Time spent in _forward_impl was  0.2563352584838867
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2572050094604492
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000118
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000070
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000000
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000007
+Time taken by thread_main is : 0.502378
+Time taken by execute_with_graph_task is : 0.502417
+Time taken by sec3 is : 0.502497
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.502633 sec
+[tensor([[ 2.0223e+01,  1.9092e+01,  8.4516e+00,  ..., -1.9638e-01,
+          1.6362e-02, -1.4510e-01],
+        [ 1.9164e+01,  1.7902e+01,  8.1486e+00,  ..., -1.6531e-01,
+         -4.0352e-02,  4.1268e-02],
+        [ 1.9336e+01,  1.9098e+01,  9.2812e+00,  ..., -3.9977e-02,
+         -3.7482e-01, -4.2052e-01],
+        ...,
+        [ 2.0107e+01,  1.9378e+01,  8.6829e+00,  ..., -5.6706e-02,
+         -3.3751e-01,  1.2817e-01],
+        [ 1.8942e+01,  1.8835e+01,  8.9781e+00,  ...,  1.8063e-03,
+         -4.7346e-01, -3.2042e-01],
+        [ 2.1816e+01,  2.0916e+01,  1.1059e+01,  ..., -3.1613e-01,
+         -2.5670e-01, -4.6305e-01]], device='cuda:0', grad_fn=<AddmmBackward>), tensor([[ 2.0437e+01,  1.9149e+01,  8.7746e+00,  ..., -3.0284e-01,
+         -2.2032e-01,  4.5402e-02],
+        [ 2.0603e+01,  1.9650e+01,  1.0013e+01,  ..., -1.1390e-01,
+         -4.9322e-01, -5.6458e-01],
+        [ 1.9719e+01,  1.8894e+01,  9.0814e+00,  ..., -2.4736e-01,
+          6.5487e-02, -1.1936e-01],
+        ...,
+        [ 1.9689e+01,  1.9021e+01,  8.7571e+00,  ..., -7.2224e-02,
+         -4.6171e-01, -2.5313e-01],
+        [ 2.0264e+01,  1.9251e+01,  8.9414e+00,  ..., -1.2080e-01,
+         -3.7377e-01, -7.9102e-03],
+        [ 1.8926e+01,  1.7769e+01,  8.5321e+00,  ..., -1.5451e-01,
+         -3.2331e-01, -2.4189e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008385658264160156
+The time took extra here for 2 GPUs is: 0.27179408073425293
+Time spent in model is 0.28058648109436035
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 5.117988586425781
+Time spent in criterion is 0.0004398822784423828
+Before going into the rest
+The time took for accuracy is: 0.0003604888916015625
+The time took for three update functions is: 0.00019669532775878906
+The time took for zero_grad(): 0.0008440017700195312
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00030517578125
+Time spent in _forward_cls.backward: 0.0008678436279296875
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.005797863006591797
+The time spent right after Variable._execution_engine.run_backward is: 0.5027298927307129
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5028109550476074
+The time took for backward(): 0.5029473304748535
+The time took for step(): 0.005360126495361328
+Time spent in the rest is 0.5097086429595947
+Batch 4
+Data wait time is 0.0004143714904785156.
+Transfer time is 0.0002942085266113281.
+Compute time is 0.7908511161804199.
+Total data wait time is: 3.0888402462005615
+Total compute time is: 6.762361526489258
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00635075569152832
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.00684046745300293
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.005914211273193359
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012681961059570312
+Time spent in bn1 is: 0.004063844680786133
+Time spent in relu is: 0.001650094985961914
+Time spent in maxpool is: 0.0022051334381103516
+Time spent in A is: 0.02060103416442871
+Time spent in B is: 0.23320508003234863
+Time spent in C is: 0.0004553794860839844
+Time spent in _forward_impl was  0.2544856071472168
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013268470764160156
+Time spent in bn1 is: 0.004143238067626953
+Time spent in relu is: 0.0016374588012695312
+Time spent in maxpool is: 0.0022482872009277344
+Time spent in A is: 0.021297454833984375
+Time spent in B is: 0.23393821716308594
+Time spent in C is: 0.0003917217254638672
+Time spent in _forward_impl was  0.25577259063720703
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2565746307373047
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000164
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000085
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000000
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000020
+Time taken by thread_main is : 0.503646
+Time taken by execute_with_graph_task is : 0.503702
+Time taken by sec3 is : 0.503797
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.503981 sec
+[tensor([[26.8372, 27.6008, 13.5783,  ..., -0.3611, -0.3916, -0.5028],
+        [26.0742, 26.1623, 12.5070,  ..., -0.0975, -0.4579, -0.2198],
+        [26.6022, 26.1289, 11.8823,  ..., -0.1786, -0.2863, -0.1823],
+        ...,
+        [26.1507, 26.1559, 13.3237,  ..., -0.0745, -0.4743, -0.4663],
+        [25.5223, 25.6071, 12.5477,  ..., -0.0407, -0.4738, -0.4818],
+        [28.5440, 28.0590, 12.1518,  ..., -0.1514, -0.3127,  0.0450]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[26.2922, 25.8119, 11.6183,  ..., -0.0737, -0.1926,  0.1269],
+        [30.8500, 31.8397, 13.8643,  ...,  0.1291,  0.0745, -0.5076],
+        [26.6932, 26.6205, 12.7382,  ..., -0.3044, -0.2133, -0.4106],
+        ...,
+        [27.9157, 27.4484, 11.8188,  ..., -0.0936, -0.2976, -0.2424],
+        [44.1681, 44.9853, 25.5883,  ..., -0.8426, -1.0141, -1.4885],
+        [26.1127, 26.2714, 12.6118,  ..., -0.0455, -0.4685, -0.1591]],
+       device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008309602737426758
+The time took extra here for 2 GPUs is: 0.2707984447479248
+Time spent in model is 0.2792832851409912
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 7.7414960861206055
+Time spent in criterion is 0.0006232261657714844
+Before going into the rest
+The time took for accuracy is: 0.0006427764892578125
+The time took for three update functions is: 0.00023484230041503906
+The time took for zero_grad(): 0.0008115768432617188
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0002789497375488281
+Time spent in _forward_cls.backward: 0.0008609294891357422
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.007055997848510742
+The time spent right after Variable._execution_engine.run_backward is: 0.5040857791900635
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5041623115539551
+The time took for backward(): 0.5043573379516602
+The time took for step(): 0.0058498382568359375
+Time spent in the rest is 0.5118963718414307
+Batch 5
+Data wait time is 0.0003559589385986328.
+Transfer time is 0.00032258033752441406.
+Compute time is 0.7919919490814209.
+Total data wait time is: 3.08919620513916
+Total compute time is: 7.554353475570679
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006426572799682617
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.0069370269775390625
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.0064432621002197266
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.01386117935180664
+Time spent in bn1 is: 0.004056215286254883
+Time spent in relu is: 0.001657247543334961
+Time spent in maxpool is: 0.002190113067626953
+Time spent in A is: 0.021764755249023438
+Time spent in B is: 0.2334918975830078
+Time spent in C is: 0.0006182193756103516
+Time spent in _forward_impl was  0.2559998035430908
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012820720672607422
+Time spent in bn1 is: 0.004439592361450195
+Time spent in relu is: 0.0016505718231201172
+Time spent in maxpool is: 0.002260446548461914
+Time spent in A is: 0.02117133140563965
+Time spent in B is: 0.23356413841247559
+Time spent in C is: 0.0008313655853271484
+Time spent in _forward_impl was  0.25574731826782227
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.257556676864624
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000102
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000061
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000003
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000013
+Time taken by queue->push+unlock is : 0.000007
+Time taken by thread_main is : 0.502558
+Time taken by execute_with_graph_task is : 0.502616
+Time taken by sec3 is : 0.502689
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.502811 sec
+[tensor([[ 3.5666e+01,  3.9494e+01,  2.0044e+01,  ..., -2.1414e-01,
+         -4.0312e-02, -8.3524e-01],
+        [ 2.9723e+01,  3.0494e+01,  1.6193e+01,  ..., -3.6957e-01,
+         -2.0025e-01, -1.8157e-01],
+        [ 3.2477e+01,  3.3989e+01,  1.6676e+01,  ..., -3.4525e-01,
+         -4.0316e-01, -2.1218e-01],
+        ...,
+        [ 4.0892e+01,  4.4067e+01,  2.6406e+01,  ..., -1.7567e-01,
+         -5.0797e-01, -1.0236e+00],
+        [ 3.1013e+01,  3.2043e+01,  1.6746e+01,  ..., -3.7819e-01,
+         -4.3223e-01, -1.5586e-01],
+        [ 5.2582e+01,  5.8018e+01,  3.4975e+01,  ..., -2.2845e-01,
+         -1.2390e+00, -1.3863e+00]], device='cuda:0', grad_fn=<AddmmBackward>), tensor([[ 3.2030e+01,  3.2697e+01,  1.6321e+01,  ..., -5.7146e-01,
+         -3.3024e-01,  3.4641e-02],
+        [ 3.3630e+01,  3.5584e+01,  1.8138e+01,  ..., -4.5745e-01,
+         -3.5860e-01, -1.7753e-02],
+        [ 3.1186e+01,  3.1916e+01,  1.6704e+01,  ..., -2.4341e-01,
+         -6.1323e-01,  1.0195e-02],
+        ...,
+        [ 3.5777e+01,  3.7590e+01,  1.7796e+01,  ..., -2.0669e-01,
+         -1.4780e-01, -6.0245e-01],
+        [ 3.2499e+01,  3.4012e+01,  1.6993e+01,  ..., -3.4101e-01,
+         -1.2749e-01, -4.1139e-01],
+        [ 3.4576e+01,  3.5875e+01,  1.7315e+01,  ..., -2.5721e-01,
+         -2.4333e-01, -3.8640e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.009634733200073242
+The time took extra here for 2 GPUs is: 0.273634672164917
+Time spent in model is 0.2825343608856201
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 10.714670181274414
+Time spent in criterion is 0.0005228519439697266
+Before going into the rest
+The time took for accuracy is: 0.0004930496215820312
+The time took for three update functions is: 0.00016832351684570312
+The time took for zero_grad(): 0.0008387565612792969
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0002636909484863281
+Time spent in _forward_cls.backward: 0.0008635520935058594
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.006007194519042969
+The time spent right after Variable._execution_engine.run_backward is: 0.5029070377349854
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5029873847961426
+The time took for backward(): 0.5032012462615967
+The time took for step(): 0.005479097366333008
+Time spent in the rest is 0.5101804733276367
+Batch 6
+Data wait time is 0.0006768703460693359.
+Transfer time is 0.0005609989166259766.
+Compute time is 0.79337477684021.
+Total data wait time is: 3.0898730754852295
+Total compute time is: 8.347728252410889
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0065310001373291016
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.0070378780364990234
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.006163120269775391
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012709856033325195
+Time spent in bn1 is: 0.004182100296020508
+Time spent in relu is: 0.0016551017761230469
+Time spent in maxpool is: 0.0021820068359375
+Time spent in A is: 0.02072906494140625
+Time spent in B is: 0.2330646514892578
+Time spent in C is: 0.00031828880310058594
+Time spent in _forward_impl was  0.2542572021484375
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.01335000991821289
+Time spent in bn1 is: 0.004182100296020508
+Time spent in relu is: 0.0016477108001708984
+Time spent in maxpool is: 0.002226114273071289
+Time spent in A is: 0.021405935287475586
+Time spent in B is: 0.23362088203430176
+Time spent in C is: 0.0003762245178222656
+Time spent in _forward_impl was  0.2555508613586426
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2563512325286865
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000003
+Time taken by sec2 is : 0.000120
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000095
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000008
+Time taken by thread_main is : 0.503035
+Time taken by execute_with_graph_task is : 0.503072
+Time taken by sec3 is : 0.503189
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.503329 sec
+[tensor([[25.6873, 20.7084, 17.6871,  ..., -0.2137, -0.1684, -0.2625],
+        [25.0714, 20.7034, 18.1004,  ..., -0.2780, -0.3627, -0.1802],
+        [26.5271, 21.6163, 18.5122,  ..., -0.4544, -0.2107, -0.1338],
+        ...,
+        [24.7055, 19.8185, 16.9084,  ..., -0.3051, -0.2296, -0.1097],
+        [37.4916, 31.5961, 29.0662,  ..., -0.2741, -0.6245, -0.5271],
+        [23.3426, 18.9059, 15.6228,  ..., -0.3235, -0.2423, -0.2187]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[ 5.2023e+01,  4.6004e+01,  4.1669e+01,  ..., -1.4784e-01,
+         -6.7763e-01, -4.4595e-01],
+        [ 2.6579e+01,  2.1686e+01,  1.7227e+01,  ..., -3.3621e-01,
+         -1.5774e-01, -2.5294e-01],
+        [ 2.6532e+01,  2.1511e+01,  1.7186e+01,  ..., -2.4944e-01,
+          1.4555e-02, -4.9607e-01],
+        ...,
+        [ 2.6366e+01,  2.1933e+01,  1.8973e+01,  ..., -1.7395e-01,
+         -2.4160e-01, -3.3413e-01],
+        [ 2.7670e+01,  2.1822e+01,  1.7520e+01,  ..., -3.7396e-01,
+         -5.1067e-02, -1.3883e-01],
+        [ 5.4259e+01,  4.8681e+01,  4.3972e+01,  ...,  4.1699e-02,
+         -1.0373e+00, -7.0159e-01]], device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008829116821289062
+The time took extra here for 2 GPUs is: 0.271343469619751
+Time spent in model is 0.2801339626312256
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 9.055455207824707
+Time spent in criterion is 0.0006556510925292969
+Before going into the rest
+The time took for accuracy is: 0.00046443939208984375
+The time took for three update functions is: 0.00020051002502441406
+The time took for zero_grad(): 0.0008473396301269531
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00024580955505371094
+Time spent in _forward_cls.backward: 0.0008060932159423828
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.006493091583251953
+The time spent right after Variable._execution_engine.run_backward is: 0.5034265518188477
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5035076141357422
+The time took for backward(): 0.5036749839782715
+The time took for step(): 0.005774021148681641
+Time spent in the rest is 0.5109612941741943
+Batch 7
+Data wait time is 0.00045561790466308594.
+Transfer time is 0.00024890899658203125.
+Compute time is 0.7919347286224365.
+Total data wait time is: 3.0903286933898926
+Total compute time is: 9.139662981033325
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006792545318603516
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.007224559783935547
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.006426095962524414
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012756824493408203
+Time spent in bn1 is: 0.00416874885559082
+Time spent in relu is: 0.0016868114471435547
+Time spent in maxpool is: 0.0022346973419189453
+Time spent in A is: 0.020847082138061523
+Time spent in B is: 0.23354291915893555
+Time spent in C is: 0.0003917217254638672
+Time spent in _forward_impl was  0.2549269199371338
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013639450073242188
+Time spent in bn1 is: 0.0042095184326171875
+Time spent in relu is: 0.0016636848449707031
+Time spent in maxpool is: 0.0022399425506591797
+Time spent in A is: 0.021752595901489258
+Time spent in B is: 0.23318099975585938
+Time spent in C is: 0.0007991790771484375
+Time spent in _forward_impl was  0.25588178634643555
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.25692009925842285
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000003
+Time taken by sec2 is : 0.000205
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000137
+Time taken by two streams is : 0.000005
+Time taken by input_buffer.add is : 0.000003
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000003
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000012
+Time taken by thread_main is : 0.503242
+Time taken by execute_with_graph_task is : 0.503296
+Time taken by sec3 is : 0.503452
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.503680 sec
+[tensor([[ 1.7493e+01,  1.4281e+01,  1.6886e+01,  ..., -3.3468e-01,
+         -1.0162e-01, -1.7643e-01],
+        [ 1.7305e+01,  1.4647e+01,  1.6478e+01,  ..., -2.9937e-01,
+         -1.7436e-01, -1.0858e-01],
+        [ 1.6881e+01,  1.3757e+01,  1.5993e+01,  ..., -3.3260e-01,
+         -2.4382e-01, -2.1197e-01],
+        ...,
+        [ 1.7665e+01,  1.4735e+01,  1.7067e+01,  ..., -4.2443e-01,
+         -2.6686e-01, -1.6539e-01],
+        [ 1.8861e+01,  1.5733e+01,  1.8367e+01,  ..., -2.1957e-01,
+         -1.6539e-01, -1.4272e-02],
+        [ 1.8353e+01,  1.5304e+01,  1.8227e+01,  ..., -2.3750e-01,
+         -1.8517e-01, -1.9503e-01]], device='cuda:0', grad_fn=<AddmmBackward>), tensor([[17.6805, 14.7276, 17.2981,  ..., -0.5042, -0.2684, -0.0597],
+        [18.5949, 15.1008, 17.8658,  ..., -0.4343, -0.2373, -0.2200],
+        [17.6867, 14.7395, 17.3935,  ..., -0.2968, -0.1947, -0.0860],
+        ...,
+        [18.5626, 15.1631, 17.5255,  ..., -0.3580, -0.1283, -0.1721],
+        [16.9931, 13.9928, 16.4777,  ..., -0.3198, -0.1437, -0.0788],
+        [26.0128, 21.0098, 25.5456,  ..., -0.2495, -0.4163, -0.0631]],
+       device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008571386337280273
+The time took extra here for 2 GPUs is: 0.27191758155822754
+Time spent in model is 0.2806715965270996
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 8.439740180969238
+Time spent in criterion is 0.0006422996520996094
+Before going into the rest
+The time took for accuracy is: 0.0006165504455566406
+The time took for three update functions is: 0.00037288665771484375
+The time took for zero_grad(): 0.0013971328735351562
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0002951622009277344
+Time spent in _forward_cls.backward: 0.00087738037109375
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.0059566497802734375
+The time spent right after Variable._execution_engine.run_backward is: 0.5037658214569092
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5038418769836426
+The time took for backward(): 0.5040647983551025
+The time took for step(): 0.005455493927001953
+Time spent in the rest is 0.5119068622589111
+Batch 8
+Data wait time is 0.0007009506225585938.
+Transfer time is 0.0004897117614746094.
+Compute time is 0.7933845520019531.
+Total data wait time is: 3.091029644012451
+Total compute time is: 9.933047533035278
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006339550018310547
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.006657838821411133
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.0059087276458740234
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012671232223510742
+Time spent in bn1 is: 0.00414729118347168
+Time spent in relu is: 0.001649618148803711
+Time spent in maxpool is: 0.0021741390228271484
+Time spent in A is: 0.02064228057861328
+Time spent in B is: 0.23287034034729004
+Time spent in C is: 0.00027179718017578125
+Time spent in _forward_impl was  0.25391721725463867
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013336658477783203
+Time spent in bn1 is: 0.004171609878540039
+Time spent in relu is: 0.001605987548828125
+Time spent in maxpool is: 0.002221345901489258
+Time spent in A is: 0.021335601806640625
+Time spent in B is: 0.23343610763549805
+Time spent in C is: 0.00038695335388183594
+Time spent in _forward_impl was  0.2552988529205322
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.25609850883483887
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000103
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000081
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000008
+Time taken by thread_main is : 0.504690
+Time taken by execute_with_graph_task is : 0.504719
+Time taken by sec3 is : 0.504809
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000002
+After engine.execute. 
+Time taken by engine.execute is : 0.504928 sec
+[tensor([[ 1.2011e+01,  1.0610e+01,  1.5623e+01,  ..., -2.3709e-01,
+         -1.5534e-01, -1.5488e-01],
+        [ 1.1426e+01,  1.0263e+01,  1.4582e+01,  ..., -1.2538e-01,
+         -8.3916e-02, -2.9819e-01],
+        [ 1.2004e+01,  1.0518e+01,  1.5432e+01,  ..., -2.1740e-01,
+         -1.9029e-01, -3.7490e-02],
+        ...,
+        [ 1.4116e+02,  1.2069e+02,  1.8945e+02,  ...,  7.1250e-01,
+         -1.9316e+00, -9.4296e-01],
+        [ 1.1462e+01,  1.0417e+01,  1.4995e+01,  ..., -1.8312e-01,
+         -1.8598e-01, -1.5080e-01],
+        [ 1.1495e+01,  1.0485e+01,  1.4989e+01,  ..., -2.3823e-01,
+         -5.7906e-02, -1.2343e-01]], device='cuda:0', grad_fn=<AddmmBackward>), tensor([[11.5475, 10.1320, 15.2379,  ..., -0.3352, -0.2772, -0.0930],
+        [12.5070, 11.0144, 16.3935,  ..., -0.2262, -0.2152, -0.1523],
+        [12.1881, 10.9639, 16.0940,  ..., -0.2923, -0.1463, -0.1223],
+        ...,
+        [15.9455, 13.9235, 20.8982,  ..., -0.1893, -0.2376, -0.2396],
+        [11.8077, 10.5491, 14.9785,  ..., -0.1610, -0.0939, -0.2016],
+        [13.6857, 11.9678, 16.9634,  ..., -0.2818, -0.0924, -0.0901]],
+       device='cuda:1', grad_fn=<AddmmBackward>)]
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008521795272827148
+The time took extra here for 2 GPUs is: 0.27052903175354004
+Time spent in model is 0.2784616947174072
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 9.0689115524292
+Time spent in criterion is 0.0005838871002197266
+Before going into the rest
+The time took for accuracy is: 0.0007166862487792969
+The time took for three update functions is: 0.00034999847412109375
+The time took for zero_grad(): 0.0012028217315673828
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0003077983856201172
+Time spent in _forward_cls.backward: 0.0008566379547119141
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.008092641830444336
+The time spent right after Variable._execution_engine.run_backward is: 0.5049853324890137
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5050344467163086
+The time took for backward(): 0.5051476955413818
+The time took for step(): 0.003115415573120117
+Time spent in the rest is 0.5105326175689697
+Batch 9
+Data wait time is 0.0004763603210449219.
+Transfer time is 0.0003540515899658203.
+Compute time is 0.7897169589996338.
+Total data wait time is: 3.091506004333496
+Total compute time is: 10.722764492034912
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 256
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 3, 224, 224]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.006910800933837891
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.007386445999145508
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+If I have 2 devices I come here. I want to know the time of the following. 
+I got into replicate.py in parallel directory. 
+The time took for replicate is: 0.00692439079284668
+len of inputs: 2, kwargs are: ({}, {})
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+When having 2 GPUs, I'm calling forward from /home/cc/pytorch-meng/torch/nn/parallel/parallel_apply.py.
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012804031372070312
+Time spent in bn1 is: 0.0059795379638671875
+Time spent in relu is: 0.0021948814392089844
+Time spent in maxpool is: 0.0022194385528564453
+Time spent in A is: 0.02319788932800293
+Time spent in B is: 0.24228644371032715
+Time spent in C is: 0.0004718303680419922
+Time spent in _forward_impl was  0.26609182357788086
+Getting out of _forward_impl in resnet.py
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.013707637786865234
+Time spent in bn1 is: 0.0039942264556884766
+Time spent in relu is: 0.0016486644744873047
+Time spent in maxpool is: 0.0021877288818359375
+Time spent in A is: 0.021538257598876953
+Time spent in B is: 0.2449016571044922
+Time spent in C is: 0.0005471706390380859
+Time spent in _forward_impl was  0.26712989807128906
+Getting out of _forward_impl in resnet.py
+The time took for parallel_apply is: 0.2680628299713135
+[tensor([[10.9807,  9.9724, 13.6789,  ..., -0.1999, -0.1491, -0.0292],
+        [10.1201,  9.4404, 12.4503,  ..., -0.1585, -0.0439, -0.1485],
+        [ 9.2819,  8.6985, 11.9667,  ..., -0.0745, -0.1362, -0.1762],
+        ...,
+        [ 8.3043,  7.9378, 10.7552,  ..., -0.1283, -0.1603, -0.0844],
+        [ 8.6892,  8.1100, 10.9795,  ..., -0.1795, -0.1523, -0.0912],
+        [11.6228, 11.0471, 13.9666,  ..., -0.1587, -0.0404, -0.0969]],
+       device='cuda:0', grad_fn=<AddmmBackward>), tensor([[10.8150, 10.1251, 13.9392,  ..., -0.2111, -0.1952, -0.0641],
+        [10.9195, 10.1557, 13.7003,  ..., -0.1792, -0.2015, -0.1401],
+        [18.1313, 16.3751, 22.1380,  ..., -0.1410, -0.1967, -0.2610],
+        ...,
+        [10.1733,  9.4767, 13.0019,  ..., -0.2091, -0.1741, -0.1176],
+        [10.3510,  9.7832, 12.9046,  ..., -0.1009, -0.1222, -0.1709],
+        [10.1249,  9.3852, 12.9012,  ..., -0.1394, -0.2048, -0.0793]],
+       device='cuda:1', grad_fn=<AddmmBackward>)]
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000105
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000062
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000007
+Time taken by thread_main is : 0.502510
+Time taken by execute_with_graph_task is : 0.502547
+Time taken by sec3 is : 0.502618
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.502743 sec
+Similar to scatter, gather also takes the inputs to /home/cc/pytorch-meng/torch/nn/parallel/comm.py
+It then leverages on using ._C._gather. 
+The time took for gather is: 0.008768320083618164
+The time took extra here for 2 GPUs is: 0.2837555408477783
+Time spent in model is 0.29244256019592285
+Before going into criterion
+The shape of output before criterion is: torch.Size([256, 1000])
+The shape of target before criterion is: torch.Size([256])
+The loss is: 5.168877601623535
+Time spent in criterion is 0.0006282329559326172
+Before going into the rest
+The time took for accuracy is: 0.0006506443023681641
+The time took for three update functions is: 0.0003523826599121094
+The time took for zero_grad(): 0.0009982585906982422
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+1
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 77
+-- call stack of Function forward in backward in: /home/cc/pytorch-meng/torch/nn/parallel/_functions.py
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 110, in apply
+    temp=self._forward_cls.backward(self, *args)
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py", line 83, in backward
+    for line in traceback.format_stack():
+---
+
+in /home/cc/pytorch-meng/torch/nn/parallel/_functions.py, the grad_output's shape is: torch.Size([256, 1000])
+Got into _functions.py Scatter's forward
+The length of tensor is: torch.Size([256, 1000]).
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.00023603439331054688
+Time spent in _forward_cls.backward: 0.0008573532104492188
+-- call stack of apply
+File "/home/cc/anaconda3/lib/python3.9/site-packages/torch/autograd/function.py", line 94, in apply
+    for line in traceback.format_stack():
+---
+I got into apply() in /home/cc/pytorch-meng/torch/autograd/function.py
+The len(args) in apply(self, *args) is: 
+124
+backward is implemented in file: /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py  starting_line_number: 33
+I got into @staticmethod backward() in /home/cc/anaconda3/lib/python3.9/site-packages/torch/nn/parallel/_functions.py
+I got into forward() in ReduceAddCoalesced()
+Time spent in _forward_cls.backward: 0.006083488464355469
+The time spent right after Variable._execution_engine.run_backward is: 0.5028481483459473
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5029606819152832
+The time took for backward(): 0.5031311511993408
+The time took for step(): 0.005757331848144531
+Time spent in the rest is 0.5108897686004639
+Batch 10
+Data wait time is 0.00029587745666503906.
+Transfer time is 0.00029397010803222656.
+Compute time is 0.8041176795959473.
+Total data wait time is: 3.091801881790161
+Total compute time is: 11.52688217163086
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE

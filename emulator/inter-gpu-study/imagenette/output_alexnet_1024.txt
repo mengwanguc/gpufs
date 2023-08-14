@@ -1,0 +1,423 @@
+=> creating model 'alexnet'
+DataParallel will divide and allocate batch_size to all available GPUs
+torch/nn/parallel/data_parallel.py: device_ids: [0, 1]
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.025865793228149414
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 1.6969804763793945
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 3.079871416091919
+Before going into criterion
+Time spent in criterion is 0.0028014183044433594
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0019080638885498047
+Time spent in the rest is 0.6194100379943848
+Batch 0
+Data wait time is 10.20914626121521.
+Transfer time is 0.00041961669921875.
+Compute time is 3.702359914779663.
+Total data wait time is: 10.20914626121521
+Total compute time is: 3.702359914779663
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.024940967559814453
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.025246858596801758
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.37509727478027344
+Before going into criterion
+Time spent in criterion is 0.00036787986755371094
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0018837451934814453
+Time spent in the rest is 0.6200475692749023
+Batch 1
+Data wait time is 0.00044846534729003906.
+Transfer time is 0.0003616809844970703.
+Compute time is 0.9957232475280762.
+Total data wait time is: 10.2095947265625
+Total compute time is: 4.698083162307739
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.025013446807861328
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.02529764175415039
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.37473106384277344
+Before going into criterion
+Time spent in criterion is 0.0002155303955078125
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0018792152404785156
+Time spent in the rest is 0.6198527812957764
+Batch 2
+Data wait time is 0.00022029876708984375.
+Transfer time is 0.0001316070556640625.
+Compute time is 0.9949767589569092.
+Total data wait time is: 10.20981502532959
+Total compute time is: 5.693059921264648
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.024971961975097656
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.02530503273010254
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.3763246536254883
+Before going into criterion
+Time spent in criterion is 0.00035309791564941406
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.002090930938720703
+Time spent in the rest is 0.6198408603668213
+Batch 3
+Data wait time is 0.00012993812561035156.
+Transfer time is 0.00013184547424316406.
+Compute time is 0.9967169761657715.
+Total data wait time is: 10.2099449634552
+Total compute time is: 6.68977689743042
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.025003671646118164
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.02544689178466797
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.3779606819152832
+Before going into criterion
+Time spent in criterion is 0.00033926963806152344
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0019550323486328125
+Time spent in the rest is 0.6200151443481445
+Batch 4
+Data wait time is 2.3815767765045166.
+Transfer time is 0.0003364086151123047.
+Compute time is 0.9985451698303223.
+Total data wait time is: 12.591521739959717
+Total compute time is: 7.688322067260742
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.024929046630859375
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.025298595428466797
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.3761436939239502
+Before going into criterion
+Time spent in criterion is 0.0003070831298828125
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0018570423126220703
+Time spent in the rest is 0.6195447444915771
+Batch 5
+Data wait time is 0.0001430511474609375.
+Transfer time is 0.00013589859008789062.
+Compute time is 0.9961285591125488.
+Total data wait time is: 12.591664791107178
+Total compute time is: 8.684450626373291
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.02497076988220215
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.025263547897338867
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.3771636486053467
+Before going into criterion
+Time spent in criterion is 0.00019097328186035156
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0017921924591064453
+Time spent in the rest is 0.6189277172088623
+Batch 6
+Data wait time is 0.00025725364685058594.
+Transfer time is 0.00010633468627929688.
+Compute time is 0.9963982105255127.
+Total data wait time is: 12.591922044754028
+Total compute time is: 9.680848836898804
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.02501988410949707
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.02538013458251953
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.3765428066253662
+Before going into criterion
+Time spent in criterion is 0.00021028518676757812
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0018777847290039062
+Time spent in the rest is 0.6192607879638672
+Batch 7
+Data wait time is 0.00010418891906738281.
+Transfer time is 0.00015044212341308594.
+Compute time is 0.9961462020874023.
+Total data wait time is: 12.592026233673096
+Total compute time is: 10.676995038986206
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 1024
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.024978160858154297
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.02534794807434082
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.391507625579834
+Before going into criterion
+Time spent in criterion is 0.0001475811004638672
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 1024.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0018036365509033203
+Time spent in the rest is 0.6199679374694824
+Batch 8
+Data wait time is 4.539206266403198.
+Transfer time is 0.00020623207092285156.
+Compute time is 1.0117673873901367.
+Total data wait time is: 17.131232500076294
+Total compute time is: 11.688762426376343
+args.gpu is None. I might put images onto GPU later in model. 
+The image is on cuda before model: False
+Before going into model()
+I got into forward funciton of DataParallel! ! !, the ids are [0, 1]
+Note that the images are not divided here yet. 
+The length of inputs is 1, and the length of kwargs is 0
+Check if the image is on CUDA: False
+I got into function scatter in data_parallel.py. 
+Got into scatter_kwargs. 
+Got into try. 
+The length of input right now in scatter_map: 1
+Got into isinstance(obj, tuple) and len(obj) > 0. 
+The length of input right now in scatter_map: 253
+Got into isinstance(obj, torch.Tensor). 
+Got into _functions.py Scatter's forward
+The length of tensor is: 253.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0062770843505859375
+Got into finally. 
+The length of the res is: 2
+After scatter inputs. 
+Length of inputs: 2, length of kwargs: 0
+The total time spent on scatter is: 0.0065937042236328125
+After scatter
+The length of inputs is 2, and the length of kwargs is 2
+Two inputs, the first one is in CUDA: True
+Two inputs, the second one is in CUDA: True
+Time spent in model() is 0.09543633460998535
+Before going into criterion
+Time spent in criterion is 0.00026869773864746094
+Before going into the rest
+Got into _functions.py Scatter's forward
+The length of tensor is: 253.
+out is None. So I'm here. the devices are: [0, 1]
+The time spent in _C_scatter is: 0.0006251335144042969
+Time spent in the rest is 0.16323614120483398
+Batch 9
+Data wait time is 0.00013589859008789062.
+Transfer time is 0.00010561943054199219.
+Compute time is 0.2590601444244385.
+Total data wait time is: 17.131368398666382
+Total compute time is: 11.947822570800781

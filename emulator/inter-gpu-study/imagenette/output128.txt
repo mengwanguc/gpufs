@@ -1,0 +1,807 @@
+/home/cc/gpufs/emulator/inter-gpu-study/imagenette/main-measure-time.py:104: UserWarning: You have chosen a specific GPU. This will completely disable data parallelism.
+  warnings.warn('You have chosen a specific GPU. This will completely '
+Use GPU: 1 for training
+=> creating model 'resnet18'
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000082
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000070
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000160
+Time taken by ready_queue is : 0.000006
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000002
+Time taken by queue->push+unlock is : 0.000002
+Time taken by thread_main is : 0.423742
+Time taken by execute_with_graph_task is : 0.423948
+Time taken by sec3 is : 0.424027
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.424164 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000099
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000098
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000000
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000007
+Time taken by thread_main is : 0.416542
+Time taken by execute_with_graph_task is : 0.416595
+Time taken by sec3 is : 0.416702
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.416822 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000001
+Time taken by sec2 is : 0.000107
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000077
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000017
+Time taken by thread_main is : 0.416113
+Time taken by execute_with_graph_task is : 0.416162
+Time taken by sec3 is : 0.416249
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.416381 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000118
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000105
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000009
+Time taken by thread_main is : 0.423994
+Time taken by execute_with_graph_task is : 0.424032
+Time taken by sec3 is : 0.424146
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.424300 sec
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.42843008041381836
+Time spent in bn1 is: 0.0051190853118896484
+Time spent in relu is: 0.0016660690307617188
+Time spent in maxpool is: 0.00318145751953125
+Time spent in A is: 0.438396692276001
+Time spent in B is: 0.24743914604187012
+Time spent in C is: 0.0006997585296630859
+Time spent in _forward_impl was  0.6866450309753418
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.6868832111358643
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 6.898871421813965
+Time spent in criterion is 0.0024721622467041016
+Before going into the rest
+The time took for accuracy is: 0.0007662773132324219
+The time took for three update functions is: 0.0002589225769042969
+The time took for zero_grad(): 0.00017642974853515625
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.4242820739746094
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5028753280639648
+The time took for backward(): 0.5031826496124268
+The time took for step(): 0.046895742416381836
+Time spent in the rest is 0.5512800216674805
+Batch 0
+Data wait time is 1.3017752170562744.
+Transfer time is 0.007240772247314453.
+Compute time is 1.2407574653625488.
+Total data wait time is: 1.3017752170562744
+Total compute time is: 1.2407574653625488
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012741327285766602
+Time spent in bn1 is: 0.010720014572143555
+Time spent in relu is: 0.0015900135040283203
+Time spent in maxpool is: 0.0021588802337646484
+Time spent in A is: 0.027210235595703125
+Time spent in B is: 0.23368310928344727
+Time spent in C is: 0.0008885860443115234
+Time spent in _forward_impl was  0.261885404586792
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2620227336883545
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 4.010121822357178
+Time spent in criterion is 0.0005009174346923828
+Before going into the rest
+The time took for accuracy is: 0.0006420612335205078
+The time took for three update functions is: 0.00022935867309570312
+The time took for zero_grad(): 0.0008533000946044922
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.41698455810546875
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.4949510097503662
+The time took for backward(): 0.49513936042785645
+The time took for step(): 0.003304004669189453
+Time spent in the rest is 0.5001680850982666
+Batch 1
+Data wait time is 0.00037479400634765625.
+Transfer time is 0.0064754486083984375.
+Compute time is 0.7627854347229004.
+Total data wait time is: 1.302150011062622
+Total compute time is: 2.003542900085449
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012738227844238281
+Time spent in bn1 is: 0.004036664962768555
+Time spent in relu is: 0.0016520023345947266
+Time spent in maxpool is: 0.002195596694946289
+Time spent in A is: 0.02062249183654785
+Time spent in B is: 0.23310065269470215
+Time spent in C is: 0.00034332275390625
+Time spent in _forward_impl was  0.2541639804840088
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2543060779571533
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 3.6680984497070312
+Time spent in criterion is 0.00033473968505859375
+Before going into the rest
+The time took for accuracy is: 0.0004475116729736328
+The time took for three update functions is: 0.0002129077911376953
+The time took for zero_grad(): 0.00070953369140625
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.416501522064209
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49444007873535156
+The time took for backward(): 0.49463438987731934
+The time took for step(): 0.002996206283569336
+Time spent in the rest is 0.49900054931640625
+Batch 2
+Data wait time is 0.0003826618194580078.
+Transfer time is 0.006518125534057617.
+Compute time is 0.753713846206665.
+Total data wait time is: 1.30253267288208
+Total compute time is: 2.7572567462921143
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012650012969970703
+Time spent in bn1 is: 0.003922700881958008
+Time spent in relu is: 0.001584768295288086
+Time spent in maxpool is: 0.0021436214447021484
+Time spent in A is: 0.020301103591918945
+Time spent in B is: 0.23328208923339844
+Time spent in C is: 0.00032901763916015625
+Time spent in _forward_impl was  0.25402116775512695
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2541477680206299
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 4.036449432373047
+Time spent in criterion is 0.0003764629364013672
+Before going into the rest
+The time took for accuracy is: 0.0004818439483642578
+The time took for three update functions is: 0.0002307891845703125
+The time took for zero_grad(): 0.0007505416870117188
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.42439842224121094
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.5024118423461914
+The time took for backward(): 0.5025813579559326
+The time took for step(): 0.0028951168060302734
+Time spent in the rest is 0.5069396495819092
+Batch 3
+Data wait time is 0.00023174285888671875.
+Transfer time is 0.00639653205871582.
+Compute time is 0.7615718841552734.
+Total data wait time is: 1.3027644157409668
+Total compute time is: 3.5188286304473877
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012758970260620117
+Time spent in bn1 is: 0.0038421154022216797
+Time spent in relu is: 0.001600503921508789
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000102
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000089
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000013
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000017
+Time taken by thread_main is : 0.416518
+Time taken by execute_with_graph_task is : 0.416566
+Time taken by sec3 is : 0.416676
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.416801 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000080
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000072
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000000
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000007
+Time taken by thread_main is : 0.416345
+Time taken by execute_with_graph_task is : 0.416379
+Time taken by sec3 is : 0.416460
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.416559 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000090
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000077
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000006
+Time taken by thread_main is : 0.415903
+Time taken by execute_with_graph_task is : 0.415957
+Time taken by sec3 is : 0.416044
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.416153 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000095
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000116
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000017
+Time taken by thread_main is : 0.416583
+Time taken by execute_with_graph_task is : 0.416646
+Time taken by sec3 is : 0.416771
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.416885 sec
+Time spent in maxpool is: 0.0021371841430664062
+Time spent in A is: 0.020338773727416992
+Time spent in B is: 0.23422932624816895
+Time spent in C is: 0.0002448558807373047
+Time spent in _forward_impl was  0.25492024421691895
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2551429271697998
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 6.789799213409424
+Time spent in criterion is 0.000385284423828125
+Before going into the rest
+The time took for accuracy is: 0.0003974437713623047
+The time took for three update functions is: 0.00023818016052246094
+The time took for zero_grad(): 0.0008339881896972656
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.41687870025634766
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49494075775146484
+The time took for backward(): 0.49511027336120605
+The time took for step(): 0.0030536651611328125
+Time spent in the rest is 0.4996335506439209
+Batch 4
+Data wait time is 0.0002865791320800781.
+Transfer time is 0.006480216979980469.
+Compute time is 0.755242109298706.
+Total data wait time is: 1.3030509948730469
+Total compute time is: 4.274070739746094
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012595891952514648
+Time spent in bn1 is: 0.0038754940032958984
+Time spent in relu is: 0.001577138900756836
+Time spent in maxpool is: 0.0021338462829589844
+Time spent in A is: 0.020182371139526367
+Time spent in B is: 0.23290562629699707
+Time spent in C is: 0.0003159046173095703
+Time spent in _forward_impl was  0.25350475311279297
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2535982131958008
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 9.627286911010742
+Time spent in criterion is 0.0003485679626464844
+Before going into the rest
+The time took for accuracy is: 0.0003609657287597656
+The time took for three update functions is: 0.00019049644470214844
+The time took for zero_grad(): 0.0007386207580566406
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.416642427444458
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49497318267822266
+The time took for backward(): 0.49518465995788574
+The time took for step(): 0.005193948745727539
+Time spent in the rest is 0.5016686916351318
+Batch 5
+Data wait time is 0.0002713203430175781.
+Transfer time is 0.006394386291503906.
+Compute time is 0.7557048797607422.
+Total data wait time is: 1.3033223152160645
+Total compute time is: 5.029775619506836
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012724637985229492
+Time spent in bn1 is: 0.003997802734375
+Time spent in relu is: 0.0016126632690429688
+Time spent in maxpool is: 0.018890857696533203
+Time spent in A is: 0.037225961685180664
+Time spent in B is: 0.23322248458862305
+Time spent in C is: 0.0003123283386230469
+Time spent in _forward_impl was  0.2708780765533447
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2709770202636719
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 13.525554656982422
+Time spent in criterion is 0.0003104209899902344
+Before going into the rest
+The time took for accuracy is: 0.0003864765167236328
+The time took for three update functions is: 0.00019431114196777344
+The time took for zero_grad(): 0.0007350444793701172
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.4162166118621826
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49434804916381836
+The time took for backward(): 0.49454784393310547
+The time took for step(): 0.003278017044067383
+Time spent in the rest is 0.4991416931152344
+Batch 6
+Data wait time is 0.0002396106719970703.
+Transfer time is 0.006597280502319336.
+Compute time is 0.7705001831054688.
+Total data wait time is: 1.3035619258880615
+Total compute time is: 5.800275802612305
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012742280960083008
+Time spent in bn1 is: 0.0038576126098632812
+Time spent in relu is: 0.0015912055969238281
+Time spent in maxpool is: 0.0021598339080810547
+Time spent in A is: 0.020350933074951172
+Time spent in B is: 0.2338881492614746
+Time spent in C is: 0.00026679039001464844
+Time spent in _forward_impl was  0.2545919418334961
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2547135353088379
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 10.278797149658203
+Time spent in criterion is 0.0003333091735839844
+Before going into the rest
+The time took for accuracy is: 0.00043487548828125
+The time took for three update functions is: 0.00024366378784179688
+The time took for zero_grad(): 0.0006988048553466797
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.4169473648071289
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49498915672302246
+The time took for backward(): 0.49511194229125977
+The time took for step(): 0.0029773712158203125
+Time spent in the rest is 0.4994666576385498
+Batch 7
+Data wait time is 0.00023365020751953125.
+Transfer time is 0.006429195404052734.
+Compute time is 0.7545783519744873.
+Total data wait time is: 1.303795576095581
+Total compute time is: 6.554854154586792
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012792825698852539
+Time spent in bn1 is: 0.003914356231689453
+Time spent in relu is: 0.0016219615936279297
+Time spent in maxpool is: 0.0021276473999023438
+Time spent in A is: 0.020456790924072266
+Time spent in B is: 0.23411273956298828
+Time spent in C is: 0.0005259513854980469
+Time spent in _forward_impl was  0.2552065849304199
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2553706169128418
+Before going into criterion
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000075
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000078
+Time taken by two streams is : 0.000002
+Time taken by input_buffer.add is : 0.000002
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000009
+Time taken by thread_main is : 0.416461
+Time taken by execute_with_graph_task is : 0.416507
+Time taken by sec3 is : 0.416606
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.416704 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000080
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000071
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000001
+Time taken by ready_queue is : 0.000001
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000005
+Time taken by thread_main is : 0.416689
+Time taken by execute_with_graph_task is : 0.416737
+Time taken by sec3 is : 0.416817
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000004
+After engine.execute. 
+Time taken by engine.execute is : 0.416918 sec
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE
+I got into /home/cc/pytorch-meng/torch/csrc/autograd/python_engine.cpp
+The num_tensors is: 1
+Got before variable_list outputs
+Before engine.execute. 
+Got into execute()
+Got before Engine::execute()
+Got into execute() in /home/cc/pytorch-meng/torch/csrc/autograd/engine.cpp
+Time taken by sec1 is : 0.000002
+Time taken by sec2 is : 0.000117
+skip_dummy_node
+The input in engine is: 1
+[ CUDAFloatType{} ]
+Time taken by InputBuffer+inputs.at(0) is : 0.000100
+Time taken by two streams is : 0.000003
+Time taken by input_buffer.add is : 0.000001
+I'm in execute_with_graph_task in engine.cpp. 
+Time taken by initialize_device_threads_pool is : 0.000000
+Time taken by ready_queue is : 0.000002
+worker_device == NO_DEVICE
+Time taken by set_device is : 0.000001
+Time taken by queue->push+unlock is : 0.000005
+Time taken by thread_main is : 0.416668
+Time taken by execute_with_graph_task is : 0.416710
+Time taken by sec3 is : 0.416821
+Got before fut->value().toTensorVector()
+Time taken by sec4 is : 0.000003
+After engine.execute. 
+Time taken by engine.execute is : 0.416959 sec
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 11.07755184173584
+Time spent in criterion is 0.0005793571472167969
+Before going into the rest
+The time took for accuracy is: 0.0010612010955810547
+The time took for three update functions is: 0.0004775524139404297
+The time took for zero_grad(): 0.0009522438049316406
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.41680383682250977
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.4948747158050537
+The time took for backward(): 0.49503087997436523
+The time took for step(): 0.00307464599609375
+Time spent in the rest is 0.5005965232849121
+Batch 8
+Data wait time is 0.0002753734588623047.
+Transfer time is 0.006384372711181641.
+Compute time is 0.7566251754760742.
+Total data wait time is: 1.3040709495544434
+Total compute time is: 7.311479330062866
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012688398361206055
+Time spent in bn1 is: 0.0038709640502929688
+Time spent in relu is: 0.0015919208526611328
+Time spent in maxpool is: 0.002162933349609375
+Time spent in A is: 0.02031421661376953
+Time spent in B is: 0.23329806327819824
+Time spent in C is: 0.0002503395080566406
+Time spent in _forward_impl was  0.253934383392334
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2540566921234131
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 9.336973190307617
+Time spent in criterion is 0.00034618377685546875
+Before going into the rest
+The time took for accuracy is: 0.00045680999755859375
+The time took for three update functions is: 0.0002512931823730469
+The time took for zero_grad(): 0.0007917881011962891
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.41703104972839355
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49510645866394043
+The time took for backward(): 0.4953029155731201
+The time took for step(): 0.003091096878051758
+Time spent in the rest is 0.4998939037322998
+Batch 9
+Data wait time is 0.0002739429473876953.
+Transfer time is 0.006391286849975586.
+Compute time is 0.7543690204620361.
+Total data wait time is: 1.304344892501831
+Total compute time is: 8.065848350524902
+args.gpu is not None. I chose a GPU and I'm putting images on GPU now
+The image is on cuda before model: True
+Before going into model()
+forward! ! ! ! ! ! ! ! ! ! 
+_forward_impl! ! ! ! ! ! ! ! ! ! 
+Got into _forward_impl in resnet.py.
+Time spent in conv1 is: 0.012727022171020508
+Time spent in bn1 is: 0.003938913345336914
+Time spent in relu is: 0.0016100406646728516
+Time spent in maxpool is: 0.002161264419555664
+Time spent in A is: 0.020437240600585938
+Time spent in B is: 0.23340368270874023
+Time spent in C is: 0.00033664703369140625
+Time spent in _forward_impl was  0.2542612552642822
+Getting out of _forward_impl in resnet.py
+Time spent in model is 0.2543907165527344
+Before going into criterion
+The shape of output before criterion is: torch.Size([128, 1000])
+The shape of target before criterion is: torch.Size([128])
+The loss is: 6.798731327056885
+Time spent in criterion is 0.0003752708435058594
+Before going into the rest
+The time took for accuracy is: 0.0004756450653076172
+The time took for three update functions is: 0.000255584716796875
+The time took for zero_grad(): 0.0007205009460449219
+This is before I call loss.backward() in main.py. 
+I got into /home/cc/anaconda3/lib/python3.9/site-packages/torch/tensor.py
+I'm calling torch.autograd.backward
+I got into /home/cc/pytorch-meng/torch/autograd/__init__.py
+Before Variable._execution_engine.run_backward. 
+The time spent right after Variable._execution_engine.run_backward is: 0.41706013679504395
+After Variable._execution_engine.run_backward. 
+The time spent in Variable._execution_engine.run_backward is: 0.49511146545410156
+The time took for backward(): 0.49535298347473145
+The time took for step(): 0.002882719039916992
+Time spent in the rest is 0.49968743324279785
+Batch 10
+Data wait time is 0.0002307891845703125.
+Transfer time is 0.006524324417114258.
+Compute time is 0.7545554637908936.
+Total data wait time is: 1.3045756816864014
+Total compute time is: 8.820403814315796
+This is backward_api_called: 1
+This is inputs: 1
+before Py_RETURN_NONE

@@ -22,6 +22,8 @@ import torchvision.datasets as datasets
 import torchvision.models as models
 
 import inspect
+import time
+import pdb
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -84,7 +86,6 @@ parser.add_argument('--multiprocessing-distributed', action='store_true',
                          'multi node data parallel training')
 
 best_acc1 = 0
-
 
 def main():
     args = parser.parse_args()
@@ -170,11 +171,21 @@ def main_worker(gpu, ngpus_per_node, args):
         model = model.cuda(args.gpu)
     else:
         # DataParallel will divide and allocate batch_size to all available GPUs
+        print("DataParallel will divide and allocate batch_size to all available GPUs")
         if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
             model.features = torch.nn.DataParallel(model.features)
             model.cuda()
         else:
+            print("DataParallel will divide and allocate batch_size to all available GPUs")
+            torch.cuda.synchronize()
+            time_bef_dp = time.time()
+            torch.cuda.synchronize()
             model = torch.nn.DataParallel(model).cuda()
+            torch.cuda.synchronize()
+            time_aft_dp = time.time()
+            torch.cuda.synchronize()
+            time_ins_dp = time_aft_dp-time_bef_dp
+            print("Time in DataParallel is {}.".format(time_ins_dp))
 
     # define loss function (criterion), optimizer, and learning rate scheduler
     criterion = nn.CrossEntropyLoss().cuda(args.gpu)
@@ -278,6 +289,7 @@ def main_worker(gpu, ngpus_per_node, args):
         #     }, is_best)
 
 
+
 def train(train_loader, model, criterion, optimizer, epoch, args):
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
@@ -288,6 +300,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         len(train_loader),
         [batch_time, data_time, losses, top1, top5],
         prefix="Epoch: [{}]".format(epoch))
+
+    total_data_wait_time = 0
+    total_compute_time = 0 
 
     # switch to train mode
     model.train()
@@ -302,49 +317,147 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         torch.cuda.synchronize()
         cpu2gpu_start_time = time.time()
+        torch.cuda.synchronize()
 
+        '''
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
+        '''
+        if args.gpu is not None and torch.cuda.is_available():
+            print("args.gpu is not None. I chose a GPU and I'm putting images on GPU now")
+            images = images.cuda(args.gpu, non_blocking=False)
+            target = target.cuda(args.gpu, non_blocking=False)
+        if args.gpu is None and torch.cuda.is_available():
+            print("args.gpu is None. I might put images onto GPU later in model. ")
+            target = target.cuda(args.gpu, non_blocking=False)
+        is_on = images.is_cuda
+        print("The image is on cuda before model: {}".format(is_on))
         
         torch.cuda.synchronize()
         cpu2gpu_time = time.time() - cpu2gpu_start_time
-
         torch.cuda.synchronize()
+
+        # Here is the GPU (Compute) Start Time. 
         gpu_start_time = time.time()
 
-        # compute output
+        print("Before going into model()")
+        torch.cuda.synchronize()
+        time_bef_model=time.time()
+        torch.cuda.synchronize()
+        # transfer time is probably in model
+        # use images.is_cuda() to check when it got put into GPU
+        # print("The images: {}".format(images))
         output = model(images)
+        
+        torch.cuda.synchronize()
+        time_aft_model=time.time()
+        torch.cuda.synchronize()
+        time_ins_model=time_aft_model-time_bef_model
+        print("Time spent in model is {}".format(time_ins_model))
+        
+        print("Before going into criterion")
+        torch.cuda.synchronize()
+        time_bef_cri=time.time()
+        torch.cuda.synchronize()
 
+        # check the shape of output and target
+        print("The shape of output before criterion is: {}".format(output.size()))
+        # print("output looks like: {}".format(output))
+        print("The shape of target before criterion is: {}".format(target.size()))
+        # print("target looks like: {}".format(target))
         loss = criterion(output, target)
+        print("The loss is: {}".format(loss))
+        # loss is just 1 number, a floating number. 
+
+        torch.cuda.synchronize()
+        time_aft_cri=time.time()
+        torch.cuda.synchronize()
+        time_ins_cri=time_aft_cri-time_bef_cri
+        print("Time spent in criterion is {}".format(time_ins_cri))
+
+        print("Before going into the rest")
+        torch.cuda.synchronize()
+        time_bef_res=time.time()
+        torch.cuda.synchronize()
 
         # measure accuracy and record loss
         acc1, acc5 = accuracy(output, target, topk=(1, 5))
+
+        torch.cuda.synchronize()
+        time_aft_acc=time.time()
+        torch.cuda.synchronize()
+        print("The time took for accuracy is: {}".format(time_aft_acc-time_bef_res))
+
+
         losses.update(loss.item(), images.size(0))
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
 
+        torch.cuda.synchronize()
+        time_aft_upd=time.time()
+        torch.cuda.synchronize()
+        print("The time took for three update functions is: {}".format(time_aft_upd-time_aft_acc))
+
         # compute gradient and do SGD step
+        
         optimizer.zero_grad()
+
+        torch.cuda.synchronize()
+        time_aft_grad=time.time()
+        torch.cuda.synchronize()
+        print("The time took for zero_grad(): {}".format(time_aft_grad-time_aft_upd))
+        # print("This is where we will eventually call forward in Scatter. ")
+        # I also doubt this is one of the places that contribute to time difference. 
+        # loss does not change before or after .backward()
+        print("This is before I call loss.backward() in main.py. ")
         loss.backward()
+        
+        torch.cuda.synchronize()
+        time_aft_bac=time.time()
+        torch.cuda.synchronize()
+        print("The time took for backward(): {}".format(time_aft_bac-time_aft_grad))
+       
         optimizer.step()
 
         torch.cuda.synchronize()
-        gpu_time = time.time() - gpu_start_time
+        time_aft_res=time.time()
+        torch.cuda.synchronize()
+        time_ins_res=time_aft_res-time_bef_res
+        print("The time took for step(): {}".format(time_aft_res-time_aft_bac))
 
+        print("Time spent in the rest is {}".format(time_ins_res))
+
+        gpu_time = time.time() - gpu_start_time
+        
+        print("Batch {}".format(i))
+        print("Data wait time is {}.".format(io_wait_time))
+        print("Transfer time is {}.".format(cpu2gpu_time))
+        print("Compute time is {}.".format(gpu_time))
+        # This is where compute stops
+
+        total_data_wait_time+=io_wait_time
+        total_compute_time+=gpu_time
+        print("Total data wait time is: {}".format(total_data_wait_time))
+        print("Total compute time is: {}".format(total_compute_time))
+
+        '''
         print("batch {} \t io_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
                 i, io_wait_time, cpu2gpu_time, gpu_time
         ))
+        '''
 
         # measure elapsed time
         batch_time.update(time.time() - end)
 
         measurements.append((cpu2gpu_time, gpu_time))
         end = time.time()
-
+        # Comment off the following code to reproduce figure 9. 
+        
         if i >= args.profile_batches:
             break
+        
         # if i % args.print_freq == 0:
         #     progress.display(i)
     
