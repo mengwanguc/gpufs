@@ -1,7 +1,5 @@
 # Imagenet reference training scripts
 
-## Installation the setup
-
 1. Install all depedencies
 
    To install gpufs(detection files), pytorch, and torchvision
