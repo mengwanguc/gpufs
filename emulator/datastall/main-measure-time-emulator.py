@@ -39,6 +39,9 @@ model_names = sorted(name for name in models.__dict__
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
 parser.add_argument('data', metavar='DIR',
                     help='path to dataset')
+parser.add_argument('-f', '--file-extension', metavar='EXTENSION',
+                    help='file extension of images, for size calculations',
+                    default='JPEG')
 parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     choices=model_names,
                     help='model architecture: ' +
@@ -146,12 +149,12 @@ def main():
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
 
-def get_largest_file_size(dir_path: str):
-    filepaths = glob.glob(dir_path + '/**/*.JPEG')
+def get_largest_file_size(dir_path: str, extension: str):
+    filepaths = glob.glob(dir_path + '/**/*.{}'.format(extension))
     return max([os.path.getsize(path) for path in filepaths])
 
-def get_largest_cacheable_file_size(dir_path: str, cache_size: int):
-    filepaths = glob.glob(dir_path + '/**/*.JPEG')
+def get_largest_cacheable_file_size(dir_path: str, extension: str, cache_size: int):
+    filepaths = glob.glob(dir_path + '/**/*.{}'.format(extension))
     sizes = sorted([os.path.getsize(path) for path in filepaths])
 
     max_size = 0
@@ -275,13 +278,13 @@ def main_worker(gpu, ngpus_per_node, args):
         train_cache = minio.PyCache(
             size=train_cache_size,
             max_usable_file_size=max_item_size,
-            max_cacheable_file_size=get_largest_cacheable_file_size(traindir, train_cache_size)
+            max_cacheable_file_size=get_largest_cacheable_file_size(traindir, args.file_extension, train_cache_size)
         )
         print("Created train cache of {} MB".format(train_cache_size))
         val_cache = minio.PyCache(
             size=val_cache_size,
             max_usable_file_size=max_item_size,
-            max_cacheable_file_size=get_largest_cacheable_file_size(valdir, val_cache_size)
+            max_cacheable_file_size=get_largest_cacheable_file_size(valdir, args.file_extension, val_cache_size)
         )
         print("Created val cache of {} MB".format(val_cache_size))
 
@@ -289,7 +292,7 @@ def main_worker(gpu, ngpus_per_node, args):
     async_loader = None
     if args.use_async:
         # Create the loaders.
-        max_file_size = 1 << (max(get_largest_file_size(traindir), get_largest_file_size(valdir)) - 1).bit_length()
+        max_file_size = 1 << (max(get_largest_file_size(traindir, args.file_extension), get_largest_file_size(valdir, args.file_extension)) - 1).bit_length()
         print("Max file size: {} bytes".format(max_file_size))
         async_loader = al.Loader(queue_depth=args.super_batch_size * args.batch_size,
                                  n_workers=args.workers,
