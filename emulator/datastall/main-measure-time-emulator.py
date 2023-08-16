@@ -150,7 +150,9 @@ def main():
         main_worker(args.gpu, ngpus_per_node, args)
 
 def get_largest_file_size(dir_path: str, extension: str):
-    print("finding maximum size for files matching {}/**/*.{}".format(dir_path, extension))
+    # note if the images are all in a folder, like /images/train/*.jpg, then you
+    # will need to move them to /images/train/extra_folder/*.jpg so that this
+    # will still match all of them.
     filepaths = glob.glob(dir_path + '/**/*.{}'.format(extension))
     return max([os.path.getsize(path) for path in filepaths])
 
