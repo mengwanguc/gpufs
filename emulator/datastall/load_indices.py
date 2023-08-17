@@ -1,0 +1,116 @@
+# PyTorch index loading functions. There are enough of these that it was
+# getting confusing to edit them in the main training script.
+
+# All "load_indices" variants need to follow the same pattern. First, there must
+# be a "front half", which initiates the loading (may be a no-op if the variant)
+# does not require sending requests prior to reading back. Next, there must be a
+# "back half", which reads back the files.
+
+import io
+import minio
+import AsyncLoader as al
+from functools import partial
+from PIL import Image
+
+# Convert from raw bytearray and target to usable data
+def process_raw(dataset, raw, target):
+    sample = Image.open(io.BytesIO(raw)).convert('RGB')
+
+    if dataset.transform is not None:
+        sample = dataset.transform(sample)
+    if dataset.target_transform is not None:
+        target = dataset.target_transform(target)
+
+    return sample, target
+
+
+## PURE MINIO ##
+
+def load_indices_minio_FRONT(cache, async_worker, dataset, batched_indices):
+    pass
+
+def load_indices_minio_BACK(cache, async_worker, dataset, batched_indices):
+    data = []
+    for i, indices in enumerate(batched_indices):
+        data.append([])
+        for index in indices:
+            path, target = dataset.samples[index]
+            data[i].append((target, cache.read(path)[0]))
+    
+    return data
+
+
+## PURE ASYNC ##
+
+def load_indices_async_FRONT(cache, async_worker, dataset, batched_indices):
+    # Request all of the images.
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, _ = dataset.samples[index]
+            async_worker.request(path)
+
+def load_indices_async_BACK(cache, async_worker, dataset, batched_indices):
+    # Determine where all of the images belong.
+    targets = {}
+    path_to_batch = {}
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, target = dataset.samples[index]
+            path_to_batch[path] = i
+            targets[path] = target
+
+    # Wait for all of the images to be loaded.
+    data = [[] for _ in batched_indices]
+    for i, indices in enumerate(batched_indices):
+        for _ in indices:
+            entry = async_worker.wait_get()
+            filepath = entry.get_filepath().decode()
+            data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
+            entry.release()
+    
+    return data
+
+
+## ASYNC AND MINIO ##
+
+def load_indices_async_minio_FRONT(cache, async_worker, dataset, batched_indices):
+    # Request all of the images that aren't cached.
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, _ = dataset.samples[index]
+            if not cache.contains(path):
+                async_worker.request(path)
+
+def load_indices_async_minio_BACK(cache, async_worker, dataset, batched_indices):
+    # Determine where all of the images belong.
+    cached, not_cached = [], []
+    targets, path_to_batch = {}, {}
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, target = dataset.samples[index]
+            path_to_batch[path] = i
+            targets[path] = target
+            if cache.contains(path):
+                cached.append(path)
+            else:
+                not_cached.append(path)
+
+    # Load the cached data.
+    data = [[] for _ in batched_indices]
+    for path in cached:
+        data[path_to_batch[path]].append((targets[path], cache.load(path)[0]))
+    
+    # Wait for all of the images to be loaded.
+    for i, indices in enumerate(batched_indices):
+        for _ in indices:
+            entry = async_worker.wait_get()
+            filepath = entry.get_filepath().decode()
+            data[path_to_batch[filepath]].append(process_raw(targets[filepath], entry.get_data()))
+            entry.release()
+    
+    return data
+
+
+# Generic wrapper.
+def load_indices_wrapper(cache, func):
+    return partial(func, cache)

@@ -9,10 +9,9 @@ import warnings
 import minio
 import AsyncLoader as al
 import mlock
-from PIL import Image
 import io
 import glob
-from functools import partial
+from load_indices import *
 
 import torch
 import torch.nn as nn
@@ -311,124 +310,30 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         print("NOT using AsyncLoader")
 
-    # Convert from raw bytearray and target to usable data
-    def process_raw(dataset, raw, target):
-        sample = Image.open(io.BytesIO(raw)).convert('RGB')
-
-        if dataset.transform is not None:
-            sample = dataset.transform(sample)
-        if dataset.target_transform is not None:
-            target = dataset.target_transform(target)
-
-        return sample, target
-
-    # Dataset "load_indices" method that uses only MinIO
-    def load_indices_minio(cache, async_worker, dataset, batched_indices):
-        data = []
-        for i, indices in enumerate(batched_indices):
-            data.append([])
-            for index in indices:
-                path, target = dataset.samples[index]
-                data[i].append((target, cache.read(path)[0]))
-        
-        return data
-
-    # Wrapper to create "load_indices_minio" variant for the given cache.
-    def load_indices_minio_wrapper(cache):
-        return partial(load_indices_minio, cache)
-
-    # Dataset "load_indices" method that uses only AsyncLoader
-    def load_indices_async(async_worker, dataset, batched_indices):
-        data = []
-
-        # Request all of the images
-        targets = {}
-        path_to_batch = {}
-        for i, indices in enumerate(batched_indices):
-            for index in indices:
-                path, target = dataset.samples[index]
-                path_to_batch[path] = i
-                targets[path] = target
-                async_worker.request(path)
-
-        # Create empty lists for each batch
-        for _ in range(len(batched_indices)):
-            data.append([])
-        
-        # Wait for all of the images to be loaded.
-        for i, indices in enumerate(batched_indices):
-            for _ in indices:
-                entry = async_worker.wait_get()
-                filepath = entry.get_filepath().decode()
-                data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
-                entry.release()
-        
-        return data
-
-
-    # Dataset "load_indices" method that uses both MinIO and AsyncLoader
-    def load_indices_async_minio(cache, async_worker, dataset, batched_indices):
-        data = []
-
-        cached = []
-        not_cached = []
-
-        # Request all of the images
-        targets = {}
-        path_to_batch = {}
-        for i, indices in enumerate(batched_indices):
-            for index in indices:
-                path, target = dataset.samples[index]
-                path_to_batch[path] = i
-                targets[path] = target
-                if cache.contains(path):
-                    cached.append(path)
-                else:
-                    not_cached.append(path)
-
-        # Create empty lists for each batch
-        for _ in range(len(batched_indices)):
-            data.append([])
-
-        # First, request everything that's not cached.
-        for path in not_cached:
-            async_worker.request(path)
-
-        # In the meantime, load the cached data.
-        for path in cached:
-            data[path_to_batch[path]].append((targets[path], cache.load(path)[0]))
-        
-        # Wait for all of the images to be loaded.
-        for i, indices in enumerate(batched_indices):
-            for _ in indices:
-                entry = async_worker.wait_get()
-                filepath = entry.get_filepath().decode()
-                data[path_to_batch[filepath]].append(process_raw(targets[filepath], entry.get_data()))
-                entry.release()
-        
-        return data
-    
-    # Wrapper to create "load_indices_async_minio" variant for the given cache.
-    def load_indices_async_minio_wrapper(cache):
-        return partial(load_indices_async_minio, cache)
-
     # Choose which "load_indices" implementation to use...
     load_indices_train = None
     load_indices_val = None
     if (args.use_minio and args.use_async):
         print("Using the COMBINED AsyncLoader and MinIO load_indices method")
-        load_indices_train = load_indices_async_minio_wrapper(train_cache)
-        load_indices_val = load_indices_async_minio_wrapper(val_cache)
+        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_async_minio_FRONT)
+        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_async_minio_BACK)
+        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_async_minio_FRONT)
+        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_async_minio_BACK)
     elif (args.use_minio):
         print("Using the MinIO load_indices method")
-        load_indices_train = load_indices_minio_wrapper(train_cache)
-        load_indices_val = load_indices_minio_wrapper(val_cache)
+        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_minio_FRONT)
+        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_minio_BACK)
+        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_minio_FRONT)
+        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_minio_BACK)
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
-        load_indices_train = load_indices_async
-        load_indices_val = load_indices_async
+        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_async_FRONT)
+        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_async_BACK)
+        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_async_FRONT)
+        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_async_BACK)
     else:
         print("Using the DEFAULT loader.")
+        assert False
 
     train_dataset = datasets.ImageFolder(
         traindir,
