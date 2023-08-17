@@ -105,7 +105,7 @@ def load_indices_async_minio_BACK(cache, async_worker, dataset, batched_indices)
         for _ in indices:
             entry = async_worker.wait_get()
             filepath = entry.get_filepath().decode()
-            data[path_to_batch[filepath]].append(process_raw(targets[filepath], entry.get_data()))
+            data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
             entry.release()
     
     return data
