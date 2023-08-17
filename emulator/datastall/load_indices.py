@@ -8,18 +8,25 @@
 
 import io
 import minio
+import time
 import AsyncLoader as al
 from functools import partial
 from PIL import Image
 
 # Convert from raw bytearray and target to usable data
 def process_raw(dataset, raw, target):
+    t = time.time()
     sample = Image.open(io.BytesIO(raw)).convert('RGB')
+    print("\tto PIL image = {:.04}s".format(time.time() - t))
 
     if dataset.transform is not None:
+        t = time.time()
         sample = dataset.transform(sample)
+        print("\ttransform sample = {:.04}s".format(time.time() - t))
     if dataset.target_transform is not None:
+        t = time.time()
         target = dataset.target_transform(target)
+        print("\ttransform target = {:.04}s".format(time.time() - t))
 
     return sample, target
 
