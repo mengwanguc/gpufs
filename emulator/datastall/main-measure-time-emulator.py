@@ -344,7 +344,8 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]),
         async_loader=async_loader,
-        load_indices=load_indices_train
+        load_indices_front=load_indices_train_FRONT,
+        load_indices_back=load_indices_train_BACK
     )
 
     if args.distributed:
@@ -378,7 +379,8 @@ def main_worker(gpu, ngpus_per_node, args):
                 normalize,
             ]),
             async_loader=async_loader,
-            load_indices=load_indices_val),
+            load_indices_front=load_indices_val_FRONT,
+        load_indices_back=load_indices_val_BACK),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons,
