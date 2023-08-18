@@ -57,13 +57,52 @@
    mv instances_train2017.json ~/coco_minitrain_25k/annotations/
    mv instances_val2017.json ~/coco_minitrain_25k/annotations/  
    ```
+   And for the large coco dataset you can use this commands:
+   ```
+   mkdir coco
+   cd coco
+   mkdir images
+   cd images
    
-5. Training the model
+   wget http://images.cocodataset.org/zips/train2017.zip
+   wget http://images.cocodataset.org/zips/val2017.zip
+   wget http://images.cocodataset.org/zips/test2017.zip
+   wget http://images.cocodataset.org/zips/unlabeled2017.zip
+   
+   unzip train2017.zip
+   unzip val2017.zip
+   unzip test2017.zip
+   unzip unlabeled2017.zip
+   
+   rm train2017.zip
+   rm val2017.zip
+   rm test2017.zip
+   rm unlabeled2017.zip 
+   
+   cd ../
+   wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
+   wget http://images.cocodataset.org/annotations/stuff_annotations_trainval2017.zip
+   wget http://images.cocodataset.org/annotations/image_info_test2017.zip
+   wget http://images.cocodataset.org/annotations/image_info_unlabeled2017.zip
+   
+   unzip annotations_trainval2017.zip
+   unzip stuff_annotations_trainval2017.zip
+   unzip image_info_test2017.zip
+   unzip image_info_unlabeled2017.zip
+   
+   rm annotations_trainval2017.zip
+   rm stuff_annotations_trainval2017.zip
+   rm image_info_test2017.zip
+   rm image_info_unlabeled2017.zip
+   ```
+   
+6. Training the model
 
    Note: if you have error "Loss function result is NaN", fixing it by change learning rates with formula  0.02/8*$NGPU. Lr depends on how many gpu we are using. And n_workers > 0 will reproduce segmentation fault error
    ```
    cd ~/gpufs/detection/
-   python train.py --data-path ~/mini-coco-dataset/coco_minitrain_25k --epoch 2 --lr 0.0025 --workers 0
+   python train.py --data-path ~/mini-coco-dataset/coco_minitrain_25k --epoch 2 --lr 0.0025 --workers 0 #using subset
+   python train.py --data-path ~/coco/images --epoch 2 --lr 0.0025 --workers 0 #using full data
    ```
 
    Parameter information:
