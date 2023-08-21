@@ -4,7 +4,7 @@ set -e
 gpu_type="p100"
 model="alexnet"
 n_workers=4
-batch_size=256
+batch_size=64
 data_path="/home/cc/data/test-utilization/imagenette2"
 # limit="9G"
 superbatch_configs=(1 2 4 8 16)

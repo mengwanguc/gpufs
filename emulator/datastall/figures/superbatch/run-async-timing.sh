@@ -4,10 +4,10 @@ set -e
 gpu_type="p100"
 model="alexnet"
 n_workers=4
-batch_size=256
-data_path="/home/cc/data/test-accuracy/imagenette2"
+batch_size=2
+data_path="/home/cc/data/test-small/imagenette2/"
 # limit="9G"
-superbatch_configs=(1 2 4 8 16)
+superbatch_configs=(1 2 4 8 16 32 64 128 256)
 prefetch_factor=2
 
 # set up control group

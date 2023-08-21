@@ -8,7 +8,7 @@ batch_size=2
 data_path="/home/cc/data/mini-coco/coco_minitrain_25k/images/"
 extension="jpg"
 # limit="9G"
-superbatch_configs=(1 2 4 8 16 32 64 128 256)
+superbatch_configs=(1 2 4 8 16 32 64 128)
 prefetch_factor=2
 
 # set up control group
