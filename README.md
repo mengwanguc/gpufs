@@ -265,3 +265,11 @@ including stale data. The folder will be populated with files prefixed by
 `pytorch` and `script`. The `script` files will contain the high level timing
 data for each batch. The `pytorch` files will contain low level timing collected
 inside of PyTorch.
+
+In order to collect the data without using AsyncLoader/Superbatch, use the
+`gus-emulator-minio` branch for `pytorch-meng`, the `gus-min-io` branch for
+`torchvision-meng`, and the `optimize-workers` branch for `gpufs`. Then, run the
+training script manually. For example:
+```
+python main-measure-time-emulator.py --epoch 1 --skip-epochs 0 --profile-batches -1 --workers 4 --gpu-type=p100 --gpu-count=1 --arch=alexnet --batch-size 16 --emulator-version=1 ~/data/mini-coco/coco_minitrain_25k/images/
+```
