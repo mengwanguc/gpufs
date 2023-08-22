@@ -218,3 +218,58 @@ Test: [10/16]   Time  0.303 ( 0.723)    Loss 1.8741e+00 (2.1837e+00)    Acc@1  3
 ```
 
 
+### AsyncLoader + Superbatch Optimizations
+
+#### Results
+
+AsyncLoader is generically beneficial to IO data stall times. However, for the
+superbatch feature to be beneficial requires a goldilocks scenario where the
+batch size is neither so large that the additional load size provides no benefit,
+nor so small that multiprocessing queues become a bottleneck.
+
+Testing has shown that for the mini-coco dataset, a batch size of 64 is too
+large to notice benefits, and 2 is so small that queue overhead becomes a
+bottleneck. Strong results were obtained using a batch size of 16, where an
+overall ~2x training speedup was observed, with a ~3x data stall speedup.
+
+![results using mini-coco dataset](./assets/superbatch-variation-final.png)
+
+#### Reproducability
+
+In order to reproduce results using the AsyncLoader and Superbatch optimizations,
+clone and install the master branches of the following repositories by following
+their READMEs. Ensure that you update the machine's kernel according to the
+`async-loader` repository's instructions.
+```
+git clone git@github.com:axboe/liburing.git
+git clone git@github.com:gustrain/async-loader.git
+git clone git@github.com:gustrain/mlock.git
+git clone git@github.com:gustrain/minio.git
+```
+Use the `fix-superbatch` branch for `pytorch-meng`, the `gus-async` branch
+for `torchvision-meng`, and the `optimize-workers` branch for `gpufs`.
+
+To generate the timing data using AsyncLoader and Superbatch, use one of the
+scripts found in `gpufs/emulator/datastall/figures/superbatch`. For example, the
+`run-async-timing.sh` script can be used. Specifiy the superbatch sizes you'd
+like to collect data for by setting the `superbatch_configs` value in the script,
+as well as the `n_workers` and `batch_size` values. Use `data_path` to specify
+the location of the training data. Note that the directories containing images
+must not be directly in this `data_path` directory, but must be nested within at
+least one more directory (imagenette2 has this structure by default).
+
+Running `./run-async-timing.sh` should run each of the provided configurations
+and store the data into `gpufs/emulator/datastall/$gpu_type`. Therefore, you
+should ensure that this folder is empty prior to running the script to avoid
+including stale data. The folder will be populated with files prefixed by
+`pytorch` and `script`. The `script` files will contain the high level timing
+data for each batch. The `pytorch` files will contain low level timing collected
+inside of PyTorch.
+
+In order to collect the data without using AsyncLoader/Superbatch, use the
+`gus-emulator-minio` branch for `pytorch-meng`, the `gus-min-io` branch for
+`torchvision-meng`, and the `gus-safe-default` branch for `gpufs`. Then, run the
+training script manually. For example:
+```
+python main-measure-time-emulator.py --epoch 1 --skip-epochs 0 --profile-batches -1 --workers 4 --gpu-type=p100 --gpu-count=1 --arch=alexnet --batch-size 16 --emulator-version=1 ~/data/mini-coco/coco_minitrain_25k/images/
+```
