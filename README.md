@@ -246,7 +246,7 @@ git clone git@github.com:gustrain/async-loader.git
 git clone git@github.com:gustrain/mlock.git
 git clone git@github.com:gustrain/minio.git
 ```
-Use the `gus-emulator-minio` branch for `pytorch-meng`, the `gus-min-io` branch
+Use the `fix-superbatch` branch for `pytorch-meng`, the `gus-async` branch
 for `torchvision-meng`, and the `optimize-workers` branch for `gpufs`.
 
 To generate the timing data using AsyncLoader and Superbatch, use one of the
