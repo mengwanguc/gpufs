@@ -1,0 +1,1 @@
+{"val_top1": [27.115068435668945], "model": "resnet18", "args.epochs": 1, "args.batch_size": 256}
