@@ -2,7 +2,7 @@
 
 1. Install all depedencies
 
-   To install gpufs(detection files), pytorch, and torchvision
+   To install gpufs contained ffcv folder. and others depedencies.
     
    Need doing all step on https://github.com/mengwanguc/gpufs#readme until you done clone gpufs repository.
 
@@ -45,7 +45,7 @@
    export WRITE_DIR=/your/path/here/
 
    # Starting in the root of the Git repo:
-   cd examples;
+   cd ~/gpufs/ffcv
 
    # Serialize images with:
    # - 500px side length maximum
@@ -60,6 +60,7 @@
    The main thing to implement FFCV into our code is modify the Dataloader, because FFCV speeds up model training by eliminating (often subtle) data bottlenecks from the training process. It have similar format with the pytorch and we doesnt have to modify others things. You can use this command to train the models.
 
    ```
+   cd ~/gpufs/ffcv
    python main-original-ffcv-v2-cuda.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 10
    ```
 
