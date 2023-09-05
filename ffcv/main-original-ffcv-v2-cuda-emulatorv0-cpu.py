@@ -24,11 +24,14 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
+import torchvision
 
 from ffcv.loader import Loader, OrderOption
 from ffcv.transforms import ToTensor, ToDevice, Squeeze, NormalizeImage, RandomHorizontalFlip, ToTorchImage
 from ffcv.fields.rgb_image import CenterCropRGBImageDecoder, RandomResizedCropRGBImageDecoder
 from ffcv.fields.basics import IntDecoder
+from ffcv.transforms import RandomHorizontalFlip, Cutout, \
+    RandomTranslate, Convert, ToDevice, ToTensor, ToTorchImage
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -82,7 +85,7 @@ parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
 parser.add_argument('--gpu-type', default='p100', type=str,
                     help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
-parser.add_argument('--gpu-count', default=1, type=int,
+parser.add_argument('--gpu-count', default=8, type=int,
                     help='number of GPUs to use.')
 parser.add_argument('--multiprocessing-distributed', action='store_true',
                     help='Use multi-processing distributed training to launch '
@@ -183,11 +186,11 @@ def main_worker(gpu, ngpus_per_node, args):
     #         # available GPUs if device_ids are not set
     #         model = torch.nn.parallel.DistributedDataParallel(model)
     # elif args.gpu is not None:
-    #     print("test")
+    #     # print("test")
     #     torch.cuda.set_device(args.gpu)
     #     model = model.cuda(args.gpu)
     # else:
-    #     print("test1")
+    #     # print("test1")
     #     # DataParallel will divide and allocate batch_size to all available GPUs
     #     if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
     #         model.features = torch.nn.DataParallel(model.features)
@@ -237,29 +240,35 @@ def main_worker(gpu, ngpus_per_node, args):
     IMAGENET_MEAN = np.array([0.485, 0.456, 0.406]) * 255
     IMAGENET_STD = np.array([0.229, 0.224, 0.225]) * 255
 
+    # ToDevice(torch.device('cuda:None'), non_blocking=True),
     train_image_pipeline = [
         RandomResizedCropRGBImageDecoder((224, 224)),
         RandomHorizontalFlip(),
         ToTensor(),
+        ToDevice(torch.device('cpu')),
         ToTorchImage(),
-        NormalizeImage(IMAGENET_MEAN, IMAGENET_STD, np.float32)
+        Convert(torch.float16),
+        torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
     val_image_pipeline = [
         CenterCropRGBImageDecoder((224, 224), ratio=224/256),
         ToTensor(),
+        ToDevice(torch.device('cpu')),
         ToTorchImage(),
-        NormalizeImage(IMAGENET_MEAN, IMAGENET_STD, np.float32)
+        Convert(torch.float16),
+        torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
-    label_pipeline = [IntDecoder(), ToTensor(), Squeeze()]
+    label_pipeline = [IntDecoder(), ToTensor(), Squeeze(),
+                      ToDevice(torch.device('cpu'))]
 
-    print("args.gpu ->", args.gpu)
-    train_loader = Loader('/home/cc/ffcv-imagenet/train_500_0_50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
+    # print("args.gpu ->", args.gpu)
+    train_loader = Loader('/home/cc/data/train_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
                           order=OrderOption.RANDOM,
                           pipelines={'image': train_image_pipeline, 'label': label_pipeline})
 
-    val_loader = Loader('/home/cc/ffcv-imagenet/val_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
+    val_loader = Loader('/home/cc/data/val_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
                         order=OrderOption.SEQUENTIAL,
                         pipelines={'image': val_image_pipeline, 'label': label_pipeline},
                         )
@@ -269,55 +278,56 @@ def main_worker(gpu, ngpus_per_node, args):
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        print("epoch")
+        # print("epoch")
         if args.distributed:
             train_sampler.set_epoch(epoch)
 
         # train for one epoch
-        tt1, tt5 = train(train_loader, model, criterion, optimizer, epoch, args)
+        train(train_loader, model, criterion, optimizer, epoch, args)
+        # tt1, tt5 = train(train_loader, model, criterion, optimizer, epoch, args)
         # evaluate on validation set
-        vt1, vt5 = validate(val_loader, model, criterion, args)
+        # vt1, vt5 = validate(val_loader, model, criterion, args)
         
-        scheduler.step()
+    #     scheduler.step()
 
-        # remember best acc@1 and save checkpoint
-        is_best = vt1 > best_acc1
-        best_acc1 = max(vt1, best_acc1)
+    #     # remember best acc@1 and save checkpoint
+    #     is_best = vt1 > best_acc1
+    #     best_acc1 = max(vt1, best_acc1)
 
-        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-                and args.rank % ngpus_per_node == 0):
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'best_acc1': best_acc1,
-                'optimizer' : optimizer.state_dict(),
-                'scheduler' : scheduler.state_dict()
-            }, is_best)
+    #     if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+    #             and args.rank % ngpus_per_node == 0):
+    #         save_checkpoint({
+    #             'epoch': epoch + 1,
+    #             'arch': args.arch,
+    #             'state_dict': model.state_dict(),
+    #             'best_acc1': best_acc1,
+    #             'optimizer' : optimizer.state_dict(),
+    #             'scheduler' : scheduler.state_dict()
+    #         }, is_best)
          
-        train_top1.append(float((tt1.cpu().numpy())))
-        train_top5.append(float((tt5.cpu().numpy())))
-        val_top1.append(float((vt1.cpu().numpy())))
-        val_top5.append(float((vt5.cpu().numpy())))
+    #     train_top1.append(float((tt1.cpu().numpy())))
+    #     train_top5.append(float((tt5.cpu().numpy())))
+    #     val_top1.append(float((vt1.cpu().numpy())))
+    #     val_top5.append(float((vt5.cpu().numpy())))
 
-    strs = ""
-    if args.arch.startswith('alexnet'):
-        strs = "alexnet"
-    elif args.arch.startswith('vgg11'):
-        strs = "vgg11"
-    elif args.arch.startswith('resnet18'):
-        strs = "resnet18"
-    elif args.arch.startswith('resnet101'):
-        strs = "resnet101"
-    model_data = {'train_top1': train_top1, 'train_top5': train_top5,
-    'val_top1': val_top1, 'val_top5': val_top5, 'model':strs,
-    'args.epochs': args.epochs, 'args.batch_size': args.batch_size, 
-    'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
-    bat = str(args.batch_size)
-    epo = str(args.epochs)
-    txt = strs + "_batch_" + bat + "_epo_" + epo
-    with open(txt , 'w') as convert_file:
-        convert_file.write(json.dumps(model_data))
+    # strs = ""
+    # if args.arch.startswith('alexnet'):
+    #     strs = "alexnet"
+    # elif args.arch.startswith('vgg11'):
+    #     strs = "vgg11"
+    # elif args.arch.startswith('resnet18'):
+    #     strs = "resnet18"
+    # elif args.arch.startswith('resnet101'):
+    #     strs = "resnet101"
+    # model_data = {'train_top1': train_top1, 'train_top5': train_top5,
+    # 'val_top1': val_top1, 'val_top5': val_top5, 'model':strs,
+    # 'args.epochs': args.epochs, 'args.batch_size': args.batch_size, 
+    # 'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
+    # bat = str(args.batch_size)
+    # epo = str(args.epochs)
+    # txt = strs + "_batch_" + bat + "_epo_" + epo
+    # with open(txt , 'w') as convert_file:
+    #     convert_file.write(json.dumps(model_data))
 
 def is_convertible_to_float(value):
     try:
@@ -364,11 +374,11 @@ def parse_gpu_proflie(args):
 
 
 
-curr_batch_train = 0
-batch_top1_top5_train = {}
+# curr_batch_train = 0
+# batch_top1_top5_train = {}
 def train(train_loader, model, criterion, optimizer, epoch, args):
-    global curr_batch_train
-    global batch_top1_top5_train
+    # global curr_batch_train
+    # global batch_top1_top5_train
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -376,7 +386,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     top5 = AverageMeter('Acc@5', ':6.2f')
     progress = ProgressMeter(
         len(train_loader),
-        [batch_time, data_time, losses, top1, top5])
+        [batch_time, data_time, losses, top1, top5],
+        prefix="Epoch: [{}]".format(epoch))
 
     # switch to train mode
     model.train()
@@ -392,7 +403,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         data_wait_time = time.time() - end
-        data_time.update(time.time() - end)
+        # data_time.update(time.time() - end)
 
         cpu2gpu_start_time = time.time()
         # if torch.cuda.is_available():
@@ -401,6 +412,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         #     images = images.cuda(args.gpu, non_blocking=True)
         # if torch.cuda.is_available():
         #     target = target.cuda(args.gpu, non_blocking=True)
+        print(args.gpu_count)
         time.sleep(args.batch_cpu2gpu_time/args.gpu_count)
 
         cpu2gpu_time = time.time() - cpu2gpu_start_time
@@ -441,15 +453,15 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         print(total_data_wait_time,total_cpu2gpu_time,total_gpu_time)
 
-        if i % args.print_freq == 0:
-            progress.display(i)
-            curr_batch_train += i
-            curr_batch_train -= temp
-            if curr_batch_train != 0 and curr_batch_train % 100 == 0:
-                t1 = float(top1.avg.cpu().numpy())
-                t5 = float(top5.avg.cpu().numpy())
-                batch_top1_top5_train[curr_batch_train] = (t1, t5)
-            temp = i
+        # if i % args.print_freq == 0:
+        #     # progress.display(i)
+        #     curr_batch_train += i
+        #     curr_batch_train -= temp
+        #     if curr_batch_train != 0 and curr_batch_train % 100 == 0:
+        #         t1 = float(top1.avg.cpu().numpy())
+        #         t5 = float(top5.avg.cpu().numpy())
+        #         batch_top1_top5_train[curr_batch_train] = (t1, t5)
+        #     temp = i
 
     output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
     if not os.path.exists(args.gpu_type):
@@ -458,7 +470,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         for data_wait_time, cpu2cpu_time, gpu_time in measurements:
             f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
 
-    return (top1.avg,top5.avg)
+    # return (top1.avg,top5.avg)
 
 batch_top1_top5_val = {}
 curr_batch_val = 0
@@ -502,18 +514,12 @@ def validate(val_loader, model, criterion, args):
 
             if i % args.print_freq == 0:
                 progress.display(i)
-                curr_batch_val += i
-                curr_batch_val -= temp
-                if curr_batch_val != 0 and curr_batch_val % 100 == 0:
-                    batch_top1_top5_val[curr_batch_val] = (float(top1.avg.cpu().numpy()), 
-                    float(top5.avg.cpu().numpy()))
-                temp = i
 
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
 
-    return (top1.avg, top5.avg)
+    # return (top1.avg, top5.avg)
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
