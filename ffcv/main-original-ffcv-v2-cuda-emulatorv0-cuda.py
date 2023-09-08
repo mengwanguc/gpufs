@@ -45,7 +45,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     help='model architecture: ' +
                         ' | '.join(model_names) +
                         ' (default: resnet18)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
@@ -248,20 +248,22 @@ def main_worker(gpu, ngpus_per_node, args):
         RandomResizedCropRGBImageDecoder((224, 224)),
         RandomHorizontalFlip(),
         ToTensor(),
-        ToTorchImage(),
-        Convert(torch.float32),
+        ToDevice(torch.device('cuda'), non_blocking=True),        ToTorchImage(),
+        Convert(torch.float16),
         torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
     val_image_pipeline = [
         CenterCropRGBImageDecoder((224, 224), ratio=224/256),
         ToTensor(),
+        ToDevice(torch.device('cuda'), non_blocking=True),        
         ToTorchImage(),
-        Convert(torch.float32),
+        Convert(torch.float16),
         torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
-    label_pipeline = [IntDecoder(), ToTensor(), Squeeze()]
+    label_pipeline = [IntDecoder(), ToTensor(), Squeeze(),
+                    ToDevice(torch.device('cuda'), non_blocking=True)]
 
     # print("args.gpu ->", args.gpu)
     train_loader = Loader('/home/cc/data/train_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
@@ -411,38 +413,36 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # data_time.update(time.time() - end)
 
         # cpu2gpu_start_time = time.time()
-        # if torch.cuda.is_available():
-        #     model.cuda()
-        # if args.gpu is not None:
-        #     images = images.cuda(args.gpu, non_blocking=True)
-        # if torch.cuda.is_available():
-        #     target = target.cuda(args.gpu, non_blocking=True)
+        if torch.cuda.is_available():
+            model.cuda()
+        if args.gpu is not None:
+            images = images.cuda(args.gpu, non_blocking=True)
+        if torch.cuda.is_available():
+            target = target.cuda(args.gpu, non_blocking=True)
         # print(args.gpu_count)
-        # time.sleep(args.batch_cpu2gpu_time/args.gpu_count)
+        time.sleep(args.batch_cpu2gpu_time/args.gpu_count)
 
         # cpu2gpu_time = time.time() - cpu2gpu_start_time
 
         # gpu_start_time = time.time()
 
         # # compute output
+        output = model(images)
         # output = model(images)
-        # # output = model(images)
-        # loss = criterion(output, target)
+        loss = criterion(output, target)
+
+        # measure accuracy and record loss
+        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        losses.update(loss.item(), images.size(0))
+        top1.update(acc1[0], images.size(0))
+        top5.update(acc5[0], images.size(0))
+
+        # compute gradient and do SGD step
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
         time.sleep(args.batch_gpu_compute_time/args.gpu_count)
-
-
-        # # measure accuracy and record loss
-        # acc1, acc5 = accuracy(output, target, topk=(1, 5))
-        # losses.update(loss.item(), images.size(0))
-        # top1.update(acc1[0], images.size(0))
-        # top5.update(acc5[0], images.size(0))
-
-        # # compute gradient and do SGD step
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
-
 
         total_time = time.time() - end
 

@@ -248,6 +248,7 @@ def main_worker(gpu, ngpus_per_node, args):
         RandomResizedCropRGBImageDecoder((224, 224)),
         RandomHorizontalFlip(),
         ToTensor(),
+        ToDevice(torch.device('cpu')),
         ToTorchImage(),
         Convert(torch.float32),
         torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
@@ -256,12 +257,13 @@ def main_worker(gpu, ngpus_per_node, args):
     val_image_pipeline = [
         CenterCropRGBImageDecoder((224, 224), ratio=224/256),
         ToTensor(),
+        ToDevice(torch.device('cpu')),
         ToTorchImage(),
         Convert(torch.float32),
         torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
-    label_pipeline = [IntDecoder(), ToTensor(), Squeeze()]
+    label_pipeline = [IntDecoder(), ToTensor(), Squeeze(), ToDevice(torch.device('cpu'))]
 
     # print("args.gpu ->", args.gpu)
     train_loader = Loader('/home/cc/data/train_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
