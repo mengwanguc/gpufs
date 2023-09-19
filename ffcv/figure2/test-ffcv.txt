@@ -9,3 +9,9 @@ test
 368.32577562	90.012031078 cpu + emulating normalize
 58.709133148	80.397965193 cpu + emulating normalize and convert
 59.441021204	81.132024765 cpu + emulating normalize and convert
+59.749343157	81.443444252
+59.768998623	81.461937189
+85.057182550
+84.956138611 gpu alexnet ffcv
+
+

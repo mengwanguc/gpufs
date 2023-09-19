@@ -258,14 +258,14 @@ def main_worker(gpu, ngpus_per_node, args):
         torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
     ]
 
-    val_image_pipeline = [
-        CenterCropRGBImageDecoder((224, 224), ratio=224/256),
-        ToTensor(),
-        ToDevice(torch.device('cpu')),
-        ToTorchImage(),
-        Convert(torch.float32),
-        torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
-    ]
+    # val_image_pipeline = [
+    #     CenterCropRGBImageDecoder((224, 224), ratio=224/256),
+    #     ToTensor(),
+    #     ToDevice(torch.device('cpu')),
+    #     ToTorchImage(),
+    #     Convert(torch.float32),
+    #     torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
+    # ]
 
     label_pipeline = [IntDecoder(), ToTensor(), Squeeze(), ToDevice(torch.device('cpu'))]
 
@@ -274,10 +274,10 @@ def main_worker(gpu, ngpus_per_node, args):
                           order=OrderOption.RANDOM,
                           pipelines={'image': train_image_pipeline, 'label': label_pipeline})
 
-    val_loader = Loader('/home/cc/data/val_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
-                        order=OrderOption.SEQUENTIAL,
-                        pipelines={'image': val_image_pipeline, 'label': label_pipeline},
-                        )
+    # val_loader = Loader('/home/cc/data/val_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
+    #                     order=OrderOption.SEQUENTIAL,
+    #                     pipelines={'image': val_image_pipeline, 'label': label_pipeline},
+    #                     )
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)

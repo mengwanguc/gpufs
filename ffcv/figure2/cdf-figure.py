@@ -79,7 +79,7 @@ cdf3 = np.arange(1, len(data2_sorted) + 1) / len(data3_sorted)
 cdf4 = np.arange(1, len(data2_sorted) + 1) / len(data4_sorted)
 
 plt.figure(figsize=(8, 4))  # Set the figure size (optional)
-
+plt.xlim([0, 0.004])
 plt.plot(data1_sorted, cdf1, label="normalize")  # Plot CDF for line 1
 plt.plot(data2_sorted, cdf2, label="todevice")  # Plot CDF for line 2
 plt.plot(data3_sorted, cdf3, label="totorchimage")  # Plot CDF for line 2
@@ -94,6 +94,5 @@ plt.legend()
 plt.grid(True)  # Add grid lines (optional)
 
 # plt.show()  # Display the chart
-
 
 plt.savefig("cdf-figure.jpg", format="jpg")
