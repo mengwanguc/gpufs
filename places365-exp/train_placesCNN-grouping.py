@@ -7,6 +7,7 @@ import argparse
 import os
 import shutil
 import time
+import json
 
 import torch
 import torch.nn as nn
@@ -167,7 +168,7 @@ def main():
 
         # train_top1.append(float((tt1.cpu().numpy())))
         # train_top5.append(float((tt5.cpu().numpy())))
-        val_top1.append(float((prec11.cpu().numpy())))
+        val_top1.append(float((prec1.cpu().numpy())))
         # val_top5.append(float((vt5.cpu().numpy())))
 
     strs = ""
