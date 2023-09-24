@@ -45,6 +45,7 @@ with open('totorchimage.txt', 'r') as file:
         if line:  # Check if the line is not empty
             try:
                 number = float(line)  # Convert the line to a float
+                # print(number)
                 totorchimage_list.append(number)  # Append the number to the list
             except ValueError:
                 print(f"Warning: Skipped line '{line}' as it is not a valid float.")
@@ -82,7 +83,7 @@ plt.figure(figsize=(8, 4))  # Set the figure size (optional)
 plt.xlim([0, 0.004])
 plt.plot(data1_sorted, cdf1, label="normalize")  # Plot CDF for line 1
 plt.plot(data2_sorted, cdf2, label="todevice")  # Plot CDF for line 2
-plt.plot(data3_sorted, cdf3, label="totorchimage")  # Plot CDF for line 2
+plt.plot(data3_sorted, cdf3, label="totorchimage", linewidth=3, linestyle='dashed')  # Plot CDF for line 2
 plt.plot(data3_sorted, cdf4, label="convert")  # Plot CDF for line 2
 
 # Customize the chart with labels, legend, etc.

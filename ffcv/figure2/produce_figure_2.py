@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 categories = ["ImageFolder Data Reading Only", "ImageFolder Reading + Processing", "ImageFolder Full Training", "Idealized Training","FFCV"]
-values = [35, 310, 327, 21 ,109]  
+values = [35, 310, 327, 21 ,83]  
 # values = [34, 311, 330, 24 ,82] 
 
 plt.figure(figsize=(8, 4))  # Set the figure size (optional)

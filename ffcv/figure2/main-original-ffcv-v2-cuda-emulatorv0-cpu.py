@@ -87,7 +87,7 @@ parser.add_argument('--seed', default=None, type=int,
                     help='seed for initializing training. ')
 parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
-parser.add_argument('--gpu-type', default='p100', type=str,
+parser.add_argument('--gpu-type', default='A100PCIE', type=str,
                     help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
 parser.add_argument('--gpu-count', default=8, type=int,
                     help='number of GPUs to use.')
@@ -344,7 +344,7 @@ def parse_gpu_proflie(args):
     columns = ["GPU Type", "GPU memory", "Model Name", "Batch size", "Input size", "Memory required (MB)", 
                 "cpu-to-gpu time", "gpu compute time", "batch # per epoch", "transfer time per epoch", 
                 "compute time per epoch", "reason"]
-    df = pd.read_csv('profile.csv', sep='\t', header=None, names=columns)
+    df = pd.read_csv('profile.csv', sep='\t', header=None, names=columns, on_bad_lines='skip')
     df_filter_gpu_type = df[df['GPU Type'].str.contains(args.gpu_type, case=False)]
     df_filter_model = df_filter_gpu_type[df_filter_gpu_type["Model Name"].str.contains(args.arch, case=False)]
     if df_filter_model.empty:

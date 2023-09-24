@@ -386,7 +386,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # quit()
 
     with open("test.txt", 'a') as f:
-            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(sum(data_time_list), sum(batch_time_list), sum(gpu_time_list)))
+            f.write("{:.9f}\t{:.9f}\n".format(sum(data_time_list), sum(batch_time_list)))
 
 
 def validate(val_loader, model, criterion, args):

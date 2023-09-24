@@ -1,14 +1,11 @@
 # https://github.com/pytorch/examples/blob/6ab697cbaaa164b6eca551e8e8428dfa3b1d1e4b/imagenet/main.py
 
-import matplotlib.pyplot as plt
-import json
 import argparse
 import os
 import random
 import shutil
 import time
 import warnings
-import numpy as np
 import pandas as pd
 
 import os
@@ -28,14 +25,11 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
-import torchvision
 
-from ffcv.loader import Loader, OrderOption
-from ffcv.transforms import ToTensor, ToDevice, Squeeze, NormalizeImage, RandomHorizontalFlip, ToTorchImage
-from ffcv.fields.rgb_image import CenterCropRGBImageDecoder, RandomResizedCropRGBImageDecoder
-from ffcv.fields.basics import IntDecoder
-from ffcv.transforms import RandomHorizontalFlip, Cutout, \
-    RandomTranslate, Convert, ToDevice, ToTensor, ToTorchImage
+import nvidia.dali as dali
+import nvidia.dali.ops as ops
+import nvidia.dali.types as types
+from nvidia.dali.plugin.pytorch import DALIGenericIterator
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -87,24 +81,61 @@ parser.add_argument('--seed', default=None, type=int,
                     help='seed for initializing training. ')
 parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
-parser.add_argument('--gpu-type', default='p100', type=str,
-                    help='gpu type that you are using, e.g. p100/v100/rtx6000/...')
-parser.add_argument('--gpu-count', default=8, type=int,
-                    help='number of GPUs to use.')
 parser.add_argument('--multiprocessing-distributed', action='store_true',
                     help='Use multi-processing distributed training to launch '
                          'N processes per node, which has N GPUs. This is the '
                          'fastest way to use PyTorch for either single node or '
                          'multi node data parallel training')
 
+class DALITrainPipeline:
+    def __init__(self, batch_size, num_threads, device_id, data_dir):
+        self.pipe = dali.pipeline.Pipeline(batch_size=batch_size, num_threads=num_threads, device_id=device_id)
+        self.input = ops.FileReader(file_root=data_dir)
+        self.decode = ops.ImageDecoder(device="mixed", output_type=types.RGB)
+        self.random_resized_crop = ops.RandomResizedCrop(device="gpu", size=(224, 224))
+        self.random_horizontal_flip = ops.Flip(device="gpu", horizontal=1)
+        self.transpose = ops.Transpose(device="gpu", perm=[2, 0, 1])
+        self.to_float = ops.Cast(device="gpu", dtype=types.FLOAT)
+        self.normalize = ops.CropMirrorNormalize(device="gpu", mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
+                                              std=[0.229 * 255, 0.224 * 255, 0.225 * 255])
+        
+    def define_graph(self):
+        inputs, labels = self.input()
+        images = self.decode(inputs)
+        images = self.random_resized_crop(images)
+        images = self.random_horizontal_flip(images)
+        images = self.transpose(images)
+        images = self.to_float(images)
+        images = self.normalize(images)
+        return images, labels
+
+class DALIValPipeline:
+    def __init__(self, batch_size, num_threads, device_id, data_dir):
+        self.pipe = dali.pipeline.Pipeline(batch_size=batch_size, num_threads=num_threads, device_id=device_id)
+        self.input = ops.FileReader(file_root=data_dir)
+        self.decode = ops.ImageDecoder(device="mixed", output_type=types.RGB)
+        self.resize = ops.Resize(device="gpu", resize_x=256, resize_y=256)
+        self.center_crop = ops.Crop(device="gpu", crop=(224, 224))
+        self.transpose = ops.Transpose(device="gpu", perm=[2, 0, 1])
+        self.to_float = ops.Cast(device="gpu", dtype=types.FLOAT)
+        self.normalize = ops.CropMirrorNormalize(device="gpu", mean=[0.485 * 255, 0.456 * 255, 0.406 * 255],
+                                              std=[0.229 * 255, 0.224 * 255, 0.225 * 255])
+        
+    def define_graph(self):
+        inputs, labels = self.input()
+        images = self.decode(inputs)
+        images = self.resize(images)
+        images = self.center_crop(images)
+        images = self.transpose(images)
+        images = self.to_float(images)
+        images = self.normalize(images)
+        return images, labels
+
 best_acc1 = 0
 
 
 def main():
     args = parser.parse_args()
-    print("NOT using MinIO cache.")
-    print("NOT using MinIO cache.")
-    print("NOT using MinIO cache.")
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -137,18 +168,10 @@ def main():
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args)
 
-train_top1 = []
-train_top5 = []
-val_top1 = []
-val_top5 =[]
+
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
-    global train_top1
-    global train_top5
-    global val_top1
-    global val_top5
     args.gpu = gpu
-
     parse_gpu_proflie(args)
 
     if args.gpu is not None:
@@ -171,7 +194,6 @@ def main_worker(gpu, ngpus_per_node, args):
         print("=> creating model '{}'".format(args.arch))
         model = models.__dict__[args.arch]()
 
-    # print('using CPU, this will be slow')
     if not torch.cuda.is_available():
         print('using CPU, this will be slow')
     elif args.distributed:
@@ -193,11 +215,9 @@ def main_worker(gpu, ngpus_per_node, args):
             # available GPUs if device_ids are not set
             model = torch.nn.parallel.DistributedDataParallel(model)
     elif args.gpu is not None:
-        # print("test")
         torch.cuda.set_device(args.gpu)
         model = model.cuda(args.gpu)
     else:
-        # print("test1")
         # DataParallel will divide and allocate batch_size to all available GPUs
         if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
             model.features = torch.nn.DataParallel(model.features)
@@ -243,97 +263,79 @@ def main_worker(gpu, ngpus_per_node, args):
     # Data loading code
     traindir = os.path.join(args.data, 'train')
     valdir = os.path.join(args.data, 'val')
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                     std=[0.229, 0.224, 0.225])
+
+    # train_dataset = datasets.ImageFolder(
+    #     traindir,
+    #     transforms.Compose([
+    #         transforms.RandomResizedCrop(224),
+    #         transforms.RandomHorizontalFlip(),
+    #         transforms.ToTensor(),
+    #         normalize,
+    #     ]))
+
+    # if args.distributed:
+    #     train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+    # else:
+    #     train_sampler = None
+
+    # train_loader = torch.utils.data.DataLoader(
+    #     train_dataset, batch_size=args.batch_size, shuffle=(train_sampler is None),
+    #     num_workers=args.workers, pin_memory=True, sampler=train_sampler)
+
+    # val_loader = torch.utils.data.DataLoader(
+    #     datasets.ImageFolder(valdir, transforms.Compose([
+    #         transforms.Resize(256),
+    #         transforms.CenterCrop(224),
+    #         transforms.ToTensor(),
+    #         normalize,
+    #     ])),
+    #     batch_size=args.batch_size, shuffle=False,
+    #     num_workers=args.workers, pin_memory=True)
+
+    # Create DALI pipelines for training and validation
+    train_pipeline = DALITrainPipeline(batch_size=args.batch_size, num_threads=args.workers, device_id=0, data_dir=traindir)
+    # train_pipeline.build()
+    val_pipeline = DALIValPipeline(batch_size=args.batch_size, num_threads=args.workers, device_id=0, data_dir=valdir)
+    # val_pipeline.build()
+
+    # Create DALI DataLoaders
+    train_loader = DALIGenericIterator([train_pipeline], ["data", "label"])
+    val_loader = DALIGenericIterator([val_pipeline], ["data", "label"])
     
-    IMAGENET_MEAN = np.array([0.485, 0.456, 0.406]) * 255
-    IMAGENET_STD = np.array([0.229, 0.224, 0.225]) * 255
-
-    # ToDevice(torch.device('cuda:None'), non_blocking=True),
-    train_image_pipeline = [
-        RandomResizedCropRGBImageDecoder((224, 224)),
-        RandomHorizontalFlip(),
-        ToTensor(),
-        ToDevice(torch.device('cpu')),
-        ToTorchImage(),
-        Convert(torch.float32),
-        torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
-    ]
-
-    # val_image_pipeline = [
-    #     CenterCropRGBImageDecoder((224, 224), ratio=224/256),
-    #     ToTensor(),
-    #     ToDevice(torch.device('cpu')),
-    #     ToTorchImage(),
-    #     Convert(torch.float32),
-    #     torchvision.transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD)
-    # ]
-
-    label_pipeline = [IntDecoder(), ToTensor(), Squeeze(), ToDevice(torch.device('cpu'))]
-
-    # print("args.gpu ->", args.gpu)
-    train_loader = Loader('/home/cc/data/train_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
-                          order=OrderOption.RANDOM,
-                          pipelines={'image': train_image_pipeline, 'label': label_pipeline})
-
-    # val_loader = Loader('/home/cc/data/val_500_0.50_90.ffcv', batch_size=args.batch_size, num_workers=args.workers,
-    #                     order=OrderOption.SEQUENTIAL,
-    #                     pipelines={'image': val_image_pipeline, 'label': label_pipeline},
-    #                     )
-
     if args.evaluate:
         validate(val_loader, model, criterion, args)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
-        # print("epoch")
         if args.distributed:
             train_sampler.set_epoch(epoch)
 
         # train for one epoch
         train(train_loader, model, criterion, optimizer, epoch, args)
-        # tt1, tt5 = train(train_loader, model, criterion, optimizer, epoch, args)
+
         # evaluate on validation set
-        # vt1, vt5 = validate(val_loader, model, criterion, args)
+        # acc1 = validate(val_loader, model, criterion, args)
         
-    #     scheduler.step()
+        # scheduler.step()
 
-    #     # remember best acc@1 and save checkpoint
-    #     is_best = vt1 > best_acc1
-    #     best_acc1 = max(vt1, best_acc1)
+        
+        # # remember best acc@1 and save checkpoint
+        # is_best = acc1 > best_acc1
+        # best_acc1 = max(acc1, best_acc1)
 
-    #     if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-    #             and args.rank % ngpus_per_node == 0):
-    #         save_checkpoint({
-    #             'epoch': epoch + 1,
-    #             'arch': args.arch,
-    #             'state_dict': model.state_dict(),
-    #             'best_acc1': best_acc1,
-    #             'optimizer' : optimizer.state_dict(),
-    #             'scheduler' : scheduler.state_dict()
-    #         }, is_best)
-         
-    #     train_top1.append(float((tt1.cpu().numpy())))
-    #     train_top5.append(float((tt5.cpu().numpy())))
-    #     val_top1.append(float((vt1.cpu().numpy())))
-    #     val_top5.append(float((vt5.cpu().numpy())))
+        # if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+        #         and args.rank % ngpus_per_node == 0):
+        #     save_checkpoint({
+        #         'epoch': epoch + 1,
+        #         'arch': args.arch,
+        #         'state_dict': model.state_dict(),
+        #         'best_acc1': best_acc1,
+        #         'optimizer' : optimizer.state_dict(),
+        #         'scheduler' : scheduler.state_dict()
+        #     }, is_best)
 
-    # strs = ""
-    # if args.arch.startswith('alexnet'):
-    #     strs = "alexnet"
-    # elif args.arch.startswith('vgg11'):
-    #     strs = "vgg11"
-    # elif args.arch.startswith('resnet18'):
-    #     strs = "resnet18"
-    # elif args.arch.startswith('resnet101'):
-    #     strs = "resnet101"
-    # model_data = {'train_top1': train_top1, 'train_top5': train_top5,
-    # 'val_top1': val_top1, 'val_top5': val_top5, 'model':strs,
-    # 'args.epochs': args.epochs, 'args.batch_size': args.batch_size, 
-    # 'batch_acc_train': batch_top1_top5_train, 'batch_acc_val':batch_top1_top5_val}
-    # bat = str(args.batch_size)
-    # epo = str(args.epochs)
-    # txt = strs + "_batch_" + bat + "_epo_" + epo
-    # with open(txt , 'w') as convert_file:
-    #     convert_file.write(json.dumps(model_data))
 
 def is_convertible_to_float(value):
     try:
@@ -347,7 +349,7 @@ def parse_gpu_proflie(args):
                 "cpu-to-gpu time", "gpu compute time", "batch # per epoch", "transfer time per epoch", 
                 "compute time per epoch", "reason"]
     df = pd.read_csv('profile.csv', sep='\t', header=None, names=columns)
-    df_filter_gpu_type = df[df['GPU Type'].str.contains(args.gpu_type, case=False)]
+    df_filter_gpu_type = df[df['GPU Type'].str.contains("p100", case=False)]
     df_filter_model = df_filter_gpu_type[df_filter_gpu_type["Model Name"].str.contains(args.arch, case=False)]
     if df_filter_model.empty:
         print("We don't find the matching gpu_type {} for model {}. Please double check the inputs...".format(args.gpu_type, args.arch))
@@ -379,12 +381,7 @@ def parse_gpu_proflie(args):
                 args.batch_size, args.batch_cpu2gpu_time, args.batch_gpu_compute_time))
 
 
-
-# curr_batch_train = 0
-# batch_top1_top5_train = {}
 def train(train_loader, model, criterion, optimizer, epoch, args):
-    # global curr_batch_train
-    # global batch_top1_top5_train
     batch_time = AverageMeter('Time', ':6.3f')
     data_time = AverageMeter('Data', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
@@ -398,104 +395,60 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
-    # total_data_wait_time = 0
-    # total_cpu2gpu_time = 0
-    # total_gpu_time = 0
-
-    # measurements = []
-
     data_time_list = []
     batch_time_list = []
+    gpu_time_list = []
 
     end = time.time()
-    temp = 0
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
         loading_data_time = time.time() - end
         data_time_list.append(loading_data_time)
-        # data_wait_time = time.time() - end
-        # data_time.update(time.time() - end)
 
-        # cpu2gpu_start_time = time.time()
-        # if torch.cuda.is_available():
-        #     model.cuda()
-        # if args.gpu is not None:
-        #     images = images.cuda(args.gpu, non_blocking=True)
-        # if torch.cuda.is_available():
-        #     target = target.cuda(args.gpu, non_blocking=True)
-        # print(args.gpu_count)
-        # time.sleep(args.batch_cpu2gpu_time/args.gpu_count)
+        data_time.update(time.time() - end)
 
-        # cpu2gpu_time = time.time() - cpu2gpu_start_time
+        gpu_start_time = time.time()
+        # time.sleep(args.batch_cpu2gpu_time/8)
+        if args.gpu is not None:
+            images = images.cuda(args.gpu, non_blocking=True)
+        if torch.cuda.is_available():
+            target = target.cuda(args.gpu, non_blocking=True)
 
-        # gpu_start_time = time.time()
+        # compute output
+        output = model(images)
+        loss = criterion(output, target)
 
-        # # compute output
-        # output = model(images)
-        # # output = model(images)
-        # loss = criterion(output, target)
-
-        time.sleep(args.batch_gpu_compute_time/args.gpu_count)
-
-
-        # # measure accuracy and record loss
-        # acc1, acc5 = accuracy(output, target, topk=(1, 5))
-        # losses.update(loss.item(), images.size(0))
-        # top1.update(acc1[0], images.size(0))
-        # top5.update(acc5[0], images.size(0))
+        # measure accuracy and record loss
+        acc1, acc5 = accuracy(output, target, topk=(1, 5))
+        losses.update(loss.item(), images.size(0))
+        top1.update(acc1[0], images.size(0))
+        top5.update(acc5[0], images.size(0))
 
         # # compute gradient and do SGD step
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
+        # time.sleep(args.batch_gpu_compute_time/8)
+        gpu_time = time.time() - gpu_start_time
+        gpu_time_list.append(gpu_time)
 
+        # measure elapsed time
         total_time = time.time() - end
-
-        # gpu_time = time.time() - gpu_start_time
+        batch_time.update(time.time() - end)
+        end = time.time()
 
         batch_time_list.append(total_time)
 
-        # print("batch {} \t data_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
-        #         i, data_wait_time, cpu2gpu_time, gpu_time
-        # ))
-
-        # measure elapsed time
-        # batch_time.update(time.time() - end)
-
-        # total_data_wait_time += data_wait_time
-        # total_cpu2gpu_time += cpu2gpu_time
-        # total_gpu_time += gpu_time
-        end = time.time()
-
-        # print(total_data_wait_time,total_cpu2gpu_time,total_gpu_time)
-
         if i % args.print_freq == 0:
             progress.display(i)
-        #     curr_batch_train += i
-        #     curr_batch_train -= temp
-        #     if curr_batch_train != 0 and curr_batch_train % 100 == 0:
-        #         t1 = float(top1.avg.cpu().numpy())
-        #         t5 = float(top5.avg.cpu().numpy())
-        #         batch_top1_top5_train[curr_batch_train] = (t1, t5)
-        #     temp = i
+        # quit()
 
-    with open("test-ffcv.txt", 'a') as f:
-        f.write("{:.9f}\t{:.9f}\n".format(sum(data_time_list), sum(batch_time_list)))
-    # output_filename = "{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size)
-    # if not os.path.exists(args.gpu_type):
-    #     os.makedirs(args.gpu_type)
-    # with open(output_filename, 'a') as f:
-    #     for data_wait_time, cpu2cpu_time, gpu_time in measurements:
-    #         f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(data_wait_time, cpu2gpu_time, gpu_time))
+    with open("test.txt", 'a') as f:
+            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(sum(data_time_list), sum(batch_time_list), sum(gpu_time_list)))
 
-    # return (top1.avg,top5.avg)
 
-batch_top1_top5_val = {}
-curr_batch_val = 0
 def validate(val_loader, model, criterion, args):
-    global curr_batch_val
-    global batch_top1_top5_val
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
@@ -510,7 +463,6 @@ def validate(val_loader, model, criterion, args):
 
     with torch.no_grad():
         end = time.time()
-        temp = 0
         for i, (images, target) in enumerate(val_loader):
             if args.gpu is not None:
                 images = images.cuda(args.gpu, non_blocking=True)
@@ -538,7 +490,7 @@ def validate(val_loader, model, criterion, args):
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))
 
-    # return (top1.avg, top5.avg)
+    return top1.avg
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
@@ -576,7 +528,6 @@ class ProgressMeter(object):
         self.batch_fmtstr = self._get_batch_fmtstr(num_batches)
         self.meters = meters
         self.prefix = prefix
-        self.num_batches = num_batches
 
     def display(self, batch):
         entries = [self.prefix + self.batch_fmtstr.format(batch)]

@@ -8,6 +8,11 @@ import time
 import warnings
 import pandas as pd
 
+import os
+print("Cleaning cache...")
+os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
+
+
 import torch
 import torch.nn as nn
 import torch.nn.parallel
