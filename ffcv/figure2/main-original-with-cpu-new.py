@@ -6,7 +6,6 @@ import random
 import shutil
 import time
 import warnings
-# import pandas as pd
 
 import os
 print("Cleaning cache...")
@@ -123,7 +122,6 @@ def main():
 def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
     args.gpu = gpu
-    # parse_gpu_proflie(args)
 
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
@@ -257,69 +255,25 @@ def main_worker(gpu, ngpus_per_node, args):
         train(train_loader, model, criterion, optimizer, epoch, args)
 
         # evaluate on validation set
-        # acc1 = validate(val_loader, model, criterion, args)
+        acc1 = validate(val_loader, model, criterion, args)
         
-        # scheduler.step()
+        scheduler.step()
 
         
-        # # remember best acc@1 and save checkpoint
-        # is_best = acc1 > best_acc1
-        # best_acc1 = max(acc1, best_acc1)
+        # remember best acc@1 and save checkpoint
+        is_best = acc1 > best_acc1
+        best_acc1 = max(acc1, best_acc1)
 
-        # if not args.multiprocessing_distributed or (args.multiprocessing_distributed
-        #         and args.rank % ngpus_per_node == 0):
-        #     save_checkpoint({
-        #         'epoch': epoch + 1,
-        #         'arch': args.arch,
-        #         'state_dict': model.state_dict(),
-        #         'best_acc1': best_acc1,
-        #         'optimizer' : optimizer.state_dict(),
-        #         'scheduler' : scheduler.state_dict()
-        #     }, is_best)
-
-
-# def is_convertible_to_float(value):
-#     try:
-#         float(value)
-#         return True
-#     except ValueError:
-#         return False    
-
-# def parse_gpu_proflie(args):
-#     columns = ["GPU Type", "GPU memory", "Model Name", "Batch size", "Input size", "Memory required (MB)", 
-#                 "cpu-to-gpu time", "gpu compute time", "batch # per epoch", "transfer time per epoch", 
-#                 "compute time per epoch", "reason"]
-#     df = pd.read_csv('profile.csv', sep='\t', header=None, names=columns)
-#     df_filter_gpu_type = df[df['GPU Type'].str.contains("p100", case=False)]
-#     df_filter_model = df_filter_gpu_type[df_filter_gpu_type["Model Name"].str.contains(args.arch, case=False)]
-#     if df_filter_model.empty:
-#         print("We don't find the matching gpu_type {} for model {}. Please double check the inputs...".format(args.gpu_type, args.arch))
-#         exit(0)
-
-#     df_filter_batch = df_filter_model[df_filter_model["Batch size"] == args.batch_size]
-#     if df_filter_batch.empty:
-#         print("We don't find the matching batch size {}. Using other batch size to estimate...".format(args.batch_size))
-#         seed_batch_size = 0
-#         seed_batch_cpu2gpu_time = 0
-#         seed_batch_gpu_compute_time = 0
-#         for index, row in df_filter_model.iterrows():
-#             if is_convertible_to_float(row["gpu compute time"]):
-#                 seed_batch_size = int(row["Batch size"])
-#                 seed_batch_cpu2gpu_time = float(row["cpu-to-gpu time"])
-#                 seed_batch_gpu_compute_time = float(row["gpu compute time"])
-#                 break
-#         if seed_batch_size == 0:
-#             print("We don't find any available profile data for gpu_type {} and model {}. Please double check the profile data".format(args.gpu_type, args.arch))
-#             exit(0)
-#         args.batch_cpu2gpu_time = seed_batch_cpu2gpu_time * args.batch_size / seed_batch_size
-#         args.batch_gpu_compute_time = seed_batch_gpu_compute_time * args.batch_size / seed_batch_size
-        
-#     else:
-#         args.batch_cpu2gpu_time = df_filter_batch.at[df_filter_batch.index[0], 'cpu-to-gpu time']
-#         args.batch_gpu_compute_time = df_filter_batch.at[df_filter_batch.index[0], 'gpu compute time']
-        
-#     print("batch_size: {}\t batch_cpu2gpu_time: {}\t batch_gpu_compute_time: {}".format(
-#                 args.batch_size, args.batch_cpu2gpu_time, args.batch_gpu_compute_time))
+        if not args.multiprocessing_distributed or (args.multiprocessing_distributed
+                and args.rank % ngpus_per_node == 0):
+            save_checkpoint({
+                'epoch': epoch + 1,
+                'arch': args.arch,
+                'state_dict': model.state_dict(),
+                'best_acc1': best_acc1,
+                'optimizer' : optimizer.state_dict(),
+                'scheduler' : scheduler.state_dict()
+            }, is_best)
 
 
 def train(train_loader, model, criterion, optimizer, epoch, args):
@@ -336,22 +290,20 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
-    data_time_list = []
-    batch_time_list = []
+    total_time_list = []
+    load_time_list = []
     gpu_time_list = []
-
-    torch.cuda.synchronize()
+    # torch.cuda.synchronize()
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
-        torch.cuda.synchronize()
-        loading_data_time = time.time() - end
-        data_time_list.append(loading_data_time)
-
+        # torch.cuda.synchronize()
+        load_time_list.append(time.time() - end)
         data_time.update(time.time() - end)
-        torch.cuda.synchronize()
+
+
+        # torch.cuda.synchronize()
         gpu_start_time = time.time()
-        # time.sleep(args.batch_cpu2gpu_time/8)
         if args.gpu is not None:
             images = images.cuda(args.gpu, non_blocking=True)
         if torch.cuda.is_available():
@@ -367,31 +319,23 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         top1.update(acc1[0], images.size(0))
         top5.update(acc5[0], images.size(0))
 
-        # # compute gradient and do SGD step
+        # compute gradient and do SGD step
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        # torch.cuda.synchronize()
+        gpu_time_list.append(time.time() - gpu_start_time)
 
-        torch.cuda.synchronize()
-        # time.sleep(args.batch_gpu_compute_time/8)
-        gpu_time = time.time() - gpu_start_time
-        print(gpu_time)
-        gpu_time_list.append(gpu_time)
-
+        # torch.cuda.synchronize()
+        total_time_list.append(time.time() - end)
         # measure elapsed time
-        torch.cuda.synchronize()
-        total_time = time.time() - end
         batch_time.update(time.time() - end)
         end = time.time()
 
-        batch_time_list.append(total_time)
-
         if i % args.print_freq == 0:
             progress.display(i)
-        # quit()
-
     with open("test.txt", 'a') as f:
-            f.write("loaddata={:.9f}\t gpucompute={:.9f}\t total={:.9f}\n".format(sum(data_time_list),sum(gpu_time_list), sum(batch_time_list)))
+            f.write("loaddata={:.9f}\t gpucompute={:.9f}\t total={:.9f}\n".format(sum(load_time_list),sum(gpu_time_list), sum(total_time_list)))
 
 
 def validate(val_loader, model, criterion, args):

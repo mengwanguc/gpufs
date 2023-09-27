@@ -10,9 +10,9 @@ import time
 import warnings
 import numpy as np
 
-import os
-print("Cleaning cache...")
-os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
+# import os
+# print("Cleaning cache...")
+# os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
 
 import torch
 import torch.nn as nn
@@ -48,7 +48,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                     help='model architecture: ' +
                         ' | '.join(model_names) +
                         ' (default: resnet18)')
-parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
+parser.add_argument('-j', '--workers', default=8, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('--epochs', default=90, type=int, metavar='N',
                     help='number of total epochs to run')
@@ -342,6 +342,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
     total_time_list = []
+    load_time_list = []
+    torch.cuda.synchronize()
     end = time.time()
     temp = 0
     for i, (images, target) in enumerate(train_loader):
@@ -349,6 +351,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # print("target ->", type(target), target.size())
         # measure data loading time
         data_time.update(time.time() - end)
+        torch.cuda.synchronize()
+        load_time_list.append(time.time()-end)
         # if torch.cuda.is_available():
         #     model.cuda()
         # if args.gpu is not None:
@@ -369,8 +373,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # output = model(images)
         loss = criterion(output, target)
 
-        total_time = time.time() - end
-        total_time_list.append(total_time)
+        
 
         # measure accuracy and record loss
         # acc1, acc5 = accuracy(output, target, topk=(1, 5))
@@ -378,11 +381,14 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # top1.update(acc1[0], images.size(0))
         # top5.update(acc5[0], images.size(0))
 
-        # # compute gradient and do SGD step
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
-
+        # compute gradient and do SGD step
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        
+        torch.cuda.synchronize()
+        total_time = time.time() - end
+        total_time_list.append(total_time)
         # measure elapsed time
         batch_time.update(time.time() - end)
         
@@ -400,7 +406,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             # temp = i
 
     with open("test-ffcv.txt", 'a') as f:
-        f.write("{:.9f}\n".format(sum(total_time_list)))
+        f.write("loadtime={:.9f}\t totaltime={:.9f}\n".format(sum(load_time_list),sum(total_time_list)))
     return (top1.avg,top5.avg)
 
 batch_top1_top5_val = {}

@@ -290,7 +290,7 @@ def parse_gpu_proflie(args):
                 "cpu-to-gpu time", "gpu compute time", "batch # per epoch", "transfer time per epoch", 
                 "compute time per epoch", "reason"]
     df = pd.read_csv('profile.csv', sep='\t', header=None, names=columns)
-    df_filter_gpu_type = df[df['GPU Type'].str.contains("A100PCIE", case=False)]
+    df_filter_gpu_type = df[df['GPU Type'].str.contains("rtx6000", case=False)]
     df_filter_model = df_filter_gpu_type[df_filter_gpu_type["Model Name"].str.contains(args.arch, case=False)]
     if df_filter_model.empty:
         print("We don't find the matching gpu_type {} for model {}. Please double check the inputs...".format(args.gpu_type, args.arch))
@@ -386,7 +386,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # quit()
 
     with open("test.txt", 'a') as f:
-        f.write("{:.9f}\t{:.9f}n".format(sum(data_time_list), sum(batch_time_list)))
+        f.write("{:.9f}\t{:.9f}\t{:.9f}n".format(sum(data_time_list), sum(gpu_time_list),sum(batch_time_list)))
 
 
 def validate(val_loader, model, criterion, args):

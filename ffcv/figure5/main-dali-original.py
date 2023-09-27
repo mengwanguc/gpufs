@@ -4,9 +4,9 @@ import shutil
 import time
 import math
 
-# import os
-# print("Cleaning cache...")
-# os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
+import os
+print("Cleaning cache...")
+os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
 
 
 import torch
@@ -121,28 +121,30 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                      random_shuffle=is_training,
                                      pad_last_batch=True,
                                      name="Reader")
-    # print("images, labels ->", images, labels)
-    # dali_device = 'cpu' if dali_cpu else 'gpu'
-    # decoder_device = 'cpu' if dali_cpu else 'mixed'
-    print(dali_cpu)
-    dali_device = 'gpu'
-    decoder_device = 'mixed'
+    dali_device = 'cpu' if dali_cpu else 'gpu'
+    decoder_device = 'cpu' if dali_cpu else 'mixed'
     # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
-    # device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
-    # host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
-    # # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
-    # preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
-    # preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
+    device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
+    host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
+    # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
+    preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
+    preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
     if is_training:
-        images = fn.decoders.image(images,
-                                    device=decoder_device, output_type=types.RGB)
+        images = fn.decoders.image_random_crop(images,
+                                               device=decoder_device, output_type=types.RGB,
+                                               device_memory_padding=device_memory_padding,
+                                               host_memory_padding=host_memory_padding,
+                                               preallocate_width_hint=preallocate_width_hint,
+                                               preallocate_height_hint=preallocate_height_hint,
+                                               random_aspect_ratio=[0.8, 1.25],
+                                               random_area=[0.1, 1.0],
+                                               num_attempts=100)
         images = fn.resize(images,
-                           device=dali_device, 
+                           device=dali_device,
                            resize_x=crop,
-                           resize_y=crop)
-        images = fn.flip(images, horizontal=1)
-        # mirror = fn.random.coin_flip(probability=0.5)
-        mirror = False
+                           resize_y=crop,
+                           interp_type=types.INTERP_TRIANGULAR)
+        mirror = fn.random.coin_flip(probability=0.5)
     else:
         images = fn.decoders.image(images,
                                    device=decoder_device,
@@ -160,10 +162,8 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                       crop=(crop, crop),
                                       mean=[0.485 * 255,0.456 * 255,0.406 * 255],
                                       std=[0.229 * 255,0.224 * 255,0.225 * 255],
-                                      mirror=mirror)    
+                                      mirror=mirror)
     labels = labels.gpu()
-    # print("images ->", images)
-    # print("labels ->", labels)
     return images, labels
 
 
@@ -281,8 +281,6 @@ def main():
 
     train_loader = None
     val_loader = None
-    # print("datadir->", traindir)
-    # quit()
     if not args.disable_dali:
         train_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                           num_threads=args.workers,
@@ -296,7 +294,9 @@ def main():
                                           num_shards=args.world_size,
                                           is_training=True)
         train_pipe.build()
-        train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader")
+        train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader",
+                                                  last_batch_policy=LastBatchPolicy.PARTIAL,
+                                                  auto_reset=True)
 
         val_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                         num_threads=args.workers,
@@ -442,6 +442,7 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
     else:
         data_iterator = train_loader
 
+
     batch_time_list = []
     data_time_list = []
     gpu_time_list = []
@@ -450,15 +451,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
     torch.cuda.synchronize()
     end = time.time()
     for i, data in enumerate(data_iterator):
-        # print(data)
-        # print("i, data ->", i, len(data), type(data))
-        # print("data[0] ->", len(data[0]), type(data[0]))
-        # quit()
         loading_data_time = time.time() - end
         data_time_list.append(loading_data_time)
 
         torch.cuda.synchronize()
         gpu_start_time = time.time()
+
         if args.disable_dali:
             input, target = data
             train_loader_len = len(train_loader)
@@ -467,10 +465,6 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             target = data[0]["label"].squeeze(-1).long()
             train_loader_len = int(math.ceil(data_iterator._size / args.batch_size))
 
-        # print("input ->", input, len(input))
-        # print("target ->", target, len(target))
-        # print("train_loader_len ->", train_loader_len)
-        
         if args.prof >= 0 and i == args.prof:
             print("Profiling begun at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStart()
@@ -482,7 +476,6 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             if i > 10:
                 break
 
-        # using synchronize
         with torch.cuda.amp.autocast(enabled=args.fp16_mode):
             output = model(input)
             loss = criterion(output, target)
@@ -507,12 +500,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
         torch.cuda.synchronize()
         # time.sleep(args.batch_gpu_compute_time/8)
         gpu_time = time.time() - gpu_start_time
-        print(gpu_time)
+        # print(gpu_time)
         gpu_time_list.append(gpu_time)
 
         torch.cuda.synchronize()
         total_time = time.time() - end
-        end = time.time()
+        # end = time.time()
 
         batch_time_list.append(total_time)
 
@@ -539,10 +532,7 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
 
             torch.cuda.synchronize()
             batch_time.update((time.time() - end)/args.print_freq)
-            
-            total_time = time.time() - end
-            batch_time_list.append(total_time)
-
+            end = time.time()
 
             if args.local_rank == 0:
                 print('Epoch: [{0}][{1}/{2}]\t'
@@ -557,20 +547,16 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
                        batch_time=batch_time,
                        loss=losses, top1=top1, top5=top5))
 
-            end = time.time()
-            # quit()
-
         # Pop range "Body of iteration {}".format(i)
         if args.prof >= 0: torch.cuda.nvtx.range_pop()
 
         if args.prof >= 0 and i == args.prof + 10:
             print("Profiling ended at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStop()
-            
+        quit()
 
-    with open("result-dali.txt", 'a') as f:
+    with open("result-dali-original.txt", 'a') as f:
             f.write("loaddata={:.9f}\t gpucompute={:.9f}\t total={:.9f}\n".format(sum(data_time_list),sum(gpu_time_list), sum(batch_time_list)))
-
 
     return batch_time.avg
 
