@@ -121,49 +121,49 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                      random_shuffle=is_training,
                                      pad_last_batch=True,
                                      name="Reader")
-    dali_device = 'cpu' if dali_cpu else 'gpu'
-    decoder_device = 'cpu' if dali_cpu else 'mixed'
-    # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
-    device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
-    host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
-    # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
-    preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
-    preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
-    if is_training:
-        images = fn.decoders.image_random_crop(images,
-                                               device=decoder_device, output_type=types.RGB,
-                                               device_memory_padding=device_memory_padding,
-                                               host_memory_padding=host_memory_padding,
-                                               preallocate_width_hint=preallocate_width_hint,
-                                               preallocate_height_hint=preallocate_height_hint,
-                                               random_aspect_ratio=[0.8, 1.25],
-                                               random_area=[0.1, 1.0],
-                                               num_attempts=100)
-        images = fn.resize(images,
-                           device=dali_device,
-                           resize_x=crop,
-                           resize_y=crop,
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = fn.random.coin_flip(probability=0.5)
-    else:
-        images = fn.decoders.image(images,
-                                   device=decoder_device,
-                                   output_type=types.RGB)
-        images = fn.resize(images,
-                           device=dali_device,
-                           size=size,
-                           mode="not_smaller",
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = False
+    # dali_device = 'cpu' if dali_cpu else 'gpu'
+    # decoder_device = 'cpu' if dali_cpu else 'mixed'
+    # # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
+    # device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
+    # host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
+    # # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
+    # preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
+    # preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
+    # if is_training:
+    #     images = fn.decoders.image_random_crop(images,
+    #                                            device=decoder_device, output_type=types.RGB,
+    #                                            device_memory_padding=device_memory_padding,
+    #                                            host_memory_padding=host_memory_padding,
+    #                                            preallocate_width_hint=preallocate_width_hint,
+    #                                            preallocate_height_hint=preallocate_height_hint,
+    #                                            random_aspect_ratio=[0.8, 1.25],
+    #                                            random_area=[0.1, 1.0],
+    #                                            num_attempts=100)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        resize_x=crop,
+    #                        resize_y=crop,
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = fn.random.coin_flip(probability=0.5)
+    # else:
+    #     images = fn.decoders.image(images,
+    #                                device=decoder_device,
+    #                                output_type=types.RGB)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        size=size,
+    #                        mode="not_smaller",
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = False
 
-    images = fn.crop_mirror_normalize(images.gpu(),
-                                      dtype=types.FLOAT,
-                                      output_layout="CHW",
-                                      crop=(crop, crop),
-                                      mean=[0.485 * 255,0.456 * 255,0.406 * 255],
-                                      std=[0.229 * 255,0.224 * 255,0.225 * 255],
-                                      mirror=mirror)
-    labels = labels.gpu()
+    # images = fn.crop_mirror_normalize(images.gpu(),
+    #                                   dtype=types.FLOAT,
+    #                                   output_layout="CHW",
+    #                                   crop=(crop, crop),
+    #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+    #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
+    #                                   mirror=mirror)
+    # labels = labels.gpu()
     return images, labels
 
 
@@ -228,6 +228,8 @@ def main():
         model = model.cuda().to(memory_format=memory_format)
     else:
         model = model.cuda()
+
+    # model = model.cpu()
 
     # Scale learning rate based on global batch size
     args.lr = args.lr*float(args.batch_size*args.world_size)/256.
@@ -450,7 +452,13 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
     # quit()
     torch.cuda.synchronize()
     end = time.time()
+    print("entering loader..")
     for i, data in enumerate(data_iterator):
+        # print("data[0] ->", data[0], type(data[0]), len(data[0]))
+        # print("data[0]['data'] ->", data[0]['data'].dtype, type(data[0]['data']), data[0]['data'].size())
+        # print("data[0]['label'] ->", data[0]['label'].dtype, type(data[0]['label']), data[0]['label'].size())
+        # quit()
+
         loading_data_time = time.time() - end
         data_time_list.append(loading_data_time)
 
@@ -476,9 +484,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             if i > 10:
                 break
 
+        # print("input ->", input.dtype, type(input), input.size(), input.device)
         with torch.cuda.amp.autocast(enabled=args.fp16_mode):
             output = model(input)
             loss = criterion(output, target)
+
+        # quit()
 
         # compute output
         if args.prof >= 0: torch.cuda.nvtx.range_push("forward")
@@ -515,7 +526,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             # iteration, since they incur an allreduce and some host<->device syncs.
 
             # Measure accuracy
-            prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            print("output.data, target ->", output.data, target)
+            # prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+            prec1 = torch.zeros((1), dtype=torch.float32, device='cuda:0')
+            prec5 = torch.zeros((1), dtype=torch.float32, device='cuda:0')
+            # print("prec1, prec5 ->", prec1, prec5, type(prec5), prec5.size(), type(prec1[0]), prec1.dtype)
+            # quit()
 
             # Average loss and accuracy across processes for logging
             if args.distributed:
@@ -553,11 +569,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
         if args.prof >= 0 and i == args.prof + 10:
             print("Profiling ended at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStop()
-        quit()
+        if i == 342:
+            break
 
     with open("result-dali-original.txt", 'a') as f:
             f.write("loaddata={:.9f}\t gpucompute={:.9f}\t total={:.9f}\n".format(sum(data_time_list),sum(gpu_time_list), sum(batch_time_list)))
-
+    quit()
     return batch_time.avg
 
 def validate(val_loader, model, criterion):
@@ -683,6 +700,7 @@ def accuracy(output, target, topk=(1,)):
     for k in topk:
         correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
         res.append(correct_k.mul_(100.0 / batch_size))
+    print("res->", res)
     return res
 
 

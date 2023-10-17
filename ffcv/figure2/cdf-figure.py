@@ -76,15 +76,15 @@ data4_sorted = np.sort(convert_list)
 # Calculate the CDF values
 cdf1 = np.arange(1, len(data1_sorted) + 1) / len(data1_sorted)
 cdf2 = np.arange(1, len(data2_sorted) + 1) / len(data2_sorted)
-cdf3 = np.arange(1, len(data2_sorted) + 1) / len(data3_sorted)
-cdf4 = np.arange(1, len(data2_sorted) + 1) / len(data4_sorted)
+cdf3 = np.arange(1, len(data3_sorted) + 1) / len(data3_sorted)
+cdf4 = np.arange(1, len(data4_sorted) + 1) / len(data4_sorted)
 
 plt.figure(figsize=(8, 4))  # Set the figure size (optional)
 plt.xlim([0, 0.004])
 plt.plot(data1_sorted, cdf1, label="normalize")  # Plot CDF for line 1
 plt.plot(data2_sorted, cdf2, label="todevice")  # Plot CDF for line 2
 plt.plot(data3_sorted, cdf3, label="totorchimage", linewidth=3, linestyle='dashed')  # Plot CDF for line 2
-plt.plot(data3_sorted, cdf4, label="convert")  # Plot CDF for line 2
+plt.plot(data4_sorted, cdf4, label="convert")  # Plot CDF for line 2
 
 # Customize the chart with labels, legend, etc.
 plt.xlabel("X-axis Label")
