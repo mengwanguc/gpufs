@@ -49,6 +49,8 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-l', '--use-ladcache', default=False, type=bool,
+                    metavar='LADCACHE', help='use LADCache for file loading')
 parser.add_argument('-A', '--use-async', default=False, type=bool, metavar='ASYNC',
                     help='use AsyncLoader for file loading')
 parser.add_argument('-m', '--use-minio', default=False, type=bool,
