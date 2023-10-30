@@ -312,21 +312,18 @@ def main_worker(gpu, ngpus_per_node, args):
     else:
         print("NOT using AsyncLoader")
 
+    ladcache = None
     if args.use_ladcache:
         print("Creating LADCache cache...")
-        cache = lc.Cache(
+        ladcache = lc.Cache(
             capacity=train_cache_size + val_cache_size,
             queue_depth=args.super_batch_size * args.batch_size,
             max_unsynced=args.batch_size,
             n_users=args.workers
         )
 
-        # For now let's make these the same... port conflicts if we don't.
-        train_cache = cache
-        val_cache = cache
-
         print("Spawning LADCache processes...")
-        cache.spawn_process()
+        ladcache.spawn_process()
 
     # Choose which "load_indices" implementation to use...
     load_indices_train = None
@@ -368,6 +365,7 @@ def main_worker(gpu, ngpus_per_node, args):
             normalize,
         ]),
         async_loader=async_loader,
+        ladcache=ladcache,
         load_indices_front=load_indices_train_FRONT,
         load_indices_back=load_indices_train_BACK
     )
@@ -403,6 +401,7 @@ def main_worker(gpu, ngpus_per_node, args):
                 normalize,
             ]),
             async_loader=async_loader,
+            ladcache=ladcache,
             load_indices_front=load_indices_val_FRONT,
         load_indices_back=load_indices_val_BACK),
         batch_size=args.batch_size, shuffle=False,
