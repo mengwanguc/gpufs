@@ -124,7 +124,7 @@ def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
     for i, indices in enumerate(batched_indices):
         for index in indices:
             path, _ = dataset.samples[index]
-            user_state.submit(path)
+            user_state.submit(path, retry=True)
 
 def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
     # Determine where all of the images belong.
