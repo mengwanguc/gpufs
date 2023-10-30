@@ -8,6 +8,7 @@ import time
 import warnings
 import minio
 import AsyncLoader as al
+import ladcache as lc
 import mlock
 import io
 import glob
@@ -301,7 +302,6 @@ def main_worker(gpu, ngpus_per_node, args):
                                  dispatch_n=args.super_batch_size * args.batch_size * args.workers,
                                  max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
                                  direct=args.use_minio)
-
         # Spawn the loader processes.
         print("Spawning the async loader process...")
         async_loader.spawn_loader()
@@ -309,6 +309,22 @@ def main_worker(gpu, ngpus_per_node, args):
         print("Loaders spawned.")
     else:
         print("NOT using AsyncLoader")
+
+    if args.use_ladcache:
+        print("Creating LADCache cache...")
+        cache = lc.Cache(
+            capacity=train_cache_size + val_cache_size,
+            queue_depth=args.super_batch_size * args.batch_size,
+            max_unsynced=args.batch_size,
+            n_users=args.workers
+        )
+
+        # For now let's make these the same... port conflicts if we don't.
+        train_cache = cache
+        val_cache = cache
+
+        print("Spawning LADCache processes...")
+        cache.spawn_process()
 
     # Choose which "load_indices" implementation to use...
     load_indices_train = None
@@ -331,6 +347,12 @@ def main_worker(gpu, ngpus_per_node, args):
         load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_async_BACK)
         load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_async_FRONT)
         load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_async_BACK)
+    elif (args.use_ladcache):
+        print("Using the LADCache load_indices method")
+        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_ladcache_FRONT)
+        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_ladcache_BACK)
+        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_ladcache_FRONT)
+        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_ladcache_BACK)
     else:
         print("Using the DEFAULT loader.")
         assert False

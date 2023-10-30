@@ -33,10 +33,10 @@ def process_raw(dataset, raw, target):
 
 ## PURE MINIO ##
 
-def load_indices_minio_FRONT(cache, async_worker, dataset, batched_indices):
+def load_indices_minio_FRONT(cache, user_state, dataset, batched_indices):
     pass
 
-def load_indices_minio_BACK(cache, async_worker, dataset, batched_indices):
+def load_indices_minio_BACK(cache, user_state, dataset, batched_indices):
     data = []
     for i, indices in enumerate(batched_indices):
         data.append([])
@@ -49,14 +49,14 @@ def load_indices_minio_BACK(cache, async_worker, dataset, batched_indices):
 
 ## PURE ASYNC ##
 
-def load_indices_async_FRONT(cache, async_worker, dataset, batched_indices):
+def load_indices_async_FRONT(cache, user_state, dataset, batched_indices):
     # Request all of the images.
     for i, indices in enumerate(batched_indices):
         for index in indices:
             path, _ = dataset.samples[index]
-            async_worker.request(path)
+            user_state.request(path)
 
-def load_indices_async_BACK(cache, async_worker, dataset, batched_indices):
+def load_indices_async_BACK(cache, user_state, dataset, batched_indices):
     # Determine where all of the images belong.
     targets = {}
     path_to_batch = {}
@@ -70,7 +70,7 @@ def load_indices_async_BACK(cache, async_worker, dataset, batched_indices):
     data = [[] for _ in batched_indices]
     for i, indices in enumerate(batched_indices):
         for _ in indices:
-            entry = async_worker.wait_get()
+            entry = user_state.wait_get()
             filepath = entry.get_filepath().decode()
             data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
             entry.release()
@@ -80,15 +80,15 @@ def load_indices_async_BACK(cache, async_worker, dataset, batched_indices):
 
 ## ASYNC AND MINIO ##
 
-def load_indices_async_minio_FRONT(cache, async_worker, dataset, batched_indices):
+def load_indices_async_minio_FRONT(cache, user_state, dataset, batched_indices):
     # Request all of the images that aren't cached.
     for i, indices in enumerate(batched_indices):
         for index in indices:
             path, _ = dataset.samples[index]
             if not cache.contains(path):
-                async_worker.request(path)
+                user_state.request(path)
 
-def load_indices_async_minio_BACK(cache, async_worker, dataset, batched_indices):
+def load_indices_async_minio_BACK(cache, user_state, dataset, batched_indices):
     # Determine where all of the images belong.
     cached, not_cached = [], []
     targets, path_to_batch = {}, {}
@@ -110,10 +110,40 @@ def load_indices_async_minio_BACK(cache, async_worker, dataset, batched_indices)
     # Wait for all of the images to be loaded.
     for i, indices in enumerate(batched_indices):
         for _ in indices:
-            entry = async_worker.wait_get()
+            entry = user_state.wait_get()
             filepath = entry.get_filepath().decode()
             data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
             entry.release()
+    
+    return data
+
+## LADCACHE ##
+
+def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
+    # Request all of the images.
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, _ = dataset.samples[index]
+            user_state.submit(path)
+
+def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
+    # Determine where all of the images belong.
+    targets = {}
+    path_to_batch = {}
+    for i, indices in enumerate(batched_indices):
+        for index in indices:
+            path, target = dataset.samples[index]
+            path_to_batch[path] = i
+            targets[path] = target
+
+    # Wait for all of the images to be loaded.
+    data = [[] for _ in batched_indices]
+    for i, indices in enumerate(batched_indices):
+        for _ in indices:
+            entry = user_state.reap(wait=True)
+            filepath = entry.get_filepath().decode()
+            data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
+            del entry # releases the entry
     
     return data
 
