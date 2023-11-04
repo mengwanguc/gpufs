@@ -330,28 +330,23 @@ def main_worker(gpu, ngpus_per_node, args):
     load_indices_val = None
     if (args.use_minio and args.use_async):
         print("Using the COMBINED AsyncLoader and MinIO load_indices method")
-        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_async_minio_FRONT)
-        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_async_minio_BACK)
-        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_async_minio_FRONT)
-        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_async_minio_BACK)
+        print("NOT YET SUPPORTED.")
+        exit()
     elif (args.use_minio):
         print("Using the MinIO load_indices method")
-        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_minio_FRONT)
-        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_minio_BACK)
-        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_minio_FRONT)
-        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_minio_BACK)
+        print("NOT YET SUPPORTED.")
+        exit()
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
-        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_async_FRONT)
-        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_async_BACK)
-        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_async_FRONT)
-        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_async_BACK)
+        print("NOT YET SUPPORTED.")
+        exit()
     elif (args.use_ladcache):
         print("Using the LADCache load_indices method")
-        load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_ladcache_FRONT)
-        load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_ladcache_BACK)
-        load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_ladcache_FRONT)
-        load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_ladcache_BACK)
+        load_indices = load_indices_wrapper(ladcache, load_indices_front_back_wrapper(load_indices_ladcache_FRONT, load_indices_ladcache_BACK))
+        # load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_ladcache_FRONT)
+        # load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_ladcache_BACK)
+        # load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_ladcache_FRONT)
+        # load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_ladcache_BACK)
     else:
         print("Using the DEFAULT loader.")
         assert False
