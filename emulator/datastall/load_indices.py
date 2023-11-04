@@ -158,6 +158,13 @@ def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
 
     return data
 
+# Given separated front/back functions, generate a single combined function
+def load_indices_front_back_wrapper(front, back):
+    def temp(front, back, cache, user_state, dataset, batched_indices):
+        front(cache, user_state, dataset, batched_indices)
+        return back(cache, user_state, dataset, batched_indices)
+
+    return partial(temp, front, back)
 
 # Generic wrapper.
 def load_indices_wrapper(cache, func):
