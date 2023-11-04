@@ -121,6 +121,8 @@ def load_indices_async_minio_BACK(cache, user_state, dataset, batched_indices):
 ## LADCACHE ##
 
 def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
+    print("[PID {}] START load_indices front".format(os.getpid()))
+
     # Request all of the images.
     for i, indices in enumerate(batched_indices):
         for index in indices:
@@ -128,8 +130,12 @@ def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
             queue_depth, in_flight = user_state.get_queue_depth(), user_state.get_in_flight()
             # print("[pid {}] Submitting request. queue_depth = {}, in-flight = {}, free = {}".format(os.getpid(), queue_depth, in_flight, queue_depth - in_flight))
             user_state.submit(path, retry=False)
+    
+    print("[PID {}] END load_indices front".format(os.getpid()))
 
 def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
+    print("[PID {}] START load_indices back".format(os.getpid()))
+
     # Determine where all of the images belong.
     targets = {}
     path_to_batch = {}
@@ -148,6 +154,8 @@ def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
             data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
             del entry # releases the entry
     
+    print("[PID {}] END load_indices front".format(os.getpid()))
+
     return data
 
 
