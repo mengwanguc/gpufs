@@ -124,6 +124,7 @@ def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
     print("[PID {}] START load_indices front".format(os.getpid()))
 
     # Request all of the images.
+    print(batched_indices)
     for i, indices in enumerate(batched_indices):
         for index in indices:
             path, _ = dataset.samples[index]
