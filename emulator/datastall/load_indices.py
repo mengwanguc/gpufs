@@ -124,6 +124,8 @@ def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
     for i, indices in enumerate(batched_indices):
         for index in indices:
             path, _ = dataset.samples[index]
+            queue_depth, in_flight = user_state.get_queue_depth(), user_state.get_in_flight()
+            print("Submitting request. queue_depth = {}, in-flight = {}, free = {}".format(queue_depth, in_flight, queue_depth - in_flight))
             user_state.submit(path, retry=False)
 
 def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
