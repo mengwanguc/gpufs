@@ -162,7 +162,7 @@ def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
 def load_indices_front_back_wrapper(front, back):
     def temp(front, back, cache, user_state, dataset, batched_indices):
         front(cache, user_state, dataset, batched_indices)
-        return back(cache, user_state, dataset, batched_indices)
+        return [process_raw(dataset, raw, target) for target, raw in back(cache, user_state, dataset, batched_indices)]
 
     return partial(temp, front, back)
 
