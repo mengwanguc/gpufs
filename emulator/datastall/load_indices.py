@@ -121,6 +121,9 @@ def load_indices_async_minio_BACK(cache, user_state, dataset, batched_indices):
 ## LADCACHE ##
 
 def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
+    # Idle until cleanup complete
+    while (user_state.get_in_flight() > 0): pass
+
     # Request all of the images.
     for i, indices in enumerate(batched_indices):
         for index in indices:
