@@ -299,7 +299,7 @@ def main_worker(gpu, ngpus_per_node, args):
         # Create the loaders.
         max_file_size = 1 << (max(get_largest_file_size(traindir, args.file_extension), get_largest_file_size(valdir, args.file_extension)) - 1).bit_length()
         print("Max file size: {} bytes".format(max_file_size))
-        async_loader = al.Loader(queue_depth=4 * args.super_batch_size * args.batch_size, # 2x + 64 for some extra buffer...
+        async_loader = al.Loader(queue_depth=args.super_batch_size * args.batch_size,
                                  n_workers=args.workers,
                                  dispatch_n=args.super_batch_size * args.batch_size * args.workers,
                                  max_idle_iters=1024, # max_idle_iters arbitrary value that seems to work well.
@@ -317,7 +317,7 @@ def main_worker(gpu, ngpus_per_node, args):
         print("Creating LADCache cache...")
         ladcache = lc.Cache(
             capacity=train_cache_size + val_cache_size,
-            queue_depth=args.super_batch_size * args.batch_size,
+            queue_depth=2 * args.super_batch_size * args.batch_size,
             max_unsynced=args.batch_size,
             n_users=args.workers
         )
