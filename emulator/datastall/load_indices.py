@@ -154,7 +154,7 @@ def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
             data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
             del entry # releases the entry
     
-    print("[PID {}] END load_indices front".format(os.getpid()))
+    print("[PID {}] END load_indices back".format(os.getpid()))
 
     return data
 
