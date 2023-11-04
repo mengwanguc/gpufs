@@ -343,10 +343,8 @@ def main_worker(gpu, ngpus_per_node, args):
     elif (args.use_ladcache):
         print("Using the LADCache load_indices method")
         load_indices = load_indices_wrapper(ladcache, load_indices_front_back_wrapper(load_indices_ladcache_FRONT, load_indices_ladcache_BACK))
-        # load_indices_train_FRONT = load_indices_wrapper(train_cache, load_indices_ladcache_FRONT)
-        # load_indices_train_BACK = load_indices_wrapper(train_cache, load_indices_ladcache_BACK)
-        # load_indices_val_FRONT = load_indices_wrapper(val_cache, load_indices_ladcache_FRONT)
-        # load_indices_val_BACK = load_indices_wrapper(val_cache, load_indices_ladcache_BACK)
+        load_indices_train = load_indices
+        load_indices_val = load_indices
     else:
         print("Using the DEFAULT loader.")
         assert False
@@ -361,8 +359,7 @@ def main_worker(gpu, ngpus_per_node, args):
         ]),
         async_loader=async_loader,
         ladcache=ladcache,
-        load_indices_front=load_indices_train_FRONT,
-        load_indices_back=load_indices_train_BACK
+        load_indices=load_indices_train
     )
 
     if args.distributed:
@@ -397,8 +394,7 @@ def main_worker(gpu, ngpus_per_node, args):
             ]),
             async_loader=async_loader,
             ladcache=ladcache,
-            load_indices_front=load_indices_val_FRONT,
-        load_indices_back=load_indices_val_BACK),
+            load_indices=load_indices_val),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True,
         balloons = val_balloons,
