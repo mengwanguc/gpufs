@@ -124,13 +124,10 @@ def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
     print("[PID {}] START load_indices front".format(os.getpid()))
 
     # Request all of the images.
-    print(batched_indices)
-    for i, indices in enumerate(batched_indices):
-        for index in indices:
-            path, _ = dataset.samples[index]
-            queue_depth, in_flight = user_state.get_queue_depth(), user_state.get_in_flight()
-            # print("[pid {}] Submitting request. queue_depth = {}, in-flight = {}, free = {}".format(os.getpid(), queue_depth, in_flight, queue_depth - in_flight))
-            user_state.submit(path, retry=False)
+    for index in batched_indices:
+        path, _ = dataset.samples[index]
+        queue_depth, in_flight = user_state.get_queue_depth(), user_state.get_in_flight()
+        user_state.submit(path, retry=False)
     
     print("[PID {}] END load_indices front".format(os.getpid()))
 
@@ -139,20 +136,17 @@ def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
 
     # Determine where all of the images belong.
     targets = {}
-    path_to_batch = {}
-    for i, indices in enumerate(batched_indices):
-        for index in indices:
-            path, target = dataset.samples[index]
-            path_to_batch[path] = i
-            targets[path] = target
+    for index in batched_indices:
+        path, target = dataset.samples[index]
+        targets[path] = target
 
     # Wait for all of the images to be loaded.
-    data = [[] for _ in batched_indices]
+    data = []
     for i, indices in enumerate(batched_indices):
         for _ in indices:
             entry = user_state.reap(wait=True)
             filepath = entry.get_filepath().decode()
-            data[path_to_batch[filepath]].append((targets[filepath], entry.get_data()))
+            data.append((targets[filepath], entry.get_data()))
             del entry # releases the entry
     
     print("[PID {}] END load_indices back".format(os.getpid()))
