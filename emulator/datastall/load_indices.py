@@ -120,34 +120,33 @@ def load_indices_async_minio_BACK(cache, user_state, dataset, batched_indices):
 
 ## LADCACHE ##
 
-def load_indices_ladcache_FRONT(cache, user_state, dataset, batched_indices):
+def load_indices_ladcache_FRONT(cache, user_state, dataset, indices):
     print("[PID {}] START load_indices front".format(os.getpid()))
 
     # Request all of the images.
-    for index in batched_indices:
+    for index in indices:
         path, _ = dataset.samples[index]
         queue_depth, in_flight = user_state.get_queue_depth(), user_state.get_in_flight()
         user_state.submit(path, retry=False)
     
     print("[PID {}] END load_indices front".format(os.getpid()))
 
-def load_indices_ladcache_BACK(cache, user_state, dataset, batched_indices):
+def load_indices_ladcache_BACK(cache, user_state, dataset, indices):
     print("[PID {}] START load_indices back".format(os.getpid()))
 
     # Determine where all of the images belong.
     targets = {}
-    for index in batched_indices:
+    for index in indices:
         path, target = dataset.samples[index]
         targets[path] = target
 
     # Wait for all of the images to be loaded.
     data = []
-    for i, indices in enumerate(batched_indices):
-        for _ in indices:
-            entry = user_state.reap(wait=True)
-            filepath = entry.get_filepath().decode()
-            data.append((targets[filepath], entry.get_data()))
-            del entry # releases the entry
+    for _ in indices:
+        entry = user_state.reap(wait=True)
+        filepath = entry.get_filepath().decode()
+        data.append((targets[filepath], entry.get_data()))
+        del entry # releases the entry
     
     print("[PID {}] END load_indices back".format(os.getpid()))
 
