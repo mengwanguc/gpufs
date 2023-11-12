@@ -7,6 +7,10 @@ import shutil
 import time
 import warnings
 
+import ladcache as lc
+
+from load_indices import *
+
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -37,6 +41,8 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
+parser.add_argument('-l', '--use-ladcache', default=False, type=bool,
+                    metavar='LADCACHE', help='use LADCache for file loading')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
                     help='minio cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
@@ -228,6 +234,22 @@ def main_worker(gpu, ngpus_per_node, args):
     train_cache_size = (args.cache_size * 10) // 11
     max_item_size = 128 * 1024 * 1024
 
+    # ladcache initialization
+    ladcache = None
+    load_indices = None
+    if args.use_ladcache:
+        print("Creating LADCache cache...")
+        ladcache = lc.Cache(
+            capacity=train_cache_size + val_cache_size,
+            queue_depth=2 * args.batch_size,
+            max_unsynced=args.batch_size,
+            n_users=args.workers
+        )
+
+        print("Spawning LADCache processes...")
+        ladcache.spawn_process()
+        load_indices = load_indices_wrapper(ladcache, load_indices_front_back_wrapper(load_indices_ladcache_FRONT, load_indices_ladcache_BACK))
+
     train_dataset = datasets.ImageFolder(
         train_cache_size,
         max_item_size,
@@ -237,7 +259,9 @@ def main_worker(gpu, ngpus_per_node, args):
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
             normalize,
-        ]))
+        ]),
+        ladcache=ladcache,
+        load_indices=load_indices)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
@@ -255,7 +279,9 @@ def main_worker(gpu, ngpus_per_node, args):
                                 transforms.CenterCrop(224),
                                 transforms.ToTensor(),
                                 normalize,
-                            ])),
+                            ]),
+                            ladcache=ladcache,
+                            load_indices=load_indices),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
 
