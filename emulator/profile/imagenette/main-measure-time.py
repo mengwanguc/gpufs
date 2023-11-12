@@ -251,8 +251,6 @@ def main_worker(gpu, ngpus_per_node, args):
         load_indices = load_indices_wrapper(ladcache, load_indices_front_back_wrapper(load_indices_ladcache_FRONT, load_indices_ladcache_BACK))
 
     train_dataset = datasets.ImageFolder(
-        train_cache_size,
-        max_item_size,
         traindir,
         transforms.Compose([
             transforms.RandomResizedCrop(224),
@@ -273,7 +271,7 @@ def main_worker(gpu, ngpus_per_node, args):
         num_workers=args.workers, pin_memory=True, sampler=train_sampler)
 
     val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(val_cache_size, max_item_size, valdir,
+        datasets.ImageFolder(valdir,
                              transforms.Compose([
                                 transforms.Resize(256),
                                 transforms.CenterCrop(224),
