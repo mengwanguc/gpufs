@@ -8,43 +8,10 @@ if len(sys.argv) <= 1:
 gpu_type = sys.argv[1]
 
 models=['alexnet',
-        'densenet121',
-        'densenet161',
-        'densenet169',
-        'densenet201',
-        'googlenet',
-        'inception_v3',
-        'mnasnet0_5',
-        'mnasnet0_75',
-        'mnasnet1_3',
-        'mobilenet_v2',
-        'mobilenet_v3_large',
-        'mobilenet_v3_small',
-        'resnet101',
-        'resnet152',
         'resnet18',
-        'resnet34',
-        'resnet50',
-        'resnext101_32x8d',
-        'resnext50_32x4d',
-        'shufflenet_v2_x0_5',
-        'shufflenet_v2_x1_0',
-        'shufflenet_v2_x1_5',
-        'shufflenet_v2_x2_0',
-        'squeezenet1_0',
-        'squeezenet1_1',
-        'vgg11',
-        'vgg11_bn',
-        'vgg13',
-        'vgg13_bn',
-        'vgg16',
-        'vgg16_bn',
-        'vgg19',
-        'vgg19_bn',
-        'wide_resnet101_2',
-        'wide_resnet50_2']
+        'mobilenet_v2']
 
-batch_sizes = [256, 128, 64]
+batch_sizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 64, 128, 256]
 
 num_profile_batches = 10
 
