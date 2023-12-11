@@ -25,13 +25,14 @@ for model in models:
                     lines = fread.readlines()
                     for i in range(1, num_profile_batches+2):
                         line = lines[i]
-                        if i > 5:
-                            numbers = line.strip().split('\t')
-                            cpu2gpu_times.append(float(numbers[0]))
-                            gpu_times.append(float(numbers[1]))
+                        numbers = line.strip().split('\t')
+                        cpu2gpu_times.append(float(numbers[0]))
+                        gpu_times.append(float(numbers[1]))
             else:
                 print("{} does not exist!".format(file_path))
                 exit(0)
+            gpu_times.sort()
+            gpu_times = gpu_times[0:-6]
             avg_gpu_time = sum(gpu_times)/len(gpu_times)
             f.write('{}\t{}\n'.format(batch_size, avg_gpu_time))
 
