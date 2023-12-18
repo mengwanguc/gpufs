@@ -185,12 +185,16 @@ def main_worker(gpu, ngpus_per_node, args):
     if args.distributed:
         if args.dist_url == "env://" and args.rank == -1:
             args.rank = int(os.environ["RANK"])
+            print("(0) Setting distributed rank: {}".format(args.rank))
         if args.multiprocessing_distributed:
             # For multiprocessing distributed training, rank needs to be the
             # global rank among all the processes
             args.rank = args.rank * ngpus_per_node + gpu
+            print("(1) Setting distributed rank: {}".format(args.rank))
         dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
                                 world_size=args.world_size, rank=args.rank)
+        print("calling dist.init_process_group")
+        
     # create model
     if args.pretrained:
         print("=> using pre-trained model '{}'".format(args.arch))
@@ -407,6 +411,8 @@ def main_worker(gpu, ngpus_per_node, args):
     with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
         f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
 
+
+    print("Beginning training")
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
             train_sampler.set_epoch(epoch)
