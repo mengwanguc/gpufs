@@ -32,6 +32,14 @@ def process_raw(dataset, raw, target):
     return sample, target
 
 
+## UNMODIFIED ##
+
+def load_indices_default(cache, user_state, dataset, batched_indices):
+    data = []
+    for index in batched_indices:
+        path, target = dataset.samples[index]
+        data.append((Image.open(path), target))
+
 ## PURE MINIO ##
 
 def load_indices_minio_FRONT(cache, user_state, dataset, batched_indices):

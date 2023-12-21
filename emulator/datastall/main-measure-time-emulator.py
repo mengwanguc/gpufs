@@ -351,7 +351,8 @@ def main_worker(gpu, ngpus_per_node, args):
         load_indices_val = load_indices
     else:
         print("Using the DEFAULT loader.")
-        assert False
+        load_indices_train = load_indices_default
+        load_indices_val = load_indices_default
 
     train_dataset = datasets.ImageFolder(
         traindir,
