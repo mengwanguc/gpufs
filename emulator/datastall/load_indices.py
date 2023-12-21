@@ -45,22 +45,6 @@ def load_indices_minio_BACK(cache, user_state, dataset, batched_indices):
     
     return data
 
-# def load_indices_ladcache_BACK(cache, user_state, dataset, indices):
-#     # Determine where all of the images belong.
-#     targets = {}
-#     for index in indices:
-#         path, target = dataset.samples[index]
-#         targets[path] = target
-
-#     # Wait for all of the images to be loaded.
-#     data = []
-#     for _ in indices:
-#         entry = user_state.reap(wait=True)
-#         filepath = entry.get_filepath().decode()
-#         data.append((targets[filepath], entry.get_data()))
-#         del entry # releases the entry
-
-#     return data
 
 ## PURE ASYNC ##
 
