@@ -39,11 +39,9 @@ def load_indices_minio_FRONT(cache, user_state, dataset, batched_indices):
 
 def load_indices_minio_BACK(cache, user_state, dataset, batched_indices):
     data = []
-    for i, indices in enumerate(batched_indices):
-        data.append([])
-        for index in indices:
-            path, target = dataset.samples[index]
-            data[i].append((target, cache.read(path)[0]))
+    for i, index in enumerate(batched_indices):
+        path, target = dataset.samples[index]
+        data[i].append((target, cache.read(path)[0]))
     
     return data
 
