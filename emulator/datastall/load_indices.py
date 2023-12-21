@@ -38,7 +38,14 @@ def load_indices_default(user_state, dataset, batched_indices):
     data = []
     for index in batched_indices:
         path, target = dataset.samples[index]
-        data.append((Image.open(path), target))
+        sample = Image.open(path).convert('RGB')
+        if dataset.transform is not None:
+            sample = dataset.transform(sample)
+        if dataset.target_transform is not None:
+            target = dataset.target_transform(target)
+
+        data.append((sample, target))
+    return data
 
 ## PURE MINIO ##
 
