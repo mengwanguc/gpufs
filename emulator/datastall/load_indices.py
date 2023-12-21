@@ -34,7 +34,7 @@ def process_raw(dataset, raw, target):
 
 ## UNMODIFIED ##
 
-def load_indices_default(cache, user_state, dataset, batched_indices):
+def load_indices_default(user_state, dataset, batched_indices):
     data = []
     for index in batched_indices:
         path, target = dataset.samples[index]
