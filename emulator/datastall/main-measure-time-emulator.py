@@ -338,8 +338,8 @@ def main_worker(gpu, ngpus_per_node, args):
         exit()
     elif (args.use_minio):
         print("Using the MinIO load_indices method")
-        print("NOT YET SUPPORTED.")
-        exit()
+        load_indices_train = load_indices_wrapper(train_cache, load_indices_front_back_wrapper(load_indices_minio_FRONT, load_indices_minio_BACK))
+        load_indices_val = load_indices_wrapper(val_cache, load_indices_front_back_wrapper(load_indices_minio_FRONT, load_indices_minio_BACK))
     elif (args.use_async):
         print("Using the AsyncLoader load_indices method")
         print("NOT YET SUPPORTED.")
