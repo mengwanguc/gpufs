@@ -5,7 +5,7 @@
 
     To install gpufs(detection files), pytorch, and torchvision
 
-    Need doing all step on https://github.com/mengwanguc/gpufs#readme until torchvision installed
+    Need doing all step on https://github.com/mengwanguc/gpufs#readme until torchvision and data installed
 
     And move to naufal branch:
     ```
@@ -40,11 +40,11 @@
     ```
 
 4. Emulate the gpu
-    After copy and paste pipeline_emulate.py and pytorch_emulate.py. We have to using CPU to training model using this script
+    After copy and paste pipeline_emulate.py and pytorch_emulate.py. We have to using CPU to training model. you can using --dali_cpu parameter to used CPU
 
     ```
     cd ~/gpufs/ffcv/figure5/cpu-gpu
-    python main-dali-original.py -a alexnet --lr 0.01 ~/data/imagenette2 --epochs 1 
+    python main-dali-original.py -a alexnet --lr 0.01 ~/data/imagenette2 --epochs 1 --dali_cpu
     ```
 
 
