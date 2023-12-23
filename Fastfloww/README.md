@@ -22,6 +22,7 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
     git clone git@github.com:mengwanguc/gpufs.git
     cd gpufs
     git checkout naufal
+    cd ~
     ```
 
 4. Install conda
@@ -44,12 +45,19 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
 
 6. Instal cudnn cuda11
     ```
-    gdown https://drive.google.com/uc?id=1VImNg43lxG1-eA6-j0kyb0x0y1asZ6E-
-    tar xf cudnn-linux-x86_64-8.9.5.29_cuda11-archive.tar.xz 
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+    sudo dpkg -i cuda-keyring_1.1-1_all.deb
+    sudo apt-get update
+    sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
 
-    cd cudnn-linux-x86_64-8.9.5.29_cuda11-archive/
-    sudo cp include/cudnn*.h /usr/local/cuda/include
-    sudo cp lib/libcudnn* /usr/local/cuda/lib64
+    cd ~
+    mkdir cudnn
+    cd cudnn
+    pip install gdown
+    gdown https://drive.google.com/uc?id=1IJGIH7Axqd8E5Czox_xRDCLOyvP--ej-
+    tar -xvf cudnn-11.2-linux-x64-v8.1.1.33.tar
+    sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+    sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64
     sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
     ```
 
@@ -60,12 +68,12 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
     it will produced :
     ```
     #define CUDNN_MAJOR 8
-    #define CUDNN_MINOR 9
-    #define CUDNN_PATCHLEVEL 5
+    #define CUDNN_MINOR 1
+    #define CUDNN_PATCHLEVEL 1
     --
     #define CUDNN_VERSION (CUDNN_MAJOR * 1000 + CUDNN_MINOR * 100 + CUDNN_PATCHLEVEL)
 
-    /* cannot use constexpr here since this is a C-only file */
+    #endif /* CUDNN_VERSION_H */
     ```
 
 7. Install tensorflow from source
@@ -89,6 +97,7 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
 
 8. Instal Fastflow
     ```
+    cd ~
     git clone https://github.com/SamsungLabs/FastFlow.git
     cd ~/FastFlow
     pip install -r ./requirements.txt
@@ -140,7 +149,7 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
 
 1. Chameleon image
 
-    Please use image "ubuntu20-xxx-cuda11-xxx."
+    Please use image "ubuntu20-xxx."
 
     "xxx" means we don't care about what's there, as long as it's using ubuntu20 and cuda11.
 
