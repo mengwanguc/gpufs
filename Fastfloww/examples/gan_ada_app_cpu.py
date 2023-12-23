@@ -15,6 +15,10 @@ import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 import nvidia.dali.plugin.tf as dali_tf
 
+import os
+print("Using CPU only...")
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 """
 Reference: https://keras.io/examples/generative/gan_ada/
 We modified the source code.
