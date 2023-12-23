@@ -9,11 +9,11 @@ from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow_datasets.core.utils import read_config as read_config_lib
 
-from nvidia.dali import pipeline_def
-import nvidia.dali as dali
-import nvidia.dali.fn as fn
-import nvidia.dali.types as types
-import nvidia.dali.plugin.tf as dali_tf
+# from nvidia.dali import pipeline_def
+# import nvidia.dali as dali
+# import nvidia.dali.fn as fn
+# import nvidia.dali.types as types
+# import nvidia.dali.plugin.tf as dali_tf
 
 import os
 print("Using CPU only...")
@@ -139,12 +139,12 @@ def tf_crop_image(data):
     return image
 
 
-@pipeline_def(device_id=0, num_threads=4, batch_size=64)
-def dali_resize(device):
-    image = fn.external_source(name='image', dtype=types.UINT8, device=device)
-    image = fn.resize(image, resize_x=image_size, resize_y=image_size,
-                      dtype=types.FLOAT, device=device)
-    return image
+# @pipeline_def(device_id=0, num_threads=4, batch_size=64)
+# def dali_resize(device):
+#     image = fn.external_source(name='image', dtype=types.UINT8, device=device)
+#     image = fn.resize(image, resize_x=image_size, resize_y=image_size,
+#                       dtype=types.FLOAT, device=device)
+#     return image
 
 
 def tf_clip(image):
