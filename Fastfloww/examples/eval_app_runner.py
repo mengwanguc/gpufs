@@ -3,11 +3,11 @@ import argparse
 import subprocess
 
 import os
-print("Cleaning cache...")
-os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
+# print("Cleaning cache...")
+# os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
 
 # using only CPU
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 from enum import Enum
 
