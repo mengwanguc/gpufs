@@ -25,6 +25,21 @@ cat ~/.ssh/id_rsa.pub
 
 Copy and paste into: https://github.com/settings/keys
 
+Configure your username and email.
+```
+git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"
+```
+
+for example:
+
+```
+git config --global user.name "Meng Wang"
+git config --global user.email "mengwanguc@gmail.com"
+```
+
+
+
 3. clone this repo to local
 
 ```
@@ -273,3 +288,32 @@ training script manually. For example:
 ```
 python main-measure-time-emulator.py --epoch 1 --skip-epochs 0 --profile-batches -1 --workers 4 --gpu-type=p100 --gpu-count=1 --arch=alexnet --batch-size 16 --emulator-version=1 ~/data/mini-coco/coco_minitrain_25k/images/
 ```
+
+
+
+
+
+### Install cudnn
+
+
+```
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
+
+cd ~
+mkdir cudnn
+cd cudnn
+pip install gdown
+gdown https://drive.google.com/uc?id=1IJGIH7Axqd8E5Czox_xRDCLOyvP--ej-
+tar -xvf cudnn-11.2-linux-x64-v8.1.1.33.tar
+sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+
+
+
+
+sudo rm -rf /usr/local/cuda/lib64/libcudnn*
+sudo rm -rf /usr/local/cuda/include/cudnn*.h

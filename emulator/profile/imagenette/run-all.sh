@@ -38,6 +38,7 @@ models=(alexnet
          wide_resnet50_2
          )
 
+# models=(densenet161)
 batch_sizes=(64)
 
 for model in ${models[@]}; do
