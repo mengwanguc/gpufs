@@ -349,6 +349,15 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
     python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf' default_config.yaml
     ```
 
+    offloading_type:
+    - 'tf': TensorFlow (no offloading) 
+    - 'tf-dsr-all': TF+Remote Worker by offloading all operations (with dispatcher)
+    - 'tf-dslr-all':TF+Local and Remote Worker by offloading all operations (with dispatcher)
+    - 'dali': DALI
+    - 'ff': FastFlow (with dispatcher)
+
+12. Reproduce 
+
 
 
 ### limit network bandwidth
