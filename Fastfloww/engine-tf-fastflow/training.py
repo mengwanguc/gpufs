@@ -905,7 +905,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
 
       # load logs pickle
       # time.sleep(0.152165329)
-      with open('/home/cc/FastFlow/fastflow/examples/logs.pickle', 'rb') as handle:
+      with open('/home/cc/gpufs/Fastfloww/examples/logs.pickle', 'rb') as handle:
         outputs = pickle.load(handle)
 
       return outputs

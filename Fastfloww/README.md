@@ -338,8 +338,8 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
 
     copy custom fastflow file into their folders
     ```
-    cp ~/gpufs/Fastfloww/engine-tf-fastflow/training.py /home/cc/anaconda3/lib/python3.9/site-packages/tensorflow/python/keras/engine/
-    cp ~/gpufs/Fastfloww/fastflow-keras_utils/keras_utils.py /home/cc/anaconda3/lib/python3.9/site-packages/fastflow/
+    cp ~/gpufs/Fastfloww/engine-tf-fastflow/training.py /home/cc/anaconda3/lib/python3.9/site-packages/keras/engine/training.py
+    cp ~/gpufs/Fastfloww/fastflow-keras_utils/keras_utils.py /home/cc/anaconda3/lib/python3.9/site-packages/fastflow/keras_utils.py
     ```
     run the script for CPU:
     ```
