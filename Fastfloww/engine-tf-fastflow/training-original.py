@@ -53,6 +53,9 @@ from tensorflow.python.platform import tf_logging as logging
 from tensorflow.python.util.tf_export import keras_export
 from tensorflow.tools.docs import doc_controls
 
+import pickle
+import time
+
 
 # pylint: disable=g-import-not-at-top
 try:
@@ -564,6 +567,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
           (i.e. before/after each `tf.function` execution).
         **kwargs: Arguments supported for backwards compatibility only.
     """
+    # print("model.compile ->", self)
     base_layer.keras_api_gauge.get_cell('compile').set(True)
     with self.distribute_strategy.scope():
       if 'experimental_steps_per_execution' in kwargs:
@@ -802,6 +806,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
       values of the `Model`'s metrics are returned. Example:
       `{'loss': 0.2, 'accuracy': 0.7}`.
     """
+    # print("train_step..")
     x, y, sample_weight = data_adapter.unpack_x_y_sample_weight(data)
     # Run forward pass.
     with tf.GradientTape() as tape:
@@ -823,6 +828,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
         return_metrics.update(result)
       else:
         return_metrics[metric.name] = result
+
     return return_metrics
 
   def make_train_function(self, force=False):
@@ -850,53 +856,99 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
       be passed to `tf.keras.Callbacks.on_train_batch_end`, such as
       `{'loss': 0.2, 'accuracy': 0.7}`.
     """
+    # print("train_function..")
     if self.train_function is not None and not force:
       return self.train_function
 
     def step_function(model, iterator):
       """Runs a single training step."""
-
+      # print("step_func training..")
       def run_step(data):
+        # print("run_step..")
+        # print("model ->", model)
+        # quit()
+        # import inspect
+        # print(inspect.getfile(model.train_step))
         outputs = model.train_step(data)
+        # quit()
         # Ensure counter is updated only if `train_step` succeeds.
         with tf.control_dependencies(_minimum_control_deps(outputs)):
           model._train_counter.assign_add(1)  # pylint: disable=protected-access
+        # print("outputs run_step ->", outputs)
         return outputs
 
-      print('step_function')
+      # import time
+      # start = time.time()
       data = next(iterator)
-      outputs = model.distribute_strategy.run(run_step, args=(data,))
-      outputs = reduce_per_replica(
-          outputs, self.distribute_strategy, reduction='first')
-      write_scalar_summaries(outputs, step=model._train_counter)  # pylint: disable=protected-access
+      # end = time.time() - start
+      # print("end-iterator-data ->", end)
+      # print("data ->", data)
+
+      ####
+      # start_compute_time = time.time()
+      # outputs = model.distribute_strategy.run(run_step, args=(data,))
+      # outputs = reduce_per_replica(
+      #     outputs, self.distribute_strategy, reduction='first')
+      # write_scalar_summaries(outputs, step=model._train_counter)  # pylint: disable=protected-access
+      # end_compute_time = time.time() - start_compute_time
+      # with open("/home/cc/FastFlow/examples/train-func-compute-time.txt", 'a') as f:
+      #   f.write("{:.9f}\n".format(end_compute_time))
+      ####
+      # print("outputs ->", outputs)
+      # print("outputs ->", outputs)
+      # import traceback
+      # print("-- call stack")
+      # for line in traceback.format_stack():
+      #     print(line.strip())
+      # print("---\n")
+      # quit()
+
+      # load logs pickle
+      # time.sleep(0.152165329)
+      with open('/home/cc/FastFlow/fastflow/examples/logs.pickle', 'rb') as handle:
+        outputs = pickle.load(handle)
+
       return outputs
 
+    # print("test_function..")
     if (self._steps_per_execution is None or
         self._steps_per_execution.numpy().item() == 1):
 
       def train_function(iterator):
         """Runs a training execution with one step."""
-        return step_function(self, iterator)
+        # import sys
+        result = step_function(self, iterator)
+        # print("test11111")
+        # sys.stdout.flush()
+        return result
 
     else:
 
       def train_function(iterator):
         """Runs a training execution with multiple steps."""
+        # print("test2")
         for _ in tf.range(self._steps_per_execution):
           outputs = step_function(self, iterator)
         return outputs
 
+    # print("run_eagerly..")
     if not self.run_eagerly:
+      print("run_eagerly..")
       train_function = tf.function(
           train_function, experimental_relax_shapes=True)
       self.train_tf_function = train_function
 
+    # print("train_function222..")
     self.train_function = train_function
 
+    # print("train_functio333..")
     if self._cluster_coordinator:
       self.train_function = lambda iterator: self._cluster_coordinator.schedule(  # pylint: disable=g-long-lambda
           train_function, args=(iterator,))
 
+    
+    # import inspect
+    # print("train..... -> ",inspect.getsource(self.train_function))
     return self.train_function
 
   @traceback_utils.filter_traceback
@@ -1129,6 +1181,8 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
         ValueError: In case of mismatch between the provided input data
             and what the model expects or when the input data is empty.
     """
+    # print("parameter ->", self, x, validation_data, epochs, callbacks)
+    
     base_layer.keras_api_gauge.get_cell('fit').set(True)
     # Legacy graph support is contained in `training_v1.Model`.
     version_utils.disallow_legacy_graph('Model', 'fit')
@@ -1181,7 +1235,9 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
           steps_per_execution=self._steps_per_execution)
 
       # Container that configures and calls `tf.keras.Callback`s.
+      # print("callbacks ->", callbacks)
       if not isinstance(callbacks, callbacks_module.CallbackList):
+        # print("test callbacks..")
         callbacks = callbacks_module.CallbackList(
             callbacks,
             add_history=True,
@@ -1190,7 +1246,8 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
             verbose=verbose,
             epochs=epochs,
             steps=data_handler.inferred_steps)
-
+  
+      # print("callbacks ->", callbacks)
       self.stop_training = False
       self.train_function = self.make_train_function()
       self._train_counter.assign(0)
@@ -1202,26 +1259,120 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
       data_handler._initial_epoch = (  # pylint: disable=protected-access
           self._maybe_load_initial_epoch_from_ckpt(initial_epoch))
       logs = None
+
+      # original code
+      # import time
+      # print("start training..")
+      # import inspect
+      # import sys
+      # print(inspect.getfile(callbacks.on_train_batch_begin))
       for epoch, iterator in data_handler.enumerate_epochs():
+        start_epoch_time = time.time()
         self.reset_metrics()
         callbacks.on_epoch_begin(epoch)
+        # print("entering data_handler..")
         with data_handler.catch_stop_iteration():
+          # print("entering step iteration..")
           for step in data_handler.steps():
+            # print("step ->", step)
             with tf.profiler.experimental.Trace(
                 'train',
                 epoch_num=epoch,
                 step_num=step,
                 batch_size=batch_size,
                 _r=1):
+              
               callbacks.on_train_batch_begin(step)
+              # start_step_time = time.time()
+              # start = time.time()
+              
+              # print(inspect.getsource(self.train_function))
+              # print("iterator ->", iterator)
               tmp_logs = self.train_function(iterator)
+              time.sleep(0.064102564)
+              # print("tmp_logs ->", tmp_logs)
+              # sys.stdout.flush()
+              # end = time.time() -start 
+              # print("end2_trainfunction ->", end)
               if data_handler.should_sync:
                 context.async_wait()
               logs = tmp_logs  # No error, now safe to assign to logs.
               end_step = step + data_handler.step_increment
+              
               callbacks.on_train_batch_end(end_step, logs)
+
+              # end_step_time = time.time() - start_step_time
+              # print("\ntraining time per step ->", end_step_time)
               if self.stop_training:
                 break
+          
+            # if step == 5 :
+            #   quit()
+            
+        end_epoch_time = time.time() - start_epoch_time
+        print("training time per epoch ->", end_epoch_time)
+
+      # # emulator code
+      # import time
+      # import pickle
+
+      # # load logs pickle
+      # with open('/home/cc/FastFlow/examples/logs.pickle', 'rb') as handle:
+      #   logs = pickle.load(handle)
+
+      # for epoch, iterator in data_handler.enumerate_epochs():
+        # print("epoch, iterator ->", epoch, iterator)
+      #   self.reset_metrics()
+      #   callbacks.on_epoch_begin(epoch)
+      #   with data_handler.catch_stop_iteration():
+      #     for step in data_handler.steps():
+            # print("step->", step)
+      #       start = time.time()
+            # print("step ->", step)
+      #       with tf.profiler.experimental.Trace(
+      #           'train',
+      #           epoch_num=epoch,
+      #           step_num=step,
+      #           batch_size=batch_size,
+      #           _r=1):
+      #         callbacks.on_train_batch_begin(step)
+      #         # start = time.time()
+      #         # tmp_logs = self.train_function(iterator)
+      #         data = next(iterator)
+      #         time.sleep(0.056774616)
+              # print("tmp_logs ->", tmp_logs)
+      #         # quit()
+      #         # end = time.time() - start
+      #         # with open("/home/cc/FastFlow/examples/train-func-time-tf-gpu.txt", 'a') as f:
+      #           # f.write("{:.9f}\n".format(end))
+      #         if data_handler.should_sync:
+      #           context.async_wait()
+      #         # logs = tmp_logs  # No error, now safe to assign to logs.
+
+      #         # saving logs dict
+      #         # with open('/home/cc/FastFlow/examples/logs.pickle', 'wb') as handle:
+      #         #     pickle.dump(logs, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+      #         # load logs pickle
+      #         # with open('/home/cc/FastFlow/examples/logs.pickle', 'rb') as handle:
+      #         #   logs = pickle.load(handle)
+
+              # print("logs ->", logs, type(logs))
+      #         # quit()
+      #         end_step = step + data_handler.step_increment
+      #         callbacks.on_train_batch_end(end_step, logs)
+
+      #         if self.stop_training:
+                # print("stopping..")
+      #           break
+
+      #       end = time.time() - start
+            # print("end ->", end)
+      #       # with open("/home/cc/FastFlow/examples/gpu-compute-time-tf-gpu-nocache.txt", 'a') as f:
+      #       #   f.write("{:.9f}\n".format(end))
+      #       # quit()
+      #       if step == 468:
+      #         break
 
         logs = tf_utils.sync_to_numpy_or_python_type(logs)
         if logs is None:
@@ -1345,6 +1496,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
 
     def step_function(model, iterator):
       """Runs a single evaluation step."""
+      # print("step_function evaluation..")
 
       def run_step(data):
         outputs = model.test_step(data)
@@ -1353,10 +1505,17 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
           model._test_counter.assign_add(1)  # pylint: disable=protected-access
         return outputs
 
+      # start = time.time()
+      
       data = next(iterator)
       outputs = model.distribute_strategy.run(run_step, args=(data,))
       outputs = reduce_per_replica(
           outputs, self.distribute_strategy, reduction='first')
+
+      # quit()
+      # end = time.time() - start
+      # with open("/home/cc/FastFlow/examples/gpu-compute-time-tf-gpu.txt", 'a') as f:
+        # f.write("{:.9f}\n".format(end))
       return outputs
 
     if (self._steps_per_execution is None or
@@ -1600,7 +1759,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
 
     def step_function(model, iterator):
       """Runs a single evaluation step."""
-
+      # print("step_function predict..")
       def run_step(data):
         outputs = model.predict_step(data)
         # Ensure counter is updated only if `test_step` succeeds.
@@ -1887,6 +2046,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
     Raises:
       RuntimeError: If `model.train_on_batch` is wrapped in a `tf.function`.
     """
+    # print("train_on_batch..")
     self._assert_compile_was_called()
     self._check_call_args('train_on_batch')
     _disallow_inside_tf_function('train_on_batch')
