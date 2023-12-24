@@ -1289,7 +1289,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
               # print(inspect.getsource(self.train_function))
               # print("iterator ->", iterator)
               tmp_logs = self.train_function(iterator)
-              num_gpus = 4
+              num_gpus = 1
               time.sleep(0.064102564/num_gpus)
               # print("tmp_logs ->", tmp_logs)
               # sys.stdout.flush()

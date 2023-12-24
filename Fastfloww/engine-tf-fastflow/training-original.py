@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """Training-related part of the Keras engine."""
-
+import time
 import tensorflow.compat.v2 as tf
 
 import copy
@@ -1203,6 +1203,7 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
           self._maybe_load_initial_epoch_from_ckpt(initial_epoch))
       logs = None
       for epoch, iterator in data_handler.enumerate_epochs():
+        start_epoch_time = time.time()
         self.reset_metrics()
         callbacks.on_epoch_begin(epoch)
         with data_handler.catch_stop_iteration():
@@ -1222,6 +1223,9 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
               callbacks.on_train_batch_end(end_step, logs)
               if self.stop_training:
                 break
+
+        end_epoch_time = time.time() - start_epoch_time
+        print("training time per epoch ->", end_epoch_time)
 
         logs = tf_utils.sync_to_numpy_or_python_type(logs)
         if logs is None:
