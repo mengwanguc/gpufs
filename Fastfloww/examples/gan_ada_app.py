@@ -14,6 +14,7 @@ import nvidia.dali as dali
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 import nvidia.dali.plugin.tf as dali_tf
+import traceback
 
 """
 Reference: https://keras.io/examples/generative/gan_ada/
@@ -507,6 +508,9 @@ class GAN_ADA(ff.FastFlowModel):
         return tf.reduce_mean(generator_loss), tf.reduce_mean(discriminator_loss)
 
     def train_step(self, real_images):
+        print('train_step')
+        # print(traceback.format_exc())
+        traceback.print_stack()
         real_images = self.augmenter(real_images, training=True)
 
         # use persistent gradient tape because gradients will be calculated twice

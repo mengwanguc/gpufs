@@ -29,8 +29,6 @@ from tensorflow.python.profiler import trace
 from tensorflow.python.eager import context
 from tensorflow.python.keras.utils import tf_utils
 
-import time
-
 
 def _disallow_inside_tf_function(method_name):
     if ops.inside_function():
@@ -258,7 +256,6 @@ def fit(self,
             self._maybe_load_initial_epoch_from_ckpt(initial_epoch))
         logs = None
         for epoch, iterator in data_handler.enumerate_epochs():
-            start_epoch_time = time.time()
             self.reset_metrics()
             callbacks.on_epoch_begin(epoch)
             iterator_callback.on_epoch_begin(epoch, iterator)
@@ -273,7 +270,6 @@ def fit(self,
                         callbacks.on_train_batch_begin(step)
                         iterator_callback.on_train_batch_begin(step, iterator)
                         tmp_logs = self.train_function(iterator)
-                        time.sleep(0.064102564)
                         if data_handler.should_sync:
                             context.async_wait()
                         logs = tmp_logs  # No error, now safe to assign to logs.
@@ -282,9 +278,6 @@ def fit(self,
                         iterator_callback.on_train_batch_end(end_step, iterator)
                         if self.stop_training:
                             break
-
-            end_epoch_time = time.time() - start_epoch_time
-            print("training time per epoch ->", end_epoch_time)
 
             logs = tf_utils.sync_to_numpy_or_python_type(logs)
             if logs is None:
