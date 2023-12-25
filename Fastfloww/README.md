@@ -377,9 +377,37 @@ cd /home/cc/gpufs/Fastfloww/examples/dispatcher-and-workers
 bash service.sh
 ```
 
+
+13. Reproduce FastFlow
+
+### ctc_asr_app.py
+
+```
+mkdir ~/data
+cd ~/data/
+wget https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2
+tar -xvjf LJSpeech-1.1.tar.bz2
+```
+```
+cd ~/gpufs/Fastfloww/examples
+python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
+taskset 1-10 python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
+```
+
 ### limit network bandwidth
 
 ```
 sudo apt-get install wondershaper
 sudo wondershaper eno1 1024000 1024000
+sudo wondershaper clear eno1
+```
+
+```
+# on node 1
+iperf -s
+```
+
+```
+# on node 2
+iperf -c 10.140.82.252
 ```

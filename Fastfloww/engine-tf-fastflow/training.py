@@ -1296,7 +1296,8 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
               # print("iterator ->", iterator)
               tmp_logs = self.train_function(iterator)
               num_gpus = 1
-              time.sleep(0.064102564/num_gpus)
+              # time.sleep(0.064102564/num_gpus)  # gan
+              time.sleep( 0.1657731909/num_gpus)  # transformer_asr
               # print("tmp_logs ->", tmp_logs)
               # sys.stdout.flush()
               # end = time.time() -start 
@@ -1392,7 +1393,8 @@ class Model(base_layer.Layer, version_utils.ModelVersionSelector):
         epoch_logs = copy.copy(logs)
 
         # Run validation.
-        if validation_data and self._should_eval(epoch, validation_freq):
+        # if validation_data and self._should_eval(epoch, validation_freq):
+        if not True:
           # Create data_handler for evaluation and cache it.
           if getattr(self, '_eval_data_handler', None) is None:
             self._eval_data_handler = data_adapter.get_data_handler(
