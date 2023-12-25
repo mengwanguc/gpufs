@@ -356,9 +356,26 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
     - 'dali': DALI
     - 'ff': FastFlow (with dispatcher)
 
-12. Reproduce 
+12. Reproduce tf.data service paper from SOCC 2023: https://dl.acm.org/doi/pdf/10.1145/3620678.3624666
 
 
+baseline:
+```
+taskset -c 1-4 python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf' default_config.yaml
+```
+
+#### tf.data service
+on client node:
+
+```
+taskset -c 0-3 python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf-dsr-all' default_config.yaml
+```
+
+on server node:
+```
+cd /home/cc/gpufs/Fastfloww/examples/dispatcher-and-workers
+bash service.sh
+```
 
 ### limit network bandwidth
 
