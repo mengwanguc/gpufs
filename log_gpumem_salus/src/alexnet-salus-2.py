@@ -21,9 +21,9 @@ from utils.plot import plot_mem, pp
 base_dir = '.'
 # %% Analysis baseline
 
-model = alexnet().cuda()
-bs = 512
-input = torch.rand(bs, 3, 512, 512).cuda()
+model = alexnet().cpu()
+bs = 256
+input = torch.rand(bs, 3, 244, 244).cpu()
 
 mem_log = []
 

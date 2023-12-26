@@ -4,6 +4,7 @@ import torch
 import json
 import time
 from filelock import Timeout, FileLock
+import psutil
 
 
 def _get_gpu_mem(synchronize=True, empty_cache=True):
@@ -79,6 +80,17 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
     fps_log = []
     time_log = []
 
+    
+
+    # Get memory usage
+    memory_info = psutil.virtual_memory()
+
+    # print(f"Total Memory: {memory_info.total} bytes")
+    # print(f"Used Memory: {memory_info.used} bytes")
+    # print(f"Free Memory: {memory_info.free} bytes")
+
+    # quit()
+
     start_time_log = time.time()
     for i in range(num_batches):
         start_time = time.time()
@@ -86,11 +98,12 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         
         with open('/home/cc/edev/egpu0.json', 'r') as file:
             json_data = file.read()
+        print(json_data)
         egpu = json.loads(json_data)
         
         # memmory for alexnet
-        mem_max = 2552515072
-        mem_min = 797564928
+        mem_max = 797564928
+        mem_min = 197564928
 
         # try multiple model
         
@@ -101,6 +114,7 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         # print(egpu["m_limit"] > egpu["curr_mem"] + mem_max)
         # print(egpu["m_limit"] > egpu["curr_mem"] + mem_min)
         # quit()
+        print(egpu["occupied"] )
         while (egpu["occupied"] == True) and (egpu["m_limit"] > egpu["curr_mem"] + mem_min):
             print("waiting..")
             time.sleep(0.001)
@@ -115,7 +129,7 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
                 egpu["curr_mem"] += mem_max
 
         print("no occupied in memory..")
-        curr_gpu = torch.cuda.current_device()
+        curr_gpu = inp.device.type
         # egpu = {
         #     "type": torch.cuda.get_device_name(0),
         #     "m_limit": torch.cuda.get_device_properties(0).total_memory,
@@ -163,8 +177,9 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
 
         # Calculate FPS
         time_per_iteration = end_time - start_time
-        fps = 512 / time_per_iteration
+        fps = 256 / time_per_iteration
         print(time_per_iteration)
+        print(fps)
 
         # Log FPS and time every second
         if int(end_time) > current_second:
