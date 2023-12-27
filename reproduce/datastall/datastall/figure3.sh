@@ -1,17 +1,19 @@
 #!/bin/bash
 set -e
 
-gpu_type="p100"
+gpu_type="v100"
 
 # For SSD node, use ("8g" "8g" "7g" "9g" "8g" "8g" "8g" "8g")
 # For HDD node, use ("13g" "13g" "14g" "13g" "14g" "13g" "13g" "13g")
-cache_sizes=("8g" "8g" "7g" "9g" "8g" "8g" "8g" "8g")
-models=("shufflenet_v2_x0_5" "resnet18" "squeezenet1_1" "vgg11" "alexnet" "mobilenet_v2" "resnet50" "squeezenet1_0")
+cache_sizes=("21000m" "21500m" "21500m" "21500m" "21500m" "21500m" "21500m")
+models=("shufflenet_v2_x0_5" "alexnet" "resnet18" "squeezenet1_0" "vgg11" "mobilenet_v2" "resnet50")
+# cache_sizes=("14500m")
+# models=("shufflenet_v2_x0_5")
 
 # Saved cache size: "2g" "4g" "6g" "8g" "10g" "12g" "14g"
 # to reach 35% of figrue 3, I calculated that it should be about 3.2GB = 3200MB
 batch_size="256"
-n_workers="8"
+n_workers="40"
 data_path="~/data/imagenette2"
 gpu_count="8"
 

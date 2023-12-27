@@ -1,5 +1,5 @@
 import re
-models = ['shufflenet_v2_x0_5','alexnet','resnet18','squeezenet1_0','squeezenet1_1','mobilenet_v2','resnet50','vgg11']
+models=["shufflenet_v2_x0_5", "alexnet", "resnet18", "squeezenet1_1", "vgg11", "mobilenet_v2", "resnet50"]
 
 list_files = []
 for model in models:

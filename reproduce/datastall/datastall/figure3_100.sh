@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-gpu_type="p100"
+gpu_type="v100"
 # "shufflenet_v2_x0_5" "resnet18" "vgg11"
-models=("shufflenet_v2_x0_5" "resnet18" "squeezenet1_1" "vgg11" "alexnet" "mobilenet_v2" "resnet50" "squeezenet1_0")
+models=("shufflenet_v2_x0_5" "alexnet" "resnet18" "squeezenet1_0" "vgg11" "mobilenet_v2" "resnet50")
 # Saved cache size: "2g" "4g" "6g" "8g" "10g" "12g" "14g"
 
-limit="30g"
+limit="40g"
 batch_size="256"
-n_workers="8"
+n_workers="24"
 data_path="~/data/imagenette2"
 gpu_count="8"
 
@@ -18,7 +18,7 @@ sudo cgcreate -g memory:$group_name
 sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 
 echo "Flushing memory/cache"
-sudo ./clear-cache.sh
+# sudo ./clear-cache.sh
 
 echo "Profiling a model with $limit memory limit"
 # place the limit which will always be 6G in this case
@@ -38,7 +38,7 @@ for model in ${models[@]}; do
     echo "running training"
     
     #cgexec -g memory:$group_name python main-measure-time-emulator.py --gpu-type=$gpu_type --gpu-count=$gpu_count --arch=$model --epochs 2 --emulator-version=1 -j $n_workers $data_path &> outputsfig4/output$limit.txt
-    cgexec -g memory:$group_name python main-measure-time-emulator.py  --epoch 1 --profile-batches -1 --workers $n_workers --gpu-type=$gpu_type --gpu-count=$gpu_count --arch=$model --emulator-version=1 ~/data/imagenette2 &> outputsfig3/output_100$model.txt
+    cgexec -g memory:$group_name python main-measure-time-emulator.py  --epoch 2 --profile-batches -1 --workers $n_workers --gpu-type=$gpu_type --gpu-count=$gpu_count --arch=$model --emulator-version=1 ~/data/imagenette2 &> outputsfig3/output_100$model.txt
     # check how much memory the dataset was actually using
     # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
     echo "checking memory usage..."

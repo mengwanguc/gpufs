@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-gpu_type="p100"
+gpu_type="v100"
 # "shufflenet_v2_x0_5" "resnet18" "vgg11"
 models=("alexnet" "resnet18" "mobilenet_v2" "resnet50")
 
@@ -12,7 +12,7 @@ gpu_count="1"
 
 # flush memory & caches
 echo "Flushing memory/cache"
-sudo ./clear-cache.sh
+# sudo ./clear-cache.sh
 #run one epoch before the nested loop to make sure all data are in there. 
 python main-measure-time-emulator.py  --epoch 1 --profile-batches -1 --workers 4 --gpu-type=$gpu_type --gpu-count=$gpu_count --arch=resnet18 --emulator-version=1 ~/data/imagenette2 &> outputsfig5/output_fill_cache.txt
 vmtouch ~/data/imagenette2/train/
