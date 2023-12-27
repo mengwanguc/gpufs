@@ -69,7 +69,7 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
     #     _add_memory_hooks(idx, module, mem_log, exp, hr)
 
     
-    num_batches = 50
+    num_batches = 256
     # print("egpu ->", egpu)
     # quit()
     file_path = '/home/cc/edev/egpu0.json'
@@ -92,6 +92,7 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
     # quit()
 
     start_time_log = time.time()
+
     for i in range(num_batches):
         start_time = time.time()
         print("batch -->", i)
@@ -101,9 +102,12 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         print(json_data)
         egpu = json.loads(json_data)
         
+
+        time.sleep(0.0140)
+        
         # memmory for alexnet
-        mem_max = 797564928
-        mem_min = 197564928
+        mem_max = 2552515072
+        mem_min = 797564928
 
         # try multiple model
         
@@ -114,6 +118,10 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         # print(egpu["m_limit"] > egpu["curr_mem"] + mem_max)
         # print(egpu["m_limit"] > egpu["curr_mem"] + mem_min)
         # quit()
+        
+        # add emulate time.sleep
+
+
         print(egpu["occupied"] )
         while (egpu["occupied"] == True) and (egpu["m_limit"] > egpu["curr_mem"] + mem_min):
             print("waiting..")
@@ -156,9 +164,10 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
             with open("/home/cc/edev/egpu0.json", "w") as outfile: 
                 json.dump(egpu, outfile)
 
-        out = model(inp)
-        loss = out.sum()
-        loss.backward()
+        # out = model(inp)
+        # loss = out.sum()
+        # loss.backward()
+        time.sleep(0.2032)
         
         # egpu = {
         #     "type": torch.cuda.get_device_name(curr_gpu),
@@ -184,7 +193,12 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         # Log FPS and time every second
         if int(end_time) > current_second:
             fps_log.append(round(fps, 0))
-            time_log.append(end_time - start_time_log)
+            if num_script == 1:
+                time_log.append(end_time - start_time_log)
+            elif num_script == 2:
+                time_log.append(end_time - start_time_log + 15)
+            elif num_script == 3:
+                time_log.append(end_time - start_time_log + 30)
             current_second += 1
 
     # Save the logs to text files
