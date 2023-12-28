@@ -57,7 +57,7 @@ Read `run-all.sh` to understand it. Modify it to replace gpu-type with your curr
 <li>
 In 
 
-https://docs.google.com/spreadsheets/d/1r2dfwMVD_5S8C_8em-hdN6r_iumH0bj4F2xWZKehUFc/edit#gid=0
+https://docs.google.com/spreadsheets/d/13gL-UGSsc_xjc8jjwmCkMHzulXIQmbNHCpLFz0Oh3Q4/edit#gid=1011071935
 
 make a duplicate of the sheet "p100 (Meng)" and rename it to your own gpu type and name. Delete the existing values for batch 0-10 for all the models and batch sizes. BUT don't delete average/std/relative-std because these cells are formulas.
 </li>
@@ -93,7 +93,7 @@ from other batches. But please still copy paste batch 0's numbers into the googl
 
 <li>
 Scroll down to the bottom of the sheet. You just see there are rows automatically gather all the average values. Copy the computed average values and paste into 
-https://docs.google.com/spreadsheets/d/13gL-UGSsc_xjc8jjwmCkMHzulXIQmbNHCpLFz0Oh3Q4/edit#gid=1011071935
+https://docs.google.com/spreadsheets/d/1U0SSL362hJd7z928TfHp9tAN4qJMJWNuLoO6u52IaSc/edit#gid=380424475
 
 (You might need to create a new sheet)
 
