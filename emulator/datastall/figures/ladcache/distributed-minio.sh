@@ -22,7 +22,7 @@ cd ../..
 
 ###############################
 
-echo "Profiling model $model with $gpu_count $gpu_type GPUs. $node_count nodes, id=$node_id."
+echo "Profiling model $model with $gpu_count $gpu_type GPUs. $node_count nodes, id=$node_id. Skipping $skip_epochs epochs before profiling."
 sudo bash -c "sync; echo 3 > /proc/sys/vm/drop_caches"
 
 # set up control group
@@ -32,7 +32,7 @@ sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
 echo "running training"
 export GLOO_SOCKET_IFNAME=eno1
-cgexec -g memory:$group_name python main-measure-time-emulator.py --use-minio=true --cache-size=$cache_size --gpu-type=$gpu_type --gpu-count=$gpu_count --epoch 2 --skip-epochs=$4 --workers $n_workers --arch=$model --batch-size $batch_size --profile-batches -1 --dist-url tcp://$node_master_ip:12345 --dist-backend gloo --world-size $node_count --rank $node_id $data_path
+cgexec -g memory:$group_name python main-measure-time-emulator.py --use-minio=true --cache-size=$cache_size --gpu-type=$gpu_type --gpu-count=$gpu_count --epoch 2 --skip-epochs=$skip_epochs --workers $n_workers --arch=$model --batch-size $batch_size --profile-batches -1 --dist-url tcp://$node_master_ip:12345 --dist-backend gloo --world-size $node_count --rank $node_id $data_path
 
 # check how much memory the DATASET was actually using
 # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
@@ -46,7 +46,7 @@ usage=$(cat /sys/fs/cgroup/memory/$group_name/memory.max_usage_in_bytes)
 echo "... $usage bytes\n"
 
 # save our output to a meaningful filename
-mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached-$node_count-nodes-$node_id-id.csv
+mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$gpu_count-gpus-$limit-limit-$usage-usage-$cached-cached-$node_count-nodes-$node_id-id.csv
 echo
 
 # tear down the control group
