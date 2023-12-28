@@ -92,7 +92,8 @@ from other batches. But please still copy paste batch 0's numbers into the googl
 </li>
 
 <li>
-Scroll down to the bottom of the sheet. You just see there are rows automatically gather all the average values. Copy the computed average values and paste into https://docs.google.com/spreadsheets/d/108u91potKYYNa4C_enAvwOuuOcTBwIL1ui_K8Cq1bUU/edit#gid=380424475
+Scroll down to the bottom of the sheet. You just see there are rows automatically gather all the average values. Copy the computed average values and paste into 
+https://docs.google.com/spreadsheets/d/13gL-UGSsc_xjc8jjwmCkMHzulXIQmbNHCpLFz0Oh3Q4/edit#gid=1011071935
 
 (You might need to create a new sheet)
 
