@@ -22,14 +22,11 @@ cd ..
 ###############################
 
 echo "Profiling model $model with $gpu_count $gpu_type GPUs. $node_count nodes, id=$node_id."
+sudo bash -c "sync; echo 3 > /proc/sys/vm/drop_caches"
 
 # set up control group
 sudo cgcreate -g memory:$group_name
 sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
-
-# flush memory & caches
-echo "Flushing memory/cache"
-sudo ~/gpufs/exp/clear-cache.sh
 
 # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
 echo "running training"
