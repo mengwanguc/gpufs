@@ -31,6 +31,7 @@ sudo bash -c "echo $memory_limit > /sys/fs/cgroup/memory/$group_name/memory.limi
 
 # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
 echo "running training"
+export GLOO_SOCKET_IFNAME=eno1
 cgexec -g memory:$group_name python main-measure-time-emulator.py --gpu-type=$gpu_type --gpu-count=$gpu_count --epoch 2 --skip-epochs=1 --workers $n_workers --arch=$model --batch-size $batch_size --profile-batches -1 --dist-url tcp://$node_master_ip:12345 --dist-backend gloo --world-size $node_count --rank $node_id $data_path
 
 # check how much memory the DATASET was actually using
