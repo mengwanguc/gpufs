@@ -1,1 +1,6 @@
-{"type": "NVIDIA", "m_limit": 25396838400, "occupied": false, "curr_mem": 3000792064}
+{
+  "type": "NVIDIA",
+  "m_limit": 25396838400,
+  "occupied": false,
+  "curr_mem": 3000792064
+}
