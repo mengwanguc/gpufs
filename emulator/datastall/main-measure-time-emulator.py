@@ -51,6 +51,9 @@ parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-l', '--use-ladcache', default=False, type=bool,
                     metavar='LADCACHE', help='use LADCache for file loading')
+parser.add_argument('-B', '--loader-bottleneck', default=4, type=int,
+                    metavar='LOADER_BOTTLENECK',
+                    help='artificial bottleneck imposed on io_uring when using ladcache. 0 = no limit.')
 parser.add_argument('-A', '--use-async', default=False, type=bool, metavar='ASYNC',
                     help='use AsyncLoader for file loading')
 parser.add_argument('-m', '--use-minio', default=False, type=bool,
@@ -323,7 +326,8 @@ def main_worker(gpu, ngpus_per_node, args):
             capacity=train_cache_size + val_cache_size,
             queue_depth=2 * args.super_batch_size * args.batch_size,
             max_unsynced=args.batch_size,
-            n_users=args.workers
+            n_users=args.workers,
+            debug_limit=args.loader_bottleneck
         )
 
         print("Spawning LADCache processes...")
