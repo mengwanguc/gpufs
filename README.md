@@ -67,8 +67,28 @@ conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake 
 conda install -y -c pytorch magma-cuda112  # or the magma-cuda* that matches your CUDA version from https://anaconda.org/pytorch/repo
 ```
 
+6. Install CuDNN:
 
-6. Download our custom pytorch and build it
+```
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
+
+cd ~
+mkdir cudnn
+cd cudnn
+pip install gdown
+gdown https://drive.google.com/uc?id=1IJGIH7Axqd8E5Czox_xRDCLOyvP--ej-
+tar -xvf cudnn-11.2-linux-x64-v8.1.1.33.tar
+sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+```
+
+
+
+7. Download our custom pytorch and build it
 
 ```
 cd ~
@@ -80,7 +100,7 @@ export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
 python setup.py install
 ```
 
-7. Download our custom torchvision and build it
+8. Download our custom torchvision and build it
 
 ```
 conda install -y aiofiles
