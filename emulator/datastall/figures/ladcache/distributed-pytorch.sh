@@ -8,7 +8,6 @@ node_master_ip=$3
 gpu_type="p100"
 gpu_count="4"
 model="alexnet"
-cache_size="6979321856"
 memory_limit=$(13 * 1024 * 1024 * 1024) # should be ~65%-ish cached of imagenette
 batch_size="256"
 n_workers="8"
@@ -18,7 +17,7 @@ data_path="/home/cc/data/imagenette2"
 group_name="gpufs"
 
 # move the the emulator/datastall/ folder
-cd ..
+cd ../..
 
 ###############################
 

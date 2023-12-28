@@ -17,7 +17,7 @@ data_path="/home/cc/data/imagenette2"
 group_name="gpufs"
 
 # move the the emulator/datastall/ folder
-cd ..
+cd ../..
 
 ###############################
 
