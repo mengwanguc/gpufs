@@ -32,7 +32,7 @@ sudo chown -R ${USER} /sys/fs/cgroup/memory/$group_name
 # run training with limited memory (https://unix.stackexchange.com/questions/44985/limit-memory-usage-for-a-single-linux-process)
 echo "running training"
 export GLOO_SOCKET_IFNAME=eno1
-cgexec -g memory:$group_name python main-measure-time-emulator.py --use-minio=true --cache-size=$cache_size --gpu-type=$gpu_type --gpu-count=$gpu_count --epoch 2 --skip-epochs=$skip_epochs --workers $n_workers --arch=$model --batch-size $batch_size --profile-batches -1 --dist-url tcp://$node_master_ip:12345 --dist-backend gloo --world-size $node_count --rank $node_id $data_path
+cgexec -g memory:$group_name python main-measure-time-emulator.py --use-minio=true --cache-size=$cache_size --gpu-type=$gpu_type --gpu-count=$gpu_count --epoch $((skip_epochs + 1)) --skip-epochs=$skip_epochs --workers $n_workers --arch=$model --batch-size $batch_size --profile-batches -1 --dist-url tcp://$node_master_ip:12345 --dist-backend gloo --world-size $node_count --rank $node_id $data_path
 
 # check how much memory the DATASET was actually using
 # NOTE this isn't entirely accurate since the amount can vary throughout, and the amount at the end may not be representative/precise/etc. 
