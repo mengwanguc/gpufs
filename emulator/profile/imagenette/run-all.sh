@@ -39,7 +39,9 @@ models=(alexnet
          )
 
 # models=(densenet161)
-batch_sizes=(64)
+batch_sizes=(256
+             128
+             64)
 
 for model in ${models[@]}; do
     for batch_size in ${batch_sizes[@]}; do
