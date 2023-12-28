@@ -45,7 +45,7 @@ usage=$(cat /sys/fs/cgroup/memory/$group_name/memory.max_usage_in_bytes)
 echo "... $usage bytes\n"
 
 # save our output to a meaningful filename
-mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$limit-limit-$usage-usage-$cached-cached-$node_count-nodes-$node_id-id.csv
+mv ./$gpu_type/$model-batch$batch_size.csv ./$gpu_type/$model-$batch_size-batch_size-$n_workers-workers-$gpu_count-gpus-$limit-limit-$usage-usage-$cached-cached-$node_count-nodes-$node_id-id.csv
 echo
 
 # tear down the control group
