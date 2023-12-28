@@ -10,7 +10,7 @@ gpu_count="4"
 model="alexnet"
 cache_size="6979321856"
 batch_size="256"
-n_workers="16"
+n_workers="24"
 data_path="/home/cc/data/imagenette2"
 
 # set up control group

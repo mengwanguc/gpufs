@@ -10,7 +10,7 @@ gpu_count="4"
 model="alexnet"
 memory_limit=$((11 * 1024 * 1024 * 1024)) # should be ~65%-ish cached of imagenette
 batch_size="256"
-n_workers="16"
+n_workers="24"
 data_path="/home/cc/data/imagenette2"
 
 # set up control group
