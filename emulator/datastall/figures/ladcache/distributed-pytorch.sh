@@ -6,7 +6,7 @@ node_id=$2
 node_master_ip=$3
 
 gpu_type="p100"
-gpu_count="4"
+gpu_count="8"
 model="alexnet"
 memory_limit=$((11 * 1024 * 1024 * 1024)) # should be ~65%-ish cached of imagenette
 batch_size="256"

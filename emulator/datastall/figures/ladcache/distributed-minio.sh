@@ -7,7 +7,7 @@ node_master_ip=$3
 skip_epochs=$4
 
 gpu_type="p100"
-gpu_count="4"
+gpu_count="8"
 model="alexnet"
 cache_size="6979321856"
 batch_size="256"
