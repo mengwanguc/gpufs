@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set +e
 
 node_count=$1
 node_id=$2
