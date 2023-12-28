@@ -4,7 +4,7 @@ import torch
 import json
 import time
 from filelock import Timeout, FileLock
-import psutil
+# import psutil
 
 
 def _get_gpu_mem(synchronize=True, empty_cache=True):
@@ -69,11 +69,11 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
     #     _add_memory_hooks(idx, module, mem_log, exp, hr)
 
     
-    num_batches = 256
+    num_batches = 100
     # print("egpu ->", egpu)
     # quit()
-    file_path = '/home/cc/edev/egpu0.json'
-    lock_path = '/home/cc/edev/egpu0.json.lock'
+    file_path = '/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json'
+    lock_path = '/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json.lock'
 
     lock = FileLock(lock_path, timeout=1)
     current_second = 0
@@ -83,31 +83,44 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
     
 
     # Get memory usage
-    memory_info = psutil.virtual_memory()
+    # memory_info = psutil.virtual_memory()
 
     # print(f"Total Memory: {memory_info.total} bytes")
     # print(f"Used Memory: {memory_info.used} bytes")
     # print(f"Free Memory: {memory_info.free} bytes")
 
+    # model = alexnet().cuda()
+    # bs = 512
+    # input = torch.rand(bs, 3, 512, 512).cuda()
+    # min   = 553078784
+    # max   = 2447713280
+    # limit =   25396838400
+    # cachemax = 4745854976 
     # quit()
+    with open('/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json', 'r') as file:
+        json_data = file.read()
+
+    print("json-data ->",json_data)
+    egpu = json.loads(json_data)
+    print(egpu)
 
     start_time_log = time.time()
 
     for i in range(num_batches):
         start_time = time.time()
         print("batch -->", i)
+
+        # with open('/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json') as file:
+        #     egpu = json.load(file)
         
-        with open('/home/cc/edev/egpu0.json', 'r') as file:
-            json_data = file.read()
-        print(json_data)
-        egpu = json.loads(json_data)
+        # quit()
         
 
         time.sleep(0.0140)
         
         # memmory for alexnet
-        mem_max = 2552515072
-        mem_min = 797564928
+        mem_max = 2447713280
+        mem_min = 553078784
 
         # try multiple model
         
@@ -123,13 +136,17 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
 
 
         print(egpu["occupied"] )
-        while (egpu["occupied"] == True) and (egpu["m_limit"] > egpu["curr_mem"] + mem_min):
+        while (egpu["occupied"] == True) :
+            # and (egpu["m_limit"] > egpu["curr_mem"] + mem_min)
             print("waiting..")
             time.sleep(0.001)
-            with open('/home/cc/edev/egpu0.json', 'r') as file:
+            with open('/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json', 'r') as file:
                 # print("open..", file.read())
                 json_data = file.read()
-                print(json_data)
+                
+            print(json_data)
+            if json_data == None:
+                continue
             egpu = json.loads(json_data)
             print("egpu ->", egpu)
             if egpu["occupied"] == False:
@@ -145,29 +162,19 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         #     "curr_mem": torch.cuda.memory_allocated(0)
         # }
 
-        egpu["occupied"] == True
-
-        # import threading
-        # import time
-
-        # def run():
-        #     while True:
-        #         print("background")
-        #         time.sleep(.5)
-
-        # thread = threading.Thread(target=run,daemon=True)
-        # thread.start()
+        egpu["occupied"] = True
+        print(egpu)
         
         # print(curr_gpu, egpu)
         # Convert to JSON
-        with lock:
-            with open("/home/cc/edev/egpu0.json", "w") as outfile: 
-                json.dump(egpu, outfile)
+        # with lock:
+        with open("/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json", "w") as outfile: 
+            json.dump(egpu, outfile)
 
         # out = model(inp)
         # loss = out.sum()
         # loss.backward()
-        time.sleep(0.2032)
+        time.sleep(0.32920265197753906)
         
         # egpu = {
         #     "type": torch.cuda.get_device_name(curr_gpu),
@@ -176,10 +183,10 @@ def log_mem(num_script, model, inp, mem_log=None, exp=None):
         #     "curr_mem": torch.cuda.memory_allocated(curr_gpu)
         # }
 
-        egpu["occupied"] == True
-        with lock:
-            with open("/home/cc/edev/egpu0.json", "w") as outfile: 
-                json.dump(egpu, outfile)
+        egpu["occupied"] = False
+        # with lock:
+        with open("/home/cc/gpufs/log_gpumem_salus/src/edev/egpu0.json", "w") as outfile: 
+            json.dump(egpu, outfile)
         # print("egpu ->", egpu)
 
         end_time = time.time()

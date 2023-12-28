@@ -14,9 +14,9 @@ base_dir = '.'
 # %% Analysis baseline
 
 model = alexnet().cpu()
-bs = 256
-input = torch.rand(bs, 3, 244, 244).cpu()
-print()
+bs = 512
+input = torch.rand(bs, 3, 512, 512).cpu()
+# print()
 
 mem_log = []
 
