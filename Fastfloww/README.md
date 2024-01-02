@@ -391,7 +391,7 @@ tar -xvjf LJSpeech-1.1.tar.bz2
 ```
 cd ~/gpufs/Fastfloww/examples
 python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
-taskset 1-10 python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
+taskset -c 1-6 python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
 ```
 
 ### limit network bandwidth
