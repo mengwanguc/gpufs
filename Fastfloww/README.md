@@ -349,11 +349,65 @@ You need to using GPU node and CPU node. For the image you can use "Ubuntu20-Cud
     python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf' default_config.yaml
     ```
 
+    offloading_type:
+    - 'tf': TensorFlow (no offloading) 
+    - 'tf-dsr-all': TF+Remote Worker by offloading all operations (with dispatcher)
+    - 'tf-dslr-all':TF+Local and Remote Worker by offloading all operations (with dispatcher)
+    - 'dali': DALI
+    - 'ff': FastFlow (with dispatcher)
 
+12. Reproduce tf.data service paper from SOCC 2023: https://dl.acm.org/doi/pdf/10.1145/3620678.3624666
+
+
+baseline:
+```
+taskset -c 1-4 python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf' default_config.yaml
+```
+
+#### tf.data service
+on client node:
+
+```
+taskset -c 0-3 python eval_app_runner.py gan_ada_app_cpu.py /home/cc/data 'tf-dsr-all' default_config.yaml
+```
+
+on server node:
+```
+cd /home/cc/gpufs/Fastfloww/examples/dispatcher-and-workers
+bash service.sh
+```
+
+
+13. Reproduce FastFlow
+
+### ctc_asr_app.py
+
+```
+mkdir ~/data
+cd ~/data/
+wget https://data.keithito.com/data/speech/LJSpeech-1.1.tar.bz2
+tar -xvjf LJSpeech-1.1.tar.bz2
+```
+```
+cd ~/gpufs/Fastfloww/examples
+python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
+taskset 1-10 python eval_app_runner.py ctc_asr_app_cpu.py /home/cc/data 'tf' default_config.yaml
+```
 
 ### limit network bandwidth
 
 ```
 sudo apt-get install wondershaper
 sudo wondershaper eno1 1024000 1024000
+sudo wondershaper clear eno1
+```
+
+```
+# on node 1
+iperf -s
+```
+
+```
+# on node 2
+iperf -c 10.140.82.252
 ```

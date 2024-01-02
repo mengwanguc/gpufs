@@ -16,9 +16,9 @@ import time
 base_dir = '.'
 # %% Analysis baseline
 
-model = alexnet().cuda()
+model = alexnet().cpu()
 bs = 512
-input = torch.rand(bs, 3, 512, 512).cuda()
+input = torch.rand(bs, 3, 512, 512).cpu()
 
 mem_log = []
 
