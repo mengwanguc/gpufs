@@ -126,22 +126,22 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
     # preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
     if is_training:
         images = fn.decoders.image_random_crop(images, 
-                                               device=decoder_device, output_type=types.RGB,
+                                               device = 'cpu', output_type=types.RGB,
                                                random_aspect_ratio=[0.8, 1.25],
                                                random_area=[0.1, 1.0],
                                                num_attempts=100)
         images = fn.resize(images,
-                           device=dali_device,
+                           device = 'cpu',
                            resize_x=crop,
                            resize_y=crop,
                            interp_type=types.INTERP_TRIANGULAR)
         mirror = fn.random.coin_flip(probability=0.5)
     else:
         images = fn.decoders.image(images,
-                                   device=decoder_device,
+                                   device = 'cpu',
                                    output_type=types.RGB)
         images = fn.resize(images,
-                           device=dali_device,
+                           device = 'cpu',
                            size=size,
                            mode="not_smaller",
                            interp_type=types.INTERP_TRIANGULAR)
@@ -281,7 +281,7 @@ def main():
         train_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                           num_threads=args.workers,
                                           seed=12 + args.local_rank,
-                                          device_id = -1,
+                                          device_id = None,
                                           data_dir=traindir,
                                           crop=crop_size,
                                           size=val_size,
@@ -297,7 +297,7 @@ def main():
 
         val_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                         num_threads=args.workers,
-                                        device_id=args.local_rank,
+                                        device_id=None,
                                         seed=12 + args.local_rank,
                                         data_dir=valdir,
                                         crop=crop_size,
@@ -501,7 +501,7 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             top1.update(to_python_float(prec1), input.size(0))
             top5.update(to_python_float(prec5), input.size(0))
 
-            torch.cuda.synchronize()
+            torch.cpu.synchronize()
             batch_time.update((time.time() - end)/args.print_freq)
             end = time.time()
 
