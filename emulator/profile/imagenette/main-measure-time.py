@@ -43,6 +43,9 @@ parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-l', '--use-ladcache', default=False, type=bool,
                     metavar='LADCACHE', help='use LADCache for file loading')
+parser.add_argument('-L', '--locality-aware', default=False, type=bool,
+                    metavar='LOCALITY',
+                    help='whether to use identical sample order in each epoch for distributed training')
 parser.add_argument('-c', '--cache-size', default=16 * 1024 * 1024 * 1024,
                     type=int, metavar='CACHESIZE',
                     help='minio cache size, training gets 10/11, validation gets 1/11 (default=16GB)')
@@ -262,7 +265,8 @@ def main_worker(gpu, ngpus_per_node, args):
         load_indices=load_indices)
 
     if args.distributed:
-        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset)
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset,
+                                                                        locality_aware=args.locality_aware)
     else:
         train_sampler = None
 
