@@ -4,11 +4,6 @@ import shutil
 import time
 import math
 
-import os
-print("Cleaning cache...")
-os.system("sync; sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches'")
-
-
 import torch
 import torch.nn as nn
 import torch.nn.parallel
@@ -115,28 +110,23 @@ def to_python_float(t):
 
 @pipeline_def
 def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True):
-    images, labels = fn.readers.file(file_root=data_dir,
-                                     shard_id=shard_id,
-                                     num_shards=num_shards,
+    images, labels = fn.readers.file(file_root=data_dir, device='cpu',
                                      random_shuffle=is_training,
                                      pad_last_batch=True,
                                      name="Reader")
-    print("images, labels ->", images, labels)
-    dali_device = 'cpu' if dali_cpu else 'gpu'
-    decoder_device = 'cpu' if dali_cpu else 'mixed'
-    # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
-    device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
-    host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
-    # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
-    preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
-    preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
+    # dali_device = 'cpu' if dali_cpu else 'gpu'
+    dali_device = 'cpu'
+    # decoder_device = 'cpu' if dali_cpu else 'mixed'
+    decoder_device = 'cpu'
+    # # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
+    # device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
+    # host_memory_padding = 140544512 if decoder_device == 'mixed' else 0
+    # # ask HW NVJPEG to allocate memory ahead for the biggest image in the data set to avoid reallocations in runtime
+    # preallocate_width_hint = 5980 if decoder_device == 'mixed' else 0
+    # preallocate_height_hint = 6430 if decoder_device == 'mixed' else 0
     if is_training:
-        images = fn.decoders.image_random_crop(images,
+        images = fn.decoders.image_random_crop(images, 
                                                device=decoder_device, output_type=types.RGB,
-                                               device_memory_padding=device_memory_padding,
-                                               host_memory_padding=host_memory_padding,
-                                               preallocate_width_hint=preallocate_width_hint,
-                                               preallocate_height_hint=preallocate_height_hint,
                                                random_aspect_ratio=[0.8, 1.25],
                                                random_area=[0.1, 1.0],
                                                num_attempts=100)
@@ -157,16 +147,14 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                            interp_type=types.INTERP_TRIANGULAR)
         mirror = False
 
-    images = fn.crop_mirror_normalize(images.gpu(),
+    images = fn.crop_mirror_normalize(images, device='cpu',
                                       dtype=types.FLOAT,
                                       output_layout="CHW",
                                       crop=(crop, crop),
                                       mean=[0.485 * 255,0.456 * 255,0.406 * 255],
                                       std=[0.229 * 255,0.224 * 255,0.225 * 255],
                                       mirror=mirror)
-    labels = labels.gpu()
-    print("images ->", images)
-    print("labels ->", labels)
+    # labels = labels
     return images, labels
 
 
@@ -197,6 +185,7 @@ def main():
     cudnn.benchmark = True
     best_prec1 = 0
     if args.deterministic:
+        print("deterministic..")
         cudnn.benchmark = False
         cudnn.deterministic = True
         torch.manual_seed(args.local_rank)
@@ -224,13 +213,14 @@ def main():
         model = models.__dict__[args.arch]()
 
     if hasattr(torch, 'channels_last') and  hasattr(torch, 'contiguous_format'):
+        print("channel last..")
         if args.channels_last:
             memory_format = torch.channels_last
         else:
             memory_format = torch.contiguous_format
-        model = model.cuda().to(memory_format=memory_format)
+        model = model.cpu().to(memory_format=memory_format)
     else:
-        model = model.cuda()
+        model = model.cpu()
 
     # Scale learning rate based on global batch size
     args.lr = args.lr*float(args.batch_size*args.world_size)/256.
@@ -239,6 +229,7 @@ def main():
                                 weight_decay=args.weight_decay)
 
     if args.distributed:
+        print("distributed..")
         s = torch.cuda.Stream()
         s.wait_stream(torch.cuda.current_stream())
         with torch.cuda.stream(s):
@@ -246,7 +237,7 @@ def main():
         torch.cuda.current_stream().wait_stream(s)
 
     # define loss function (criterion) and optimizer
-    criterion = nn.CrossEntropyLoss().cuda()
+    criterion = nn.CrossEntropyLoss().cpu()
 
     # Optionally resume from a checkpoint
     if args.resume:
@@ -284,13 +275,13 @@ def main():
 
     train_loader = None
     val_loader = None
-    print("datadir->", traindir)
-    # quit()
     if not args.disable_dali:
+        # data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True
+        print("args.workers ->", args.workers)
         train_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                           num_threads=args.workers,
-                                          device_id=args.local_rank,
                                           seed=12 + args.local_rank,
+                                          device_id = -1,
                                           data_dir=traindir,
                                           crop=crop_size,
                                           size=val_size,
@@ -299,6 +290,7 @@ def main():
                                           num_shards=args.world_size,
                                           is_training=True)
         train_pipe.build()
+  
         train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader",
                                                   last_batch_policy=LastBatchPolicy.PARTIAL,
                                                   auto_reset=True)
@@ -447,14 +439,7 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
     else:
         data_iterator = train_loader
 
-    batch_time_list = []
-    print("len(data_iterator)->", len(data_iterator))
-    quit()
     for i, data in enumerate(data_iterator):
-        print(data)
-        print("i, data ->", i, len(data), type(data))
-        print("data[0] ->", len(data[0]), type(data[0]))
-        quit()
         if args.disable_dali:
             input, target = data
             train_loader_len = len(train_loader)
@@ -463,10 +448,6 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
             target = data[0]["label"].squeeze(-1).long()
             train_loader_len = int(math.ceil(data_iterator._size / args.batch_size))
 
-        print("input ->", input, len(input))
-        print("target ->", target, len(target))
-        print("train_loader_len ->", train_loader_len)
-        
         if args.prof >= 0 and i == args.prof:
             print("Profiling begun at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStart()
@@ -522,10 +503,6 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
 
             torch.cuda.synchronize()
             batch_time.update((time.time() - end)/args.print_freq)
-            
-            total_time = time.time() - end
-            batch_time_list.append(total_time)
-
             end = time.time()
 
             if args.local_rank == 0:
@@ -541,19 +518,13 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
                        batch_time=batch_time,
                        loss=losses, top1=top1, top5=top5))
 
-            # quit()
-
         # Pop range "Body of iteration {}".format(i)
         if args.prof >= 0: torch.cuda.nvtx.range_pop()
 
         if args.prof >= 0 and i == args.prof + 10:
             print("Profiling ended at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStop()
-            
-
-    with open("result-dali.txt", 'a') as f:
-        f.write("{:.9f}\n".format(sum(batch_time_list)))
-
+            quit()
 
     return batch_time.avg
 
