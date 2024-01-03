@@ -51,6 +51,9 @@ parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
 parser.add_argument('-l', '--use-ladcache', default=False, type=bool,
                     metavar='LADCACHE', help='use LADCache for file loading')
+parser.add_argument('-L', '--locality-aware', default=False, type=bool,
+                    metavar='LOCALITY',
+                    help='whether to use identical sample order in each epoch for distributed training')
 parser.add_argument('-B', '--loader-bottleneck', default=4, type=int,
                     metavar='LOADER_BOTTLENECK',
                     help='artificial bottleneck imposed on io_uring when using ladcache. 0 = no limit.')
@@ -373,7 +376,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     if args.distributed:
         ##
-        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset) ## HERE ##
+        train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset, locality_aware=args.locality_aware) ## HERE ##
         ##
     else:
         train_sampler = None
