@@ -11,7 +11,7 @@ model="alexnet"
 cache_size=$((3 * 1024 * 1024 * 1024)) # "4294967296" # "6979321856"
 batch_size="256"
 n_workers="24"
-data_path="/home/cc/data/imagenette2"
+data_path="/mnt/nfs/imagenette2"
 
 # set up control group
 group_name="gpufs"
