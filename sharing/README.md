@@ -3,11 +3,16 @@
 
 ```
 sudo apt update
-sudo apt install default-jdk
-java -version
+sudo apt install -y default-jdk
 ```
 
-Add this to the end of .bashr_rc
+confirm it's installed
+```
+java --version
+```
+
+
+Add this to the end of .bashrc
 
 ```
 export JAVA_HOME=$(/usr/libexec/java_home)
@@ -40,4 +45,10 @@ pip install kafka-python
 
 ```
 bash bin/kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic batch_requests
+```
+
+
+
+```
+python main-emulator.py  --epoch 1 --profile-batches -1 --workers 8 --gpu-type=p100 --gpu-count=1 --arch=resnet50 --emulator-version=1 ~/data/imagenette2
 ```
