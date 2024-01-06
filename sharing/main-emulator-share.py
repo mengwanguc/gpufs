@@ -25,7 +25,7 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
-import gpemu
+import share
 
 import inspect
 
@@ -314,10 +314,13 @@ def main_worker(gpu, ngpus_per_node, args):
         validate(val_loader, model, criterion, args)
         return
 
-    if not os.path.exists(args.gpu_type):
-        os.makedirs(args.gpu_type)
-    with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
-        f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
+    # if not os.path.exists(args.gpu_type):
+    #     os.makedirs(args.gpu_type)
+    # # with open("{}/{}-batch{}.csv".format(args.gpu_type, args.arch, args.batch_size), 'w') as f:
+    # #     f.write("data_stall_time\tcpu2gpu_time\tgpu_time\n")
+
+
+    args.app = share.App()
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -386,8 +389,8 @@ def parse_gpu_proflie(args):
         args.batch_gpu_compute_time = seed_batch_gpu_compute_time * args.batch_size / seed_batch_size
         
     else:
-        args.batch_cpu2gpu_time = df_filter_batch.at[df_filter_batch.index[0], 'cpu-to-gpu time']
-        args.batch_gpu_compute_time = df_filter_batch.at[df_filter_batch.index[0], 'gpu compute time']
+        args.batch_cpu2gpu_time = float(df_filter_batch.at[df_filter_batch.index[0], 'cpu-to-gpu time'])
+        args.batch_gpu_compute_time = float(df_filter_batch.at[df_filter_batch.index[0], 'gpu compute time'])
         
     print("batch_size: {}\t batch_cpu2gpu_time: {}\t batch_gpu_compute_time: {}".format(
                 args.batch_size, args.batch_cpu2gpu_time, args.batch_gpu_compute_time))
@@ -406,6 +409,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
     # switch to train mode
     model.train()
+    app = args.app
 
     total_data_wait_time = 0
     total_cpu2gpu_time = 0
@@ -413,9 +417,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
     measurements = []
     end = time.time()
+    batch_start = time.time()
     for i, (images, target) in enumerate(train_loader):
-        tt = gpemu.add_one(1)
-        print(tt)
         # measure data loading time
         # data_time.update(time.time() - end)
         # print("App got data:\t{}".format(time.time()))
@@ -456,26 +459,30 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # optimizer.zero_grad()
         # loss.backward()
         # optimizer.step()
-        time.sleep(args.batch_gpu_compute_time/args.gpu_count)
+        # time.sleep(args.batch_gpu_compute_time/args.gpu_count)
+        app.emuSharedCompute(i, args.batch_gpu_compute_time/args.gpu_count)
 
         gpu_time = time.time() - gpu_start_time
 
-        print("batch {} \t data_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
-                i, data_wait_time, cpu2gpu_time, gpu_time
-        ))
-
         # measure elapsed time
-        batch_time.update(time.time() - end)
+        # batch_time.update(time.time() - end)
 
         total_data_wait_time += data_wait_time
         total_cpu2gpu_time += cpu2gpu_time
         total_gpu_time += gpu_time
         end = time.time()
         
-        print(total_data_wait_time,total_cpu2gpu_time,total_gpu_time)
+        # print(total_data_wait_time,total_cpu2gpu_time,total_gpu_time)
 
         if epoch != 0:
             measurements.append((data_wait_time, cpu2gpu_time, gpu_time))
+        
+        batch_end = time.time()
+        batch_duration = batch_end - batch_start
+        batch_start = time.time()
+        image_process_speed = args.batch_size / batch_duration
+        print("{}\t{}\t{}\t{}".format(app.app_id, i, time.time(), image_process_speed))
+
         
         if args.profile_batches != -1 and i >= args.profile_batches:
             break
