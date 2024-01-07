@@ -28,3 +28,6 @@ install dali in ffcv env:
 loadtime=42.303056240	 totaltime=74.323196173
 loadtime=42.247511387	 totaltime=70.776504755
 loadtime=11.771928310	 totaltime=39.788168430
+
+new:
+15.103173971	79.303644896

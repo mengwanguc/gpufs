@@ -41,8 +41,8 @@
 
    ```
    # Required environmental variables for the script:
-   export IMAGENET_DIR=/path/to/pytorch/format/imagenet/directory/
-   export WRITE_DIR=/your/path/here/
+   export IMAGENET_DIR=~/data/imagenette2
+   export WRITE_DIR=~/data/
 
    # Starting in the root of the Git repo:
    cd ~/gpufs/ffcv
@@ -53,15 +53,23 @@
    # - quality=90 JPEGs
    ./write_imagenet.sh 500 0.50 90
    ```
-
+5. To emulate FFCV on CPU.
    
-6. Training the model
+   [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/NaufalRezkyA/ffcv-emulator/blob/main/ffcv/transforms/ops.py)
+   
+   Copy this script and replaced them into FFCV folder
+   ```
+   /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/ffcv/transforms/ops.py
+   ```
+   
+   
+7. Training the model
 
-   The main thing to implement FFCV into our code is modify the Dataloader, because FFCV speeds up model training by eliminating (often subtle) data bottlenecks from the training process. It have similar format with the pytorch and we doesnt have to modify others things. You can use this command to train the models.
+   The main thing to implement FFCV into our code is modify the Dataloader, because FFCV speeds up model training by eliminating (often subtle) data bottlenecks from the training process. It have similar format with the pytorch and we doesnt have to modify others things. You can use this command to train the models. Prepocessing time and total training time will write in "test-ffcv.txt"
 
    ```
-   cd ~/gpufs/ffcv
-   python main-original-ffcv-v2-cuda.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 10
+   cd ~/gpufs/ffcv/
+   python main-original-ffcv-v2-emulatorv0-cpu-todevice.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 1
    ```
 
    
