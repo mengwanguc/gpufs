@@ -317,6 +317,11 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # compute output
         output = model(images)
 
+        torch.cuda.synchronize()
+        forward_time = time.time() - gpu_start_time
+        backward_start = time.time()
+
+
         if args.arch in ['googlenet', 'inception_v3']:
             loss = criterion(output.logits, target)
         else:
@@ -334,16 +339,16 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         optimizer.step()
 
         torch.cuda.synchronize()
-        gpu_time = time.time() - gpu_start_time
+        backward_time = time.time() - backward_start
 
-        print("batch {} \t io_time: {:.9f} \t cpu2gpu_time: {:.9f} \t gpu_time: {:.9f}".format(
-                i, io_wait_time, cpu2gpu_time, gpu_time
+        print("batch {} \t io_time: {:.9f} \t cpu2gpu_time: {:.9f} \t forward_time: {:.9f} \t backward_time: {:.9f}".format(
+                i, io_wait_time, cpu2gpu_time, forward_time, backward_time
         ))
 
-        # measure elapsed time
-        batch_time.update(time.time() - end)
+        # # measure elapsed time
+        # batch_time.update(time.time() - end)
 
-        measurements.append((cpu2gpu_time, gpu_time))
+        measurements.append((cpu2gpu_time, forward_time, backward_time))
         end = time.time()
 
         if i >= args.profile_batches:
@@ -354,9 +359,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     if not os.path.exists(args.gpu_type):
         os.makedirs(args.gpu_type)
     with open(output_filename, 'w') as f:
-        f.write("{}\t{}\n".format("cpu2gpu_time", "gpu_time"))
-        for cpu2gpu_time, gpu_time in measurements:
-            f.write("{:.9f}\t{:.9f}\n".format(cpu2gpu_time, gpu_time))
+        f.write("{}\t{}\t{}\n".format("cpu2gpu_time", "forward_time", "backward_time"))
+        for cpu2gpu_time, forward_time, backward_time in measurements:
+            f.write("{:.9f}\t{:.9f}\t{:.9f}\n".format(cpu2gpu_time, forward_time, backward_time))
 
 
 def validate(val_loader, model, criterion, args):
