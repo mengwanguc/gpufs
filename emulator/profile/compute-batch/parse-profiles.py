@@ -7,7 +7,7 @@ if len(sys.argv) <= 1:
 
 gpu_type = sys.argv[1]
 
-models=['alexnet']
+models=['resnet50']
 
 num_profile_batches = 50
 batch_sizes = range(1,129)
