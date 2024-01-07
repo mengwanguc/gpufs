@@ -31,6 +31,8 @@ import torch.utils.dlpack as torch_dlpack  # noqa: F401
 import ctypes
 import numpy as np
 
+import pickle
+
 from . import fn  # noqa: F401
 
 from nvidia.dali.plugin.pytorch._torch_function import TorchPythonFunction as TorchPythonFunction
@@ -244,6 +246,34 @@ class DALIGenericIterator(_DaliBaseIterator):
         # Gather outputs
         outputs = self._get_outputs()
 
+        # print("outputs ->", outputs[0][1], type(outputs[0][1]))
+        # print("outputs ->", outputs[0][0], type(outputs[0][0]))
+
+        # print("outputs ->", outputs[0], type(outputs[0]))
+        # # print("outputs ->", outputs[0][1], type(outputs[0][1]))
+        # quit()
+
+        # outputs[0] = list(outputs[0])
+        # print(type(outputs[0]))
+        # outputs[0][0] = outputs[0][0].as_cpu().as_array()
+        # outputs[0][1] = outputs[0][1].as_cpu().as_array()
+        # print(type(outputs[0][0]))
+        # # quit()
+        
+        # print("1->", type(outputs), outputs)
+        # print("2->",type(feed_ndarray(outputs, torch.empty())))
+        # import inspect
+        # print(inspect.getsource(self._get_outputs))
+
+        # import pickle
+        # print("outputs ->", outputs)
+        # # Open a file and use dump() 
+        # with open('/home/cc/output_reader.pkl', 'wb') as file: 
+        #     # A new file will be created 
+        #     pickle.dump(outputs, file)
+
+        # quit()
+
         data_batches = [None for i in range(self._num_gpus)]
         for i in range(self._num_gpus):
             dev_id = self._pipes[i].device_id
@@ -292,6 +322,38 @@ class DALIGenericIterator(_DaliBaseIterator):
                     feed_ndarray(tensor, pyt_tensors[category], cuda_stream=stream)
                 else:
                     feed_ndarray(tensor, pyt_tensors[category])
+
+            # import pickle
+            # # print("outputs ->", outputs)
+            # # # Open a file and use dump() 
+            # with open('/home/cc/pyt_tensors.pkl', 'wb') as file: 
+            #     # A new file will be created 
+            #     pickle.dump(pyt_tensors, file)
+
+            # with open('/home/cc/data_batches.pkl', 'wb') as file: 
+            #     # A new file will be created 
+            #     pickle.dump(data_batches, file)
+            # quit()
+
+            with open('/home/cc/pyt_tensors.pkl', 'rb') as file:     
+                # Call load method to deserialze 
+                pyt_tensors = pickle.load(file) 
+
+            with open('/home/cc/data_batches.pkl', 'rb') as file:     
+                # Call load method to deserialze 
+                data_batches = pickle.load(file) 
+
+            # print("data_batches ->", data_batches)
+            # pyt_tensors = dict()
+            # pyt_tensors['label'] = torch.zeros((256, 1), dtype=torch.int32, device='cuda')
+            # # print("pyt_tensors ->", pyt_tensors['label'].dtype, type(pyt_tensors['label']), pyt_tensors['label'].shape, pyt_tensors['label'].device)
+            # pyt_tensors['data'] = torch.zeros((256, 3, 224, 224), dtype=torch.float32, device='cuda')
+            # # print("pyt_tensors ->", pyt_tensors['data'].dtype, type(pyt_tensors['data']), pyt_tensors['data'].shape, pyt_tensors['label'].device)
+
+            # data_batches[i] = pyt_tensors
+            # data_batches[i]['label'] = torch.zeros((256, 1), dtype=torch.int32, device='cuda')
+
+            # data_batches[i]['data'] = torch.zeros((256, 3, 224, 224), dtype=torch.float32, device='cuda')
 
         self._schedule_runs()
 
