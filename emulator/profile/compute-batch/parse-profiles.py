@@ -10,7 +10,7 @@ gpu_type = sys.argv[1]
 models=['alexnet']
 
 num_profile_batches = 50
-batch_sizes = range(1,177)
+batch_sizes = range(1,129)
 
 
 for model in models:
@@ -34,6 +34,7 @@ for model in models:
             gpu_times.sort()
             gpu_times = gpu_times[0:-6]
             avg_gpu_time = sum(gpu_times)/len(gpu_times)
+            medium_gpu_time = gpu_times[30]
             f.write('{}\t{}\n'.format(batch_size, avg_gpu_time))
 
 
