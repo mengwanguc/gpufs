@@ -11,7 +11,6 @@ import mlock
 from PIL import Image
 import io
 
-import torch
 import torch.nn as nn
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
@@ -423,6 +422,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         # data_time.update(time.time() - end)
         # print("App got data:\t{}".format(time.time()))
         data_wait_time = time.time() - end
+        print(data_wait_time)
+
+        # print data_wait_time to see if gpu or cpu bound
+        # scheduler for 10jobs
+        # sjf
+        # muri: one from cpu bound and gpu bound; cgroup
 
         # Release the balloons for the previous batch (release one of each type).
         if i > 0:
