@@ -1,4 +1,4 @@
-load_data_time	gpu_time
+preprocess_time	gpu_time
 3.690917015	5.863736391
 0.001829863	0.014393330
 0.000047922	0.024721146
