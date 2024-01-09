@@ -130,6 +130,7 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                      pad_last_batch=True,
                                      name="Reader")
     dali_device = 'cpu' if dali_cpu else 'gpu'
+    print(dali_device)
     decoder_device = 'cpu' if dali_cpu else 'mixed'
     # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
     device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
@@ -164,15 +165,31 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                            interp_type=types.INTERP_TRIANGULAR)
         mirror = False
 
-    images = fn.crop_mirror_normalize(images.gpu(),
-                                      dtype=types.FLOAT,
-                                      output_layout="CHW",
-                                      crop=(crop, crop),
-                                      mean=[0.485 * 255,0.456 * 255,0.406 * 255],
-                                      std=[0.229 * 255,0.224 * 255,0.225 * 255],
-                                      mirror=mirror)
+    # images = fn.crop_mirror_normalize(images.gpu(),
+    #                                   dtype=types.FLOAT,
+    #                                   output_layout="CHW",
+    #                                   crop=(crop, crop),
+    #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+    #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
+    #                                   mirror=mirror)
     labels = labels.gpu()
     return images, labels
+
+
+@pipeline_def
+def create_norm_pipeline(crop):
+    images = fn.external_source(name="images")
+    mirror = False
+    images = fn.crop_mirror_normalize(images.gpu(),
+                                    dtype=types.FLOAT,
+                                    output_layout="CHW",
+                                    crop=(crop, crop),
+                                    mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+                                    std=[0.229 * 255,0.224 * 255,0.225 * 255],
+                                    mirror=mirror)
+    return images
+
+
 
 
 def main():
@@ -202,6 +219,7 @@ def main():
     cudnn.benchmark = True
     best_prec1 = 0
     if args.deterministic:
+        print("deterministic")
         cudnn.benchmark = False
         cudnn.deterministic = True
         torch.manual_seed(args.local_rank)
@@ -290,6 +308,7 @@ def main():
     train_loader = None
     val_loader = None
     if not args.disable_dali:
+        print(args.local_rank)
         train_pipe = create_dali_pipeline(batch_size=args.batch_size,
                                           num_threads=args.workers,
                                           device_id=args.local_rank,
@@ -301,7 +320,13 @@ def main():
                                           shard_id=args.local_rank,
                                           num_shards=args.world_size,
                                           is_training=True)
+        norm_pipe = create_norm_pipeline(batch_size=args.batch_size,
+                                          num_threads=args.workers,
+                                          device_id=args.local_rank,
+                                          seed=12 + args.local_rank,
+                                          crop=crop_size)
         train_pipe.build()
+        norm_pipe.build()
         train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader",
                                                   last_batch_policy=LastBatchPolicy.PARTIAL,
                                                   auto_reset=True)
