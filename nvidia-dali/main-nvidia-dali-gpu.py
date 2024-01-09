@@ -114,23 +114,13 @@ def to_python_float(t):
 
 @pipeline_def
 def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True):
-    # # Open the file in binary mode 
-    # with open('/home/cc/output_reader.pkl', 'rb') as file: 
-        
-    #     # Call load method to deserialze 
-    #     data = pickle.load(file) 
-    
-    # images = data[0][1]
-    # labels = data[0][1]
-    # # print(myvar) 
-    
     images, labels = fn.readers.file(file_root=data_dir,
                                      shard_id=shard_id,
                                      num_shards=num_shards,
+                                     random_shuffle=is_training,
                                      pad_last_batch=True,
                                      name="Reader")
     dali_device = 'cpu' if dali_cpu else 'gpu'
-    print(dali_device)
     decoder_device = 'cpu' if dali_cpu else 'mixed'
     # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
     device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
@@ -148,32 +138,66 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                                random_aspect_ratio=[0.8, 1.25],
                                                random_area=[0.1, 1.0],
                                                num_attempts=100)
-        images = fn.resize(images,
-                           device=dali_device,
-                           resize_x=crop,
-                           resize_y=crop,
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = fn.random.coin_flip(probability=0.5)
-    else:
-        images = fn.decoders.image(images,
-                                   device=decoder_device,
-                                   output_type=types.RGB)
-        images = fn.resize(images,
-                           device=dali_device,
-                           size=size,
-                           mode="not_smaller",
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = False
-
-    images = fn.crop_mirror_normalize(images.gpu(),
-                                      dtype=types.FLOAT,
-                                      output_layout="CHW",
-                                      crop=(crop, crop),
-                                      mean=[0.485 * 255,0.456 * 255,0.406 * 255],
-                                      std=[0.229 * 255,0.224 * 255,0.225 * 255],
-                                      mirror=mirror)
-    labels = labels.gpu()
     return images, labels
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        resize_x=crop,
+    #                        resize_y=crop,
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = fn.random.coin_flip(probability=0.5)
+    # else:
+    #     images = fn.decoders.image(images,
+    #                                device=decoder_device,
+    #                                output_type=types.RGB)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        size=size,
+    #                        mode="not_smaller",
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = False
+
+    # images = fn.crop_mirror_normalize(images.gpu(),
+    #                                   dtype=types.FLOAT,
+    #                                   output_layout="CHW",
+    #                                   crop=(crop, crop),
+    #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+    #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
+    #                                   mirror=mirror)
+    # labels = labels.gpu()
+    
+
+
+@pipeline_def
+def create_decoder_crop_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True):
+    images = fn.external_source(name="images")
+    
+    dali_device = 'gpu'
+    images = fn.resize(images,
+                        device=dali_device,
+                        resize_x=crop,
+                        resize_y=crop,
+                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = fn.random.coin_flip(probability=0.5)
+    # else:
+    #     images = fn.decoders.image(images,
+    #                                device=decoder_device,
+    #                                output_type=types.RGB)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        size=size,
+    #                        mode="not_smaller",
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = False
+
+    # images = fn.crop_mirror_normalize(images.gpu(),
+    #                                   dtype=types.FLOAT,
+    #                                   output_layout="CHW",
+    #                                   crop=(crop, crop),
+    #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+    #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
+    #                                   mirror=mirror)
+    # labels = labels.gpu()
+    return images
 
 
 @pipeline_def
@@ -329,6 +353,23 @@ def main():
         #                                   crop=crop_size)
         train_pipe.build()
         # norm_pipe.build()
+
+        # decoder_pipe = create_decoder_crop_pipeline(exec_async=False,
+        #                             prefetch_queue_depth=1,
+        #                         batch_size=args.batch_size,
+        #                         num_threads=args.workers,
+        #                         device_id=args.local_rank,
+        #                         seed=12 + args.local_rank,
+        #                         data_dir=traindir,
+        #                         crop=crop_size,
+        #                         size=val_size,
+        #                         dali_cpu=args.dali_cpu,
+        #                         shard_id=args.local_rank,
+        #                         num_shards=args.world_size,
+        #                         is_training=True)
+        # decoder_pipe.build()
+
+
         train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader",
                                                   last_batch_policy=LastBatchPolicy.PARTIAL,
                                                   auto_reset=True)
@@ -466,7 +507,7 @@ class data_prefetcher():
             raise StopIteration
         return input, target
 
-def train(train_loader, model, criterion, scaler, optimizer, epoch):
+def train(train_loader, model, criterion, scaler, optimizer, epoch, decoder_pipe=None):
     batch_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
@@ -486,14 +527,17 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
     start_epoch = time.time()
     print('==== DALI training starts')
     for i, data in enumerate(data_iterator):
-        # print("data ->", data)
+        images = data[0]
+        print(i)
+        # print(images)
+        # decoder_pipe.run(images=images)
         end_preprocess = time.time() - start_preprocess
         # print("batch -> ", i)
         # print("preproces time ->", end_preprocess)
         # quit()
-        # with open("preproces-time-dali-"+args.exp_name+".txt", 'a') as f:
+        with open("preproces-time-dali-"+args.exp_name+".txt", 'a') as f:
             # f.write("batch {} time -> {:.9f}\n".format(i,end_preprocess))
-            # f.write("{:.9f}\n".format(end_preprocess))
+            f.write("{:.9f}\n".format(end_preprocess))
         print("{:.9f}\n".format(end_preprocess))
 
         # if args.disable_dali:
