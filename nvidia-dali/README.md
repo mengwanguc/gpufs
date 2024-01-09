@@ -32,6 +32,10 @@
     ```
     /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/nvidia/dali/plugin/pytorch/__init__.py (depend on your dali folder path)
     ```
+
+    ```
+    cp /home/cc/gpufs/nvidia-dali/__init__.py /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/nvidia/dali/plugin/pytorch/__init__.py
+    ```
     
 
 3. Training a model.
