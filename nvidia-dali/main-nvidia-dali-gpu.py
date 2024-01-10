@@ -29,6 +29,14 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
+def print_memory_pycuda():
+    free_memory, total_memory = cuda.mem_get_info()
+    used_memory = total_memory - free_memory
+    print(f"Total: {total_memory / 1024**2} MB\t"
+          f"Free: {free_memory / 1024**2} MB\t" 
+          f"Used: {used_memory / 1024**2} MB")
+          
+
 def fast_collate(batch, memory_format):
     """Based on fast_collate from the APEX example
        https://github.com/NVIDIA/apex/blob/5b5d41034b506591a316c308c3d2cd14d5187e23/examples/imagenet/main_amp.py#L265
