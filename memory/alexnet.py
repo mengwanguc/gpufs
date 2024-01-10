@@ -40,8 +40,8 @@ def print_memory_pycuda():
 base_dir = '.'
 # %% Analysis baseline
 
-model = resnet18().cuda()
-bs = 256
+model = resnet50().cuda(0)
+bs = 64
 input = torch.rand(bs, 3, 224, 224)
 input = input.cuda(0)
 
@@ -65,6 +65,8 @@ torch.cuda.empty_cache()
 df = pd.DataFrame(mem_log)
 
 print(df)
+
+df.to_csv('resnet50_mem.csv')
 
 
 print('pytorch total: {}  cached: {}'.format(torch.cuda.memory_allocated()/ 1024**2, torch.cuda.memory_reserved()/ 1024**2))
