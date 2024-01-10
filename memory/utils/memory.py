@@ -57,7 +57,7 @@ def log_mem(model, inp, target, mem_log=None, exp=None):
         _add_memory_hooks(idx, module, mem_log, exp, hr)
 
     print(1)
-    for i in range(20):
+    for i in range(5):
         out = model(inp)
         loss = criterion(out, target)
         loss.backward()
