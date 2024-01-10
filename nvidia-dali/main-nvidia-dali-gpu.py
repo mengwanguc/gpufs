@@ -114,23 +114,13 @@ def to_python_float(t):
 
 @pipeline_def
 def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True):
-    # # Open the file in binary mode 
-    # with open('/home/cc/output_reader.pkl', 'rb') as file: 
-        
-    #     # Call load method to deserialze 
-    #     data = pickle.load(file) 
-    
-    # images = data[0][1]
-    # labels = data[0][1]
-    # # print(myvar) 
-    
     images, labels = fn.readers.file(file_root=data_dir,
                                      shard_id=shard_id,
                                      num_shards=num_shards,
+                                     random_shuffle=is_training,
                                      pad_last_batch=True,
                                      name="Reader")
     dali_device = 'cpu' if dali_cpu else 'gpu'
-    print(dali_device)
     decoder_device = 'cpu' if dali_cpu else 'mixed'
     # ask nvJPEG to preallocate memory for the biggest sample in ImageNet for CPU and GPU to avoid reallocations in runtime
     device_memory_padding = 211025920 if decoder_device == 'mixed' else 0
@@ -148,22 +138,23 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
                                                random_aspect_ratio=[0.8, 1.25],
                                                random_area=[0.1, 1.0],
                                                num_attempts=100)
-        images = fn.resize(images,
-                           device=dali_device,
-                           resize_x=crop,
-                           resize_y=crop,
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = fn.random.coin_flip(probability=0.5)
-    else:
-        images = fn.decoders.image(images,
-                                   device=decoder_device,
-                                   output_type=types.RGB)
-        images = fn.resize(images,
-                           device=dali_device,
-                           size=size,
-                           mode="not_smaller",
-                           interp_type=types.INTERP_TRIANGULAR)
-        mirror = False
+    return images, labels
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        resize_x=crop,
+    #                        resize_y=crop,
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = fn.random.coin_flip(probability=0.5)
+    # else:
+    #     images = fn.decoders.image(images,
+    #                                device=decoder_device,
+    #                                output_type=types.RGB)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        size=size,
+    #                        mode="not_smaller",
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = False
 
     # images = fn.crop_mirror_normalize(images.gpu(),
     #                                   dtype=types.FLOAT,
@@ -172,8 +163,41 @@ def create_dali_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=Fa
     #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
     #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
     #                                   mirror=mirror)
-    labels = labels.gpu()
-    return images, labels
+    # labels = labels.gpu()
+    
+
+
+@pipeline_def
+def create_decoder_crop_pipeline(data_dir, crop, size, shard_id, num_shards, dali_cpu=False, is_training=True):
+    images = fn.external_source(name="images")
+    
+    dali_device = 'gpu'
+    images = fn.resize(images,
+                        device=dali_device,
+                        resize_x=crop,
+                        resize_y=crop,
+                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = fn.random.coin_flip(probability=0.5)
+    # else:
+    #     images = fn.decoders.image(images,
+    #                                device=decoder_device,
+    #                                output_type=types.RGB)
+    #     images = fn.resize(images,
+    #                        device=dali_device,
+    #                        size=size,
+    #                        mode="not_smaller",
+    #                        interp_type=types.INTERP_TRIANGULAR)
+    #     mirror = False
+
+    # images = fn.crop_mirror_normalize(images.gpu(),
+    #                                   dtype=types.FLOAT,
+    #                                   output_layout="CHW",
+    #                                   crop=(crop, crop),
+    #                                   mean=[0.485 * 255,0.456 * 255,0.406 * 255],
+    #                                   std=[0.229 * 255,0.224 * 255,0.225 * 255],
+    #                                   mirror=mirror)
+    # labels = labels.gpu()
+    return images
 
 
 @pipeline_def
@@ -309,7 +333,9 @@ def main():
     val_loader = None
     if not args.disable_dali:
         print(args.local_rank)
-        train_pipe = create_dali_pipeline(batch_size=args.batch_size,
+        train_pipe = create_dali_pipeline(exec_async=True,
+                                            prefetch_queue_depth=1,
+                                          batch_size=args.batch_size,
                                           num_threads=args.workers,
                                           device_id=args.local_rank,
                                           seed=12 + args.local_rank,
@@ -320,32 +346,49 @@ def main():
                                           shard_id=args.local_rank,
                                           num_shards=args.world_size,
                                           is_training=True)
-        norm_pipe = create_norm_pipeline(batch_size=args.batch_size,
-                                          num_threads=args.workers,
-                                          device_id=args.local_rank,
-                                          seed=12 + args.local_rank,
-                                          crop=crop_size)
+        # norm_pipe = create_norm_pipeline(batch_size=args.batch_size,
+        #                                   num_threads=args.workers,
+        #                                   device_id=args.local_rank,
+        #                                   seed=12 + args.local_rank,
+        #                                   crop=crop_size)
         train_pipe.build()
-        norm_pipe.build()
+        # norm_pipe.build()
+
+        # decoder_pipe = create_decoder_crop_pipeline(exec_async=False,
+        #                             prefetch_queue_depth=1,
+        #                         batch_size=args.batch_size,
+        #                         num_threads=args.workers,
+        #                         device_id=args.local_rank,
+        #                         seed=12 + args.local_rank,
+        #                         data_dir=traindir,
+        #                         crop=crop_size,
+        #                         size=val_size,
+        #                         dali_cpu=args.dali_cpu,
+        #                         shard_id=args.local_rank,
+        #                         num_shards=args.world_size,
+        #                         is_training=True)
+        # decoder_pipe.build()
+
+
         train_loader = DALIClassificationIterator(train_pipe, reader_name="Reader",
                                                   last_batch_policy=LastBatchPolicy.PARTIAL,
                                                   auto_reset=True)
 
-        val_pipe = create_dali_pipeline(batch_size=args.batch_size,
-                                        num_threads=args.workers,
-                                        device_id=args.local_rank,
-                                        seed=12 + args.local_rank,
-                                        data_dir=valdir,
-                                        crop=crop_size,
-                                        size=val_size,
-                                        dali_cpu=args.dali_cpu,
-                                        shard_id=args.local_rank,
-                                        num_shards=args.world_size,
-                                        is_training=False)
-        val_pipe.build()
-        val_loader = DALIClassificationIterator(val_pipe, reader_name="Reader",
-                                                last_batch_policy=LastBatchPolicy.PARTIAL,
-                                                auto_reset=True)
+        # val_pipe = create_dali_pipeline(batch_size=args.batch_size,
+        #                                 num_threads=args.workers,
+        #                                 device_id=args.local_rank,
+        #                                 seed=12 + args.local_rank,
+        #                                 data_dir=valdir,
+        #                                 crop=crop_size,
+        #                                 size=val_size,
+        #                                 dali_cpu=args.dali_cpu,
+        #                                 shard_id=args.local_rank,
+        #                                 num_shards=args.world_size,
+        #                                 is_training=False)
+        # val_pipe.build()
+        # val_loader = DALIClassificationIterator(val_pipe, reader_name="Reader",
+        #                                         last_batch_policy=LastBatchPolicy.PARTIAL,
+        #                                         auto_reset=True)
     else:
         train_dataset = datasets.ImageFolder(traindir,
                                              transforms.Compose([transforms.RandomResizedCrop(crop_size),
@@ -370,13 +413,13 @@ def main():
                                                    sampler=train_sampler,
                                                    collate_fn=collate_fn)
 
-        val_loader = torch.utils.data.DataLoader(val_dataset,
-                                                 batch_size=args.batch_size,
-                                                 shuffle=False,
-                                                 num_workers=args.workers,
-                                                 pin_memory=True,
-                                                 sampler=val_sampler,
-                                                 collate_fn=collate_fn)
+        # val_loader = torch.utils.data.DataLoader(val_dataset,
+        #                                          batch_size=args.batch_size,
+        #                                          shuffle=False,
+        #                                          num_workers=args.workers,
+        #                                          pin_memory=True,
+        #                                          sampler=val_sampler,
+        #                                          collate_fn=collate_fn)
 
     if args.evaluate:
         validate(val_loader, model, criterion)
@@ -397,27 +440,27 @@ def main():
         if args.test:
             break
 
-        # evaluate on validation set
-        [prec1, prec5] = validate(val_loader, model, criterion)
+        # # evaluate on validation set
+        # [prec1, prec5] = validate(val_loader, model, criterion)
 
-        # remember best prec@1 and save checkpoint
-        if args.local_rank == 0:
-            is_best = prec1 > best_prec1
-            best_prec1 = max(prec1, best_prec1)
-            save_checkpoint({
-                'epoch': epoch + 1,
-                'arch': args.arch,
-                'state_dict': model.state_dict(),
-                'best_prec1': best_prec1,
-                'optimizer' : optimizer.state_dict(),
-            }, is_best)
-            if epoch == args.epochs - 1:
-                print('##Top-1 {0}\n'
-                      '##Top-5 {1}\n'
-                      '##Perf  {2}'.format(
-                      prec1,
-                      prec5,
-                      args.total_batch_size / total_time.avg))
+        # # remember best prec@1 and save checkpoint
+        # if args.local_rank == 0:
+        #     is_best = prec1 > best_prec1
+        #     best_prec1 = max(prec1, best_prec1)
+        #     save_checkpoint({
+        #         'epoch': epoch + 1,
+        #         'arch': args.arch,
+        #         'state_dict': model.state_dict(),
+        #         'best_prec1': best_prec1,
+        #         'optimizer' : optimizer.state_dict(),
+        #     }, is_best)
+        #     if epoch == args.epochs - 1:
+        #         print('##Top-1 {0}\n'
+        #               '##Top-5 {1}\n'
+        #               '##Perf  {2}'.format(
+        #               prec1,
+        #               prec5,
+        #               args.total_batch_size / total_time.avg))
 
     end_total_time = time.time() - start_total_time
     # print("Total Time ->", end_total_time)
@@ -464,7 +507,7 @@ class data_prefetcher():
             raise StopIteration
         return input, target
 
-def train(train_loader, model, criterion, scaler, optimizer, epoch):
+def train(train_loader, model, criterion, scaler, optimizer, epoch, decoder_pipe=None):
     batch_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
@@ -482,8 +525,12 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
 
     start_preprocess = time.time()
     start_epoch = time.time()
+    print('==== DALI training starts')
     for i, data in enumerate(data_iterator):
-        # print("data ->", data)
+        images = data[0]
+        print(i)
+        # print(images)
+        # decoder_pipe.run(images=images)
         end_preprocess = time.time() - start_preprocess
         # print("batch -> ", i)
         # print("preproces time ->", end_preprocess)
@@ -491,93 +538,96 @@ def train(train_loader, model, criterion, scaler, optimizer, epoch):
         with open("preproces-time-dali-"+args.exp_name+".txt", 'a') as f:
             # f.write("batch {} time -> {:.9f}\n".format(i,end_preprocess))
             f.write("{:.9f}\n".format(end_preprocess))
+        print("{:.9f}\n".format(end_preprocess))
 
-        if args.disable_dali:
-            input, target = data
-            train_loader_len = len(train_loader)
-        else:
-            input = data[0]["data"]
-            target = data[0]["label"].squeeze(-1).long()
-            train_loader_len = int(math.ceil(data_iterator._size / args.batch_size))
+        # if args.disable_dali:
+        #     input, target = data
+        #     train_loader_len = len(train_loader)
+        # else:
+        #     input = data[0]["data"]
+        #     target = data[0]["label"].squeeze(-1).long()
+        #     train_loader_len = int(math.ceil(data_iterator._size / args.batch_size))
+        images, labels = data
 
-        if args.prof >= 0 and i == args.prof:
-            print("Profiling begun at iteration {}".format(i))
-            torch.cuda.cudart().cudaProfilerStart()
+        # if args.prof >= 0 and i == args.prof:
+        #     print("Profiling begun at iteration {}".format(i))
+        #     torch.cuda.cudart().cudaProfilerStart()
 
-        if args.prof >= 0: torch.cuda.nvtx.range_push("Body of iteration {}".format(i))
+        # if args.prof >= 0: torch.cuda.nvtx.range_push("Body of iteration {}".format(i))
 
-        adjust_learning_rate(optimizer, epoch, i, train_loader_len)
-        if args.test:
-            if i > 10:
-                break
+        # adjust_learning_rate(optimizer, epoch, i, train_loader_len)
+        # if args.test:
+        #     if i > 10:
+        #         break
 
-        with torch.cuda.amp.autocast(enabled=args.fp16_mode):
-            output = model(input)
-            loss = criterion(output, target)
+        # with torch.cuda.amp.autocast(enabled=args.fp16_mode):
+        #     output = model(input)
+        #     loss = criterion(output, target)
 
-        # compute output
-        if args.prof >= 0: torch.cuda.nvtx.range_push("forward")
+        # # compute output
+        # if args.prof >= 0: torch.cuda.nvtx.range_push("forward")
 
-        if args.prof >= 0: torch.cuda.nvtx.range_pop()
+        # if args.prof >= 0: torch.cuda.nvtx.range_pop()
 
-        # compute gradient and do SGD step
-        optimizer.zero_grad()
+        # # compute gradient and do SGD step
+        # optimizer.zero_grad()
 
-        if args.prof >= 0: torch.cuda.nvtx.range_push("backward")
-        scaler.scale(loss).backward()
-        if args.prof >= 0: torch.cuda.nvtx.range_pop()
+        # if args.prof >= 0: torch.cuda.nvtx.range_push("backward")
+        # scaler.scale(loss).backward()
+        # if args.prof >= 0: torch.cuda.nvtx.range_pop()
 
-        if args.prof >= 0: torch.cuda.nvtx.range_push("optimizer.step()")
-        scaler.step(optimizer)
-        if args.prof >= 0: torch.cuda.nvtx.range_pop()
-        scaler.update()
+        # if args.prof >= 0: torch.cuda.nvtx.range_push("optimizer.step()")
+        # scaler.step(optimizer)
+        # if args.prof >= 0: torch.cuda.nvtx.range_pop()
+        # scaler.update()
 
-        if i%args.print_freq == 0:
-            # Every print_freq iterations, check the loss, accuracy, and speed.
-            # For best performance, it doesn't make sense to print these metrics every
-            # iteration, since they incur an allreduce and some host<->device syncs.
+        # if i%args.print_freq == 0:
+        #     # Every print_freq iterations, check the loss, accuracy, and speed.
+        #     # For best performance, it doesn't make sense to print these metrics every
+        #     # iteration, since they incur an allreduce and some host<->device syncs.
 
-            # Measure accuracy
-            prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
+        #     # Measure accuracy
+        #     prec1, prec5 = accuracy(output.data, target, topk=(1, 5))
 
-            # Average loss and accuracy across processes for logging
-            if args.distributed:
-                reduced_loss = reduce_tensor(loss.data)
-                prec1 = reduce_tensor(prec1)
-                prec5 = reduce_tensor(prec5)
-            else:
-                reduced_loss = loss.data
+        #     # Average loss and accuracy across processes for logging
+        #     if args.distributed:
+        #         reduced_loss = reduce_tensor(loss.data)
+        #         prec1 = reduce_tensor(prec1)
+        #         prec5 = reduce_tensor(prec5)
+        #     else:
+        #         reduced_loss = loss.data
 
-            # to_python_float incurs a host<->device sync
-            losses.update(to_python_float(reduced_loss), input.size(0))
-            top1.update(to_python_float(prec1), input.size(0))
-            top5.update(to_python_float(prec5), input.size(0))
+        #     # to_python_float incurs a host<->device sync
+        #     losses.update(to_python_float(reduced_loss), input.size(0))
+        #     top1.update(to_python_float(prec1), input.size(0))
+        #     top5.update(to_python_float(prec5), input.size(0))
 
-            torch.cpu.synchronize()
-            batch_time.update((time.time() - end)/args.print_freq)
-            end = time.time()
+        #     torch.cpu.synchronize()
+        #     batch_time.update((time.time() - end)/args.print_freq)
+        #     end = time.time()
 
-            if args.local_rank == 0:
-                print('Epoch: [{0}][{1}/{2}]\t'
-                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                      'Speed {3:.3f} ({4:.3f})\t'
-                      'Loss {loss.val:.10f} ({loss.avg:.4f})\t'
-                      'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                      'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                       epoch, i, train_loader_len,
-                       args.world_size*args.batch_size/batch_time.val,
-                       args.world_size*args.batch_size/batch_time.avg,
-                       batch_time=batch_time,
-                       loss=losses, top1=top1, top5=top5))
+        #     if args.local_rank == 0:
+        #         print('Epoch: [{0}][{1}/{2}]\t'
+        #               'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+        #               'Speed {3:.3f} ({4:.3f})\t'
+        #               'Loss {loss.val:.10f} ({loss.avg:.4f})\t'
+        #               'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+        #               'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+        #                epoch, i, train_loader_len,
+        #                args.world_size*args.batch_size/batch_time.val,
+        #                args.world_size*args.batch_size/batch_time.avg,
+        #                batch_time=batch_time,
+        #                loss=losses, top1=top1, top5=top5))
 
         # Pop range "Body of iteration {}".format(i)
-        if args.prof >= 0: torch.cuda.nvtx.range_pop()
+        # if args.prof >= 0: torch.cuda.nvtx.range_pop()
 
         if args.prof >= 0 and i == args.prof + 10:
             print("Profiling ended at iteration {}".format(i))
             torch.cuda.cudart().cudaProfilerStop()
             quit()
 
+        print('starting next batch')
         start_preprocess = time.time()
 
     end_epoch = time.time() - start_epoch

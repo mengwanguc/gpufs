@@ -32,6 +32,10 @@
     ```
     /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/nvidia/dali/plugin/pytorch/__init__.py (depend on your dali folder path)
     ```
+
+    ```
+    cp /home/cc/gpufs/nvidia-dali/__init__.py /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/nvidia/dali/plugin/pytorch/__init__.py
+    ```
     
 
 3. Training a model.
@@ -45,6 +49,14 @@
     In create_dali_pipeline() you will see 4 step of preprocessing data on dali. To measure them you can comment other code. For example you want to measure reader step, you should comment other step like decoder, resize, and normalize. Another example if you want to measure decoder you have to comment resize and normalize. And so on for others.
 
    
+
+
+```
+python main-nvidia-dali-gpu.py dataset/small-imagenet-16/ -b 16 --exp_name images16-bsize16-all --epochs 1 --deterministic
+python main-nvidia-dali-gpu.py dataset/small-imagenet-16/ -b 4 --exp_name images16-bsize16-all --epochs 1 --deterministic
+
+```
+
 ## Usage
 
 ```
