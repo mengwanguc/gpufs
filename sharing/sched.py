@@ -7,13 +7,13 @@ from concurrent.futures import ProcessPoolExecutor
 
 GPU_BND_CMD_FMT = (
     "python main-emulator-share.py  "
-    "--epoch {n_epoch} --profile-batches -1 --workers 8 --gpu-type=v100 "
-    "--gpu-count=1 --arch=resnet50 --emulator-version=1 ~/data/test-accuracy/"
+    "--epoch {n_epoch} --profile-batches -1 --workers 3 --gpu-type=v100 "
+    "--gpu-count=1 --arch=resnet18 --emulator-version=1 ~/data/test-accuracy/"
 )
 
 CPU_BND_CMD_FMT = (
     "python main-emulator-share.py  "
-    "--epoch {n_epoch} --profile-batches -1 --workers 8 --gpu-type=v100 "
+    "--epoch {n_epoch} --profile-batches -1 --workers 23 --gpu-type=v100 "
     "--gpu-count=1 --arch=alexnet --emulator-version=1 ~/data/test-accuracy/"
 )
 
@@ -100,7 +100,6 @@ def main():
                         names=["bound_type", "n_epoch", "job_length"])
             .sort_values("job_length", ascending=True)
         )
-        jct: list[float] = []
         jobs: list[list[str]] = []
         for _, row in queue.iterrows():
             job_bound_type: str = str(row.bound_type)

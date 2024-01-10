@@ -3,14 +3,14 @@ from time import clock_gettime, CLOCK_MONOTONIC
 
 GPU_BND_CMD_FMT = (
     "python main-emulator-share.py  "
-    "--epoch {n_epoch} --profile-batches -1 --workers 8 --gpu-type=p100 "
-    "--gpu-count=1 --arch=resnet50 --emulator-version=1 ~/data/test-accuracy/"
+    "--epoch {n_epoch} --profile-batches -1 --workers 8 --gpu-type=v100 "
+    "--gpu-count=1 --arch=resnet18 --emulator-version=1 ~/data/test-accuracy/"
 )
 
 CPU_BND_CMD_FMT = (
     "python main-emulator-share.py  "
-    "--epoch {n_epoch} --profile-batches -1 --workers 8 --gpu-type=p100 "
-    "--gpu-count=1 --arch=alexnet --emulator-version=1 ~/data/test-accuracy/"
+    "--epoch {n_epoch} --profile-batches -1 --workers 24 --gpu-type=v100 "
+    "--gpu-count=1 --arch=alexnet --batch-size 32 --emulator-version=1 ~/data/test-accuracy"
 )
 
 
@@ -22,9 +22,9 @@ def main():
     #     subprocess.run(cmd, capture_output=True)
     #     end = clock_gettime(CLOCK_MONOTONIC)
     #     print(f"{n_epoch},{end-st}")
-    
-    print("-----------------------------------------------------------------")
-    for n_epoch in range(16, 20):
+    # 
+    # print("-----------------------------------------------------------------")
+    for n_epoch in range(1, 2):
         cmd: list[str] = CPU_BND_CMD_FMT.format(n_epoch=n_epoch).split()
         st = clock_gettime(CLOCK_MONOTONIC)
         subprocess.run(cmd, capture_output=True)
