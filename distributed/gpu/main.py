@@ -336,11 +336,14 @@ def validate(val_loader, model, criterion, args):
         end = time.time()
         for i, (images, target) in enumerate(val_loader):
             if args.gpu is not None:
-                images = images.cuda(args.gpu, non_blocking=True)
+                images = images.cuda(args.gpu, non_blocking=False)
             if torch.cuda.is_available():
-                target = target.cuda(args.gpu, non_blocking=True)
+                target = target.cuda(args.gpu, non_blocking=False)
 
             # compute output
+            torch.cuda.synchronize()
+            model_start = time.time()
+
             output = model(images)
             loss = criterion(output, target)
 
@@ -358,6 +361,8 @@ def validate(val_loader, model, criterion, args):
                 progress.display(i)
             
             torch.cuda.synchronize()
+            model_end = time.time()
+            print('[app] model time: {}'.format(model_end-model_start))
 
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
