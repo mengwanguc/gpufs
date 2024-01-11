@@ -292,9 +292,12 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         data_time.update(time.time() - end)
 
         if args.gpu is not None:
-            images = images.cuda(args.gpu, non_blocking=True)
+            images = images.cuda(args.gpu, non_blocking=False)
         if torch.cuda.is_available():
-            target = target.cuda(args.gpu, non_blocking=True)
+            target = target.cuda(args.gpu, non_blocking=False)
+        
+        torch.cuda.synchronize()
+        model_start = time.time()
 
         # compute output
         output = model(images)
@@ -317,6 +320,10 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
 
         if i % args.print_freq == 0:
             progress.display(i)
+        
+        torch.cuda.synchronize()
+        model_end = time.time()
+        print('[app] model time: {}'.format(model_end-model_start))
 
 
 def validate(val_loader, model, criterion, args):
