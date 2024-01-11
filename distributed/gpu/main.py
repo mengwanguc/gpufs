@@ -286,6 +286,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     # switch to train mode
     model.train()
 
+    # print(model.parameters())
+
     end = time.time()
     for i, (images, target) in enumerate(train_loader):
         # measure data loading time
@@ -296,7 +298,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if torch.cuda.is_available():
             target = target.cuda(args.gpu, non_blocking=False)
         
-        torch.cuda.synchronize()
+        # torch.cuda.synchronize()
         model_start = time.time()
 
         # compute output
@@ -321,7 +323,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         if i % args.print_freq == 0:
             progress.display(i)
         
-        torch.cuda.synchronize()
+        # torch.cuda.synchronize()
         model_end = time.time()
         print('[app] model time: {}'.format(model_end-model_start))
 
