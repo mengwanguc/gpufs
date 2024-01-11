@@ -356,6 +356,8 @@ def validate(val_loader, model, criterion, args):
 
             if i % args.print_freq == 0:
                 progress.display(i)
+            
+            torch.cuda.synchronize()
 
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
