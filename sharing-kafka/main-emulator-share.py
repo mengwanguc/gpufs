@@ -243,7 +243,7 @@ def main_worker(gpu, ngpus_per_node, args):
 
     # Use this loader for ImageFolder "loader" param if minio enabled.
     def minio_loader(path: str, cache: minio.PyCache) -> Image.Image:
-        data, _ = cache.read_file(path)
+        data, _ = cache.read(path)
         img = Image.open(io.BytesIO(data))
         return img.convert('RGB')
 
@@ -261,8 +261,9 @@ def main_worker(gpu, ngpus_per_node, args):
     val_cache = None
     loader = None
     if args.use_minio:
-        train_cache = minio.PyCache(size=train_cache_size, max_file_size=max_item_size)
-        val_cache = minio.PyCache(size=val_cache_size, max_file_size=max_item_size)
+        print(f'train_cache_size: {train_cache_size}  max_item_size: {max_item_size}')
+        train_cache = minio.PyCache(size=train_cache_size, max_usable_file_size=max_item_size)
+        # val_cache = minio.PyCache(size=val_cache_size, max_usable_file_size=max_item_size)
         loader = minio_loader
     else:
         loader = pil_loader
@@ -293,21 +294,21 @@ def main_worker(gpu, ngpus_per_node, args):
         emulator_version=args.emulator_version,
         balloons = train_balloons)
 
-    val_balloons = dict()
-    val_loader = torch.utils.data.DataLoader(
-        datasets.ImageFolder(
-            valdir,
-            transforms.Compose([
-                transforms.Resize(256),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(),
-                normalize,
-            ]),
-            loader=loader,
-            cache=val_cache),
-        batch_size=args.batch_size, shuffle=False,
-        num_workers=args.workers, pin_memory=True,
-        balloons = val_balloons)
+    # val_balloons = dict()
+    # val_loader = torch.utils.data.DataLoader(
+    #     datasets.ImageFolder(
+    #         valdir,
+    #         transforms.Compose([
+    #             transforms.Resize(256),
+    #             transforms.CenterCrop(224),
+    #             transforms.ToTensor(),
+    #             normalize,
+    #         ]),
+    #         loader=loader,
+    #         cache=val_cache),
+    #     batch_size=args.batch_size, shuffle=False,
+    #     num_workers=args.workers, pin_memory=True,
+    #     balloons = val_balloons)
 
     if args.evaluate:
         validate(val_loader, model, criterion, args)
@@ -410,6 +411,8 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
     model.train()
     app = args.app
 
+    epoch_start = time.time()
+
     total_data_wait_time = 0
     total_cpu2gpu_time = 0
     total_gpu_time = 0
@@ -491,6 +494,9 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
         
         if args.profile_batches != -1 and i >= args.profile_batches:
             break
+
+    epoch_time = time.time() - epoch_start
+    print(f'epoch {epoch} time: {epoch_time}')
 
     # release all balloons at end of batch
     for size in train_loader.balloons:

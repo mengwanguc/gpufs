@@ -1,43 +1,23 @@
-### Emulate time-slice sharing using Kafka
+# Emulate time-slice sharing using RabbitMQ
 
-
-```
-sudo apt update
-sudo apt install -y default-jdk
-```
-
-confirm it's installed
-```
-java --version
-```
-
-
-Add this to the end of .bashrc
+## Install rabbitmq
 
 ```
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH=$JAVA_HOME/bin:$PATH
+bash install-rabbitmq.sh
 ```
 
-*Reload terminal*
-
-NOTE: When I say "open another terminal", actually you can always use `tmux` instead
-if you are familiar with it.
-
-
-
-download kafka
 ```
-cd ~
-wget https://dlcdn.apache.org/kafka/3.6.1/kafka_2.13-3.6.1.tgz
-tar -xzf kafka_2.13-3.6.1.tgz
+sudo systemctl start rabbitmq-server
 ```
 
-launch zookeeper server
+install pika to interact with rabbitmq
+
 ```
-cd ~/kafka_2.13-3.6.1
-bin/zookeeper-server-start.sh config/zookeeper.properties
+pip install pika
 ```
+
+
+
 
 open another terminal. Launch kafka server:
 

@@ -1,29 +1,32 @@
-from kafka import KafkaProducer, KafkaConsumer
+import pika
 import json
 import uuid
-import time
 
-app_id = str(uuid.uuid4())  # Unique identifier for each application
-request_topic = 'batch_requests'
-response_topic = f'response_{app_id}'
+app_id = str(uuid.uuid4())
 
-producer = KafkaProducer(bootstrap_servers='localhost:9092')
-consumer = KafkaConsumer(response_topic, bootstrap_servers='localhost:9092',
-                         auto_offset_reset='earliest', enable_auto_commit=True)
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+request_queue = 'gpu_requests'
+channel = connection.channel()
+callback_queue =  f'response_{app_id}'
+result = channel.queue_declare(queue=callback_queue, exclusive=True)
 
-def send_batch_request_and_wait(batch_id, batch_size, batch_compute_time):
-    batch_start = time.time()
-    message = json.dumps({'app_id': app_id, 'batch_id': batch_id, 'duration': batch_compute_time, 'response_topic': response_topic})
-    producer.send(request_topic, message.encode('utf-8'))
-    # Wait for response
-    for message in consumer:
-        break  # Exit after receiving the response
-    batch_end = time.time()
-    batch_duration = batch_end - batch_start
-    image_process_speed = batch_size / batch_duration
-    print("{}\t{}\t{}\t{}".format(app_id, batch_id, time.time(), image_process_speed))
+def on_response(ch, method, props, body):
+    response = json.loads(body)
+    if response['app_id'] == app_id:
+        print(f"Received GPU processing completion: {response}")
+
+channel.basic_consume(queue=callback_queue, on_message_callback=on_response, auto_ack=True)
 
 
-print(time.time())
-for batch_id in range(200):  # Example batch processing loop
-    send_batch_request_and_wait(batch_id, 128, 0.5753)
+def send_gpu_request(processing_time):
+    request = json.dumps({'app_id': app_id, 'processing_time': processing_time})
+    channel.basic_publish(exchange='',
+                          routing_key=request_queue,
+                          properties=pika.BasicProperties(reply_to=callback_queue, correlation_id=app_id),
+                          body=request)
+    print(f"App {app_id} requested GPU processing.")
+
+# Example request for GPU processing
+send_gpu_request(2)  # Requesting 2 seconds of GPU processing
+
+channel.start_consuming()

@@ -15,8 +15,10 @@ java --version
 Add this to the end of .bashrc
 
 ```
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH=$JAVA_HOME/bin:$PATH
+# export JAVA_HOME=$(/usr/lib/jvm/java-11-openjdk-amd64)
+# export PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64"
+export PATH="$JAVA_HOME/bin:$PATH"
 ```
 
 *Reload terminal*
