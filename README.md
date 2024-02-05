@@ -25,6 +25,21 @@ cat ~/.ssh/id_rsa.pub
 
 Copy and paste into: https://github.com/settings/keys
 
+Configure your username and email.
+```
+git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"
+```
+
+for example:
+
+```
+git config --global user.name "Meng Wang"
+git config --global user.email "mengwanguc@gmail.com"
+```
+
+
+
 3. clone this repo to local
 
 ```
@@ -52,8 +67,31 @@ conda install -y astunparse numpy ninja pyyaml mkl mkl-include setuptools cmake 
 conda install -y -c pytorch magma-cuda112  # or the magma-cuda* that matches your CUDA version from https://anaconda.org/pytorch/repo
 ```
 
+6. Install CuDNN:
 
-6. Download our custom pytorch and build it
+```
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
+
+cd ~
+mkdir cudnn
+cd cudnn
+pip install gdown
+gdown https://drive.google.com/uc?id=1IJGIH7Axqd8E5Czox_xRDCLOyvP--ej-
+tar -xvf cudnn-11.2-linux-x64-v8.1.1.33.tar
+sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+
+sudo apt-get update
+sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
+```
+
+
+
+7. Download our custom pytorch and build it
 
 ```
 cd ~
@@ -65,7 +103,7 @@ export CMAKE_PREFIX_PATH=${CONDA_PREFIX:-"$(dirname $(which conda))/../"}
 python setup.py install
 ```
 
-7. Download our custom torchvision and build it
+8. Download our custom torchvision and build it
 
 ```
 conda install -y aiofiles
@@ -305,3 +343,27 @@ ladcache on a single node with a bottleneck parameter of 1. For example:
 ```
 python main-measure-time-emulator.py --use-ladcache=true --cache-size=6979321856 --loader-bottleneck 1 --gpu-type=p100 --gpu-count=8 --epoch 2 --skip-epochs=1 --workers 24 --arch=alexnet --batch-size 256 --profile-batches -1 --dist-url localhost --dist-backend gloo --world-size 1 --rank 1 /home/cc/data/test-accuracy/imagenette2
 ```
+
+### Install cudnn
+
+```
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install libcudnn8=8.1.1.33-1+cuda11.2
+
+cd ~
+mkdir cudnn
+cd cudnn
+pip install gdown
+gdown https://drive.google.com/uc?id=1IJGIH7Axqd8E5Czox_xRDCLOyvP--ej-
+tar -xvf cudnn-11.2-linux-x64-v8.1.1.33.tar
+sudo cp cuda/include/cudnn*.h /usr/local/cuda/include
+sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda/lib64
+sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
+
+
+
+
+sudo rm -rf /usr/local/cuda/lib64/libcudnn*
+sudo rm -rf /usr/local/cuda/include/cudnn*.h
