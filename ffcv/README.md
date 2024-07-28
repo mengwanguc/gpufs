@@ -56,7 +56,7 @@
 ## Measuring Preprocessing Time FFCV
 1. Modified ops.py from ffcv folder
    
-   [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/NaufalRezkyA/ffcv-emulator/blob/original-measuring-time/ffcv/transforms/ops.py)
+   [FFCV ops.py file that has been modified for measuring time](https://github.com/NaufalRezkyA/ffcv-emulator/blob/original-measuring-time/ffcv/transforms/ops.py)
    
    Copy this script and replaced them into FFCV folder
    ```
@@ -64,7 +64,7 @@
    ```
 2. Modified transform.py from torchvision folder
    
-   [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/mengwanguc/gpufs/blob/naufal/custom-file/transform(shape-time).py)
+   [FFCV transform.py file that has been modified for emulate the GPU for measuring time](https://github.com/mengwanguc/gpufs/blob/naufal/custom-file/transform(shape-time).py)
    
    Copy this script and replaced them into FFCV folder
    ```
@@ -76,8 +76,8 @@
    This training will produce preprocessing time log file in ffcv folder. You can see it on "~/gpufs/ffcv/{preprocessing-stage-name}.txt" precossing stage used in this schema is : toDevice(), ToTorchImage(), Convert(), and Normalize()
 
    ```
-   cd ~/gpufs/ffcv/
-   python main-original-ffcv-v2-emulatorv0-cpu-todevice.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 1
+   cd ~/gpufs/ffcv/figure2
+   python main-original-ffcv-v2-cuda-measuring.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 1
    ```
 
 ## Emulating CPU
