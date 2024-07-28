@@ -41,7 +41,7 @@
 
    ```
    # Required environmental variables for the script:
-   export IMAGENET_DIR=~/data/imagenette2
+   export IMAGENET_DIR=~/data/test-accuracy/imagenette2
    export WRITE_DIR=~/data/
 
    # Starting in the root of the Git repo:
@@ -53,7 +53,35 @@
    # - quality=90 JPEGs
    ./write_imagenet.sh 500 0.50 90
    ```
-5. To emulate FFCV on CPU.
+## Measuring Preprocessing Time FFCV
+1. Modified ops.py from ffcv folder
+   
+   [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/NaufalRezkyA/ffcv-emulator/blob/original-measuring-time/ffcv/transforms/ops.py)
+   
+   Copy this script and replaced them into FFCV folder
+   ```
+   /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/ffcv/transforms/ops.py
+   ```
+2. Modified transform.py from torchvision folder
+   
+   [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/mengwanguc/gpufs/blob/naufal/custom-file/transform(shape-time).py)
+   
+   Copy this script and replaced them into FFCV folder
+   ```
+   /home/cc/torchvision-meng/torchvision/transforms/transforms.py
+   ```
+
+3. Training the model
+
+   This training will produce preprocessing time log file in ffcv folder. You can see it on "~/gpufs/ffcv/{preprocessing-stage-name}.txt" precossing stage used in this schema is : toDevice(), ToTorchImage(), Convert(), and Normalize()
+
+   ```
+   cd ~/gpufs/ffcv/
+   python main-original-ffcv-v2-emulatorv0-cpu-todevice.py -a resnet18 --lr 0.1 ~/data/test-accuracy/imagenette2/ --epochs 1
+   ```
+
+## Emulating CPU
+1. To emulate FFCV on CPU.
    
    [FFCV ops.py file that has been modified for emulate the GPU](https://github.com/NaufalRezkyA/ffcv-emulator/blob/main/ffcv/transforms/ops.py)
    
@@ -61,9 +89,7 @@
    ```
    /home/cc/anaconda3/envs/ffcv/lib/python3.9/site-packages/ffcv/transforms/ops.py
    ```
-   
-   
-7. Training the model
+2. Training the model
 
    The main thing to implement FFCV into our code is modify the Dataloader, because FFCV speeds up model training by eliminating (often subtle) data bottlenecks from the training process. It have similar format with the pytorch and we doesnt have to modify others things. You can use this command to train the models. Prepocessing time and total training time will write in "test-ffcv.txt"
 
