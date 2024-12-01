@@ -1,5 +1,7 @@
 https://github.com/pytorch/examples/tree/6ab697cbaaa164b6eca551e8e8428dfa3b1d1e4b/imagenet
 
+python main-original.py /data/imagenet/ --dist-url 'tcp://127.0.0.1:12345' --dist-backend 'nccl' --multiprocessing-distributed --world-size 1 --rank 0 -j 100 --epochs 1
+
 # ImageNet training in PyTorch
 
 This implements training of popular model architectures, such as ResNet, AlexNet, and VGG on the ImageNet dataset.
